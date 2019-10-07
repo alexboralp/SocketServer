@@ -33,7 +33,9 @@ public abstract class AbsObservable implements IObservable{
     }
 
     @Override
-    public abstract void update(IObserver observer, Object message);
+    public void update(IObserver observer, Object message){
+        observer.update(message);
+    }
 
     @Override
     public void updateAll(Object message) {

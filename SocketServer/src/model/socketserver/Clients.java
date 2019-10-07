@@ -5,10 +5,24 @@
  */
 package model.socketserver;
 
+import java.util.LinkedList;
+import model.socketserver.commoninterfaces.IList;
+
 /**
  *
  * @author alexander
  */
-public class Clients {
+public class Clients implements IList<IClient>{
+    private LinkedList<IClient> clients;
+
+    @Override
+    public void add(IClient element) {
+        clients.add(element);
+    }
+
+    @Override
+    public void remove(IClient element) {
+        clients.remove(element);
+    }
     
 }

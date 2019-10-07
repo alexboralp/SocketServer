@@ -43,9 +43,5 @@ public class WaitClients extends AbsObservable implements Runnable{
             }
         }
     }
-
-    @Override
-    public void update(IObserver observer, Object message) { }
-
     
 }
