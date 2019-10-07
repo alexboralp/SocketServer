@@ -37,6 +37,7 @@ public abstract class AbsClient<T extends Serializable> implements IClient<T>{
         this.socket = socket;
         in = new ObjectInputStream(socket.getInputStream());
         out = new ObjectOutputStream(socket.getOutputStream());
+        id = socket.getRemoteSocketAddress().toString();
     }
 
     /**
@@ -76,6 +77,7 @@ public abstract class AbsClient<T extends Serializable> implements IClient<T>{
         this.socket = socket;
         in = new ObjectInputStream(socket.getInputStream());
         out = new ObjectOutputStream(socket.getOutputStream());
+        id = socket.getRemoteSocketAddress().toString();
     }
     
     /**

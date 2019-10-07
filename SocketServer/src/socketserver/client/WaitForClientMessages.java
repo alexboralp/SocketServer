@@ -5,9 +5,10 @@
  */
 package socketserver.client;
 
-import java.io.EOFException;
 import java.io.IOException;
+import socketserver.MessageFactory;
 import socketserver.commoninterfaces.IPrintable;
+import socketserver.commoninterfaces.IClientable;
 import socketserver.message.IMessage;
 import socketserver.patterns.observer.AbsObservable;
 
@@ -15,7 +16,7 @@ import socketserver.patterns.observer.AbsObservable;
  *
  * @author alexander
  */
-public class WaitForClientMessages extends AbsObservable implements Runnable{
+public class WaitForClientMessages extends AbsObservable implements Runnable, IClientable {
     private IClient client;
     private boolean listening;
     private Thread socketThread;
@@ -31,32 +32,18 @@ public class WaitForClientMessages extends AbsObservable implements Runnable{
     public void run() {
         Object message;
         
-        printer.print("ClientSocketThread: " + "Esperando mensajes del server");
-        
-        while (listening) {
-            try {
-                if ((message = client.getIn().readObject()) != null) {
-                    this.updateAll(message);
-                }
-            } catch (EOFException ex) {
-                listening = false;
-            } catch (IOException | ClassNotFoundException ex) {
-                printer.printError("WaitForClientMessages: " + ex.getMessage());
-            }
-            
-            if (!client.isOk()) {
-                listening = false;
-            }
-        }
-    }
-    
-    public void sendMessage(IMessage message) {
+        printer.print("WaitForClientMessages: " + "Waiting for messages from clients");
         try {
-            printer.print("ClientSocketThread: " + "Enviando un mensaje al server.");
-            client.sendMessage(message);
-        } catch (IOException ex) {
-            printer.printError("ClientSocketThread: " + ex.getMessage());
+            while (client.isOk() && (message = client.getIn().readObject()) != null) {
+                this.updateAll(message);
+                IMessage response = MessageFactory.createMessage(MessageFactory.INFO, "Message received."); 
+                response.setId(client.getId());
+                client.sendMessage(response);
+            }
+        } catch (IOException | ClassNotFoundException ex) {
+            printer.printError("WaitForClientMessages: " + ex.getMessage());
         }
+        listening = false;
     }
     
     public void startListening() {
@@ -65,7 +52,7 @@ public class WaitForClientMessages extends AbsObservable implements Runnable{
             socketThread = new Thread(this);
             socketThread.start();
         } else {
-            printer.printError("ClientSocketThread: " + "Hay algún error con el cliente.");
+            printer.printError("WaitForClientMessages: " + "Hay algún error con el cliente.");
         }
     }
     
@@ -83,11 +70,13 @@ public class WaitForClientMessages extends AbsObservable implements Runnable{
         return client.isOk() && listening;
     }
 
+    @Override
     public IClient getClient() {
         return client;
     }
-
-    public void setClient(Client client) {
+    
+    @Override
+    public void setClient(IClient client) {
         this.client = client;
     }
 }

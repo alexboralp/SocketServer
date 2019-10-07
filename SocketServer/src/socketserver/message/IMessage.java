@@ -8,7 +8,6 @@ package socketserver.message;
 import java.io.Serializable;
 import socketserver.commoninterfaces.IIdable;
 import socketserver.commoninterfaces.IMessageable;
-import socketserver.commoninterfaces.ISecondaryTypeable;
 import socketserver.commoninterfaces.ITypeable;
 
 /**
@@ -16,6 +15,6 @@ import socketserver.commoninterfaces.ITypeable;
  * @author alexander
  * @param <T>
  */
-public interface IMessage<T extends Serializable> extends IIdable, ITypeable, ISecondaryTypeable, IMessageable<T>, Serializable {
+public interface IMessage<T extends Serializable> extends IIdable, ITypeable, IMessageable<T>, Serializable {
     
 }

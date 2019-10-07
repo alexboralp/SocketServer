@@ -3,11 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package controller;
+package controller.server;
 
 import socketserver.ServerAdministrator;
 import socketserver.commoninterfaces.IPrintable;
-import vista.Server;
+import vista.server.Server;
 
 /**
  *
@@ -15,8 +15,8 @@ import vista.Server;
  */
 public class ServerController implements IPrintable {
 
-    private Server server;
-    private ServerAdministrator serverAdministrator;
+    private final Server server;
+    private final ServerAdministrator serverAdministrator;
             
     public ServerController(Server server, int port) {
         this.server = server;

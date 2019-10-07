@@ -10,6 +10,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.net.ServerSocketFactory;
 import socketserver.patterns.observer.AbsObservable;
 import socketserver.commoninterfaces.IPrintable;
 
@@ -22,6 +23,7 @@ public class WaitClients extends AbsObservable implements Runnable{
     // Socket del server que está a la espera de clientes
     private final ServerSocket serverSocket;
     IPrintable printer;
+    Thread thread;
 
     /**
      * Constructor que recibe el puerto en el que se escuchará por clientes
@@ -31,8 +33,17 @@ public class WaitClients extends AbsObservable implements Runnable{
      */
     public WaitClients(int port, IPrintable printer) throws IOException {
         // Se inicializa el socket con el puerto dado
-        serverSocket = new ServerSocket(port);
+        serverSocket = ServerSocketFactory.getDefault().createServerSocket(port);
         this.printer = printer;
+    }
+    
+    public void startListening() {
+        thread = new Thread(this);
+        thread.start();
+    }
+    
+    public void stopListening() {
+        thread.interrupt();
     }
 
     @Override
@@ -41,7 +52,7 @@ public class WaitClients extends AbsObservable implements Runnable{
             try {
                 Socket socketClient = serverSocket.accept();
                 updateAll(new Client(socketClient));
-                printer.print("New client accepted: " + socketClient.getInetAddress().toString() + ".");
+                printer.print("New client accepted: " + socketClient.getRemoteSocketAddress().toString() + ".");
             } catch (IOException ex) {
                 Logger.getLogger(WaitClients.class.getName()).log(Level.SEVERE, null, ex);
             }

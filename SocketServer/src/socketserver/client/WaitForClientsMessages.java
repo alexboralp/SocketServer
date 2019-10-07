@@ -11,9 +11,9 @@ import socketserver.commoninterfaces.IPrintable;
  *
  * @author alexander
  */
-public class Clients extends AbsClients {
+public class WaitForClientsMessages extends AbsWaitForClientsMessages {
 
-    public Clients(IPrintable printer) {
+    public WaitForClientsMessages(IPrintable printer) {
         super(printer);
     }
     

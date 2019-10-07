@@ -3,16 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package socketserver.commoninterfaces;
+package socketserver.client;
 
-import java.io.Serializable;
+import socketserver.commoninterfaces.ICleanable;
 
 /**
  *
  * @author alexander
- * @param <T>
  */
-public interface IMessageable<T extends Serializable> {
-    public T getMessage();
-    public void setMessage(T message);
+public interface IWaitForClientsMessages extends ICleanable {
+    public void stopAll();
 }

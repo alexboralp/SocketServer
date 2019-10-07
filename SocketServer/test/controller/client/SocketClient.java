@@ -3,18 +3,18 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package controller;
+package controller.client;
 
-import vista.Server;
+import vista.client.Client;
 
 /**
  *
  * @author alexander
  */
-public class SocketServer {
+public class SocketClient {
     
-    private static Server server;
-    private static ServerController serverController;
+    private static ClientController clientController;
+    private static Client client;
     
     /**
      * @param args the command line arguments
@@ -33,25 +33,31 @@ public class SocketServer {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Server.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Client.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Server.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Client.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Server.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Client.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Server.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Client.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
 
-        int port = 4800;
+        String serverName = "localhost";
+        int port = 4444;
+        
         
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                server = new Server();
-                server.setVisible(true);
-                serverController = new ServerController(server, port);
+                client = new Client();
+                client.setVisible(true);
+                clientController = new ClientController(client, serverName, port);
+                client.setController(clientController);
             }
         });
     }

@@ -5,16 +5,13 @@
  */
 package socketserver.client;
 
-import socketserver.commoninterfaces.IPrintable;
+import socketserver.commoninterfaces.ICleanable;
+import socketserver.message.IMessage;
 
 /**
  *
  * @author alexander
  */
-public class Clients extends AbsClients {
-
-    public Clients(IPrintable printer) {
-        super(printer);
-    }
-    
+public interface IClients extends ICleanable {
+    public void sendMessageToAllClients(IMessage message);
 }

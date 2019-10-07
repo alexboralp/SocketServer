@@ -5,14 +5,10 @@
  */
 package socketserver.commoninterfaces;
 
-import java.io.Serializable;
-
 /**
  *
  * @author alexander
- * @param <T>
  */
-public interface IMessageable<T extends Serializable> {
-    public T getMessage();
-    public void setMessage(T message);
+public interface ICleanable {
+    public void clean();
 }

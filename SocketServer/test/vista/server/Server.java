@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package vista;
+package vista.server;
 
 /**
  *
@@ -16,6 +16,8 @@ public class Server extends javax.swing.JFrame {
      */
     public Server() {
         initComponents();
+        
+        this.setSize(800, 600);
     }
 
     /**

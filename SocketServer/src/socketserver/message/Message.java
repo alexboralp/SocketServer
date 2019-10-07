@@ -18,8 +18,12 @@ public class Message<T extends Serializable> extends AbsMessage<T> {
         super();
     }
 
-    public Message(String id, int type, int secondaryType, T mensaje) {
-        super(id, type, secondaryType, mensaje);
+    public Message(int type, T mensaje) {
+        super("", type, mensaje);
+    }
+
+    public Message(String id, int type, T mensaje) {
+        super(id, type, mensaje);
     }
     
 }
