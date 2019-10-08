@@ -35,6 +35,11 @@ public abstract class AbsClients implements IList<IClient>, IClients{
     }
     
     @Override
+    public IClient get(String id) {
+        return clients.get(id);
+    }
+    
+    @Override
     public void clean() {
         for (IClient client: clients.values()) {
             if (!client.isOk()) {

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package socketserver;
+package socketserver.administrator;
 
 import socketserver.client.Clients;
 import socketserver.client.IClient;
@@ -46,10 +46,6 @@ public class ServerAdministrator extends AbsObservable implements IObserver, Run
             this.printer.printError("ServerAdministrator: " + "Unnable to start server on port " + port + ".");
         }
     }
-    
-    public static ServerAdministrator createServerAdministrator(int port, IPrintable printer) {
-        return new ServerAdministrator(port, printer);
-    }
         
     public void stopServer() {
         waitClients.stopListening();
@@ -58,6 +54,7 @@ public class ServerAdministrator extends AbsObservable implements IObserver, Run
         
     public void startServerCleaning() {
         thread = new Thread(this);
+        thread.start();
     }
     
     public void stopServerCleaning() {
@@ -81,6 +78,7 @@ public class ServerAdministrator extends AbsObservable implements IObserver, Run
         waitForClientMessages.addObserver(this);
         waitForClientMessages.startListening();
         waitForClientsMessages.add(waitForClientMessages);
+        updateAll(client);
     }
     
     private void newMessageReceived(IMessage message) {

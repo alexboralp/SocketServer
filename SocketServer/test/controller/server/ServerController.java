@@ -5,7 +5,8 @@
  */
 package controller.server;
 
-import socketserver.ServerAdministrator;
+import socketserver.ServerAdministratorFactory;
+import socketserver.administrator.ServerAdministrator;
 import socketserver.commoninterfaces.IPrintable;
 import vista.server.Server;
 
@@ -23,7 +24,7 @@ public class ServerController implements IPrintable {
         
         print("Starting server on port " + port + ".");
         
-        serverAdministrator = new ServerAdministrator(port, this);
+        serverAdministrator = ServerAdministratorFactory.createServerAdministrator(port, this);
         
     }
     

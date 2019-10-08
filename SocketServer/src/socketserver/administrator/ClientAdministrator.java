@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package socketclient;
+package socketserver.administrator;
 
 import socketclient.socket.WaitMessagesFromServer;
 import socketserver.patterns.observer.IObserver;
@@ -28,10 +28,6 @@ public class ClientAdministrator extends AbsObservable implements IObserver{
         this.printer = printer;
 
         this.printer.print("Waiting for messages from server.");
-    }
-    
-    public static ClientAdministrator createClientAdministrator(String serverName, int port, IPrintable printer) {
-        return new ClientAdministrator(serverName, port, printer);
     }
     
     public void sendMessage(IMessage message) {

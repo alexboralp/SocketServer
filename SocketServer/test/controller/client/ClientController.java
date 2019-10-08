@@ -5,7 +5,8 @@
  */
 package controller.client;
 
-import socketclient.ClientAdministrator;
+import socketclient.ClientAdministratorFactory;
+import socketserver.administrator.ClientAdministrator;
 import socketserver.commoninterfaces.IPrintable;
 import socketserver.message.IMessage;
 import vista.client.Client;
@@ -25,7 +26,7 @@ public class ClientController implements IPrintable {
         
         print("Connecting server " + server + " on port " + port + ".");
         
-        clientAdministrator = ClientAdministrator.createClientAdministrator(server, port, this);
+        clientAdministrator = ClientAdministratorFactory.createClientAdministrator(server, port, this);
         
     }
 

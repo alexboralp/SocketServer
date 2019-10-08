@@ -13,7 +13,7 @@ import java.util.LinkedList;
  */
 public abstract class AbsObservable implements IObservable{
     // Lista de observers
-    private final LinkedList<IObserver> observers;
+    protected LinkedList<IObserver> observers;
 
     /**
      * Constructor vacío que inicia la lista de observers.

@@ -13,4 +13,5 @@ package socketserver.commoninterfaces;
 public interface IList<T> {
     public void add(T element);
     public void remove(T element);
+    public T get(String id);
 }

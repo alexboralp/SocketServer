@@ -34,6 +34,11 @@ public abstract class AbsWaitForClientsMessages implements IList<WaitForClientMe
     }
     
     @Override
+    public WaitForClientMessages get(String id) {
+        return waitForClientsMessages.get(id);
+    }
+    
+    @Override
     public void clean() {
         for (WaitForClientMessages waitForClientMessages: waitForClientsMessages.values()) {
             if (!waitForClientMessages.getClient().isOk()) {
