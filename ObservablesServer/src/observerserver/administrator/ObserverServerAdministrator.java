@@ -6,6 +6,8 @@
 package observerserver.administrator;
 
 import java.io.IOException;
+import java.io.Serializable;
+import observerserver.ObserverMessageFactory;
 import observerserver.observables.IObservableObject;
 import observerserver.observables.Observables;
 import observerserver.observers.IObserverObject;
@@ -38,9 +40,63 @@ public class ObserverServerAdministrator implements IObserver {
         observers = new Observers();
     }
     
+    public void sendObservableToClient(String idClient, String idObservable) {
+        sendMessageToClient(idClient, ObserverMessageFactory.createMessage(ObserverMessageFactory.SENDING_OBSERVABLE, (Serializable)observables.get(idObservable).getObject()));
+    }
+    
+    public void sendObservableToClient(String idClient, Serializable observable) {
+        sendMessageToClient(idClient, ObserverMessageFactory.createMessage(ObserverMessageFactory.SENDING_OBSERVABLE, observable));
+    }
+    
+    private void sendObservableToClient(IClient client, Serializable observable) {
+        sendMessageToClient(client, ObserverMessageFactory.createMessage(ObserverMessageFactory.SENDING_OBSERVABLE, observable));
+    }
+    
+    public void sendObservablesToClient(String idClient) {
+        IClient client = observers.get(idClient).getObject();
+        sendMessageToClient(client, ObserverMessageFactory.createMessage(ObserverMessageFactory.OBSERVABLES_LIST, null));
+        for (IObservableObject observable : observables.getObservables()) {
+            sendObservableToClient(client, (Serializable)observable.getObject());
+        }
+        sendMessageToClient(client, ObserverMessageFactory.createMessage(ObserverMessageFactory.DONE, null));
+    }
+    
+    public void sendObserverToClient(String idClient, String idSendClient) {
+        sendMessageToClient(idClient, ObserverMessageFactory.createMessage(ObserverMessageFactory.SENDING_OBSERVER, (Serializable)observers.get(idSendClient).getObject()));
+    }
+    
+    public void sendObserverToClient(String idClient, Serializable observer) {
+        sendMessageToClient(idClient, ObserverMessageFactory.createMessage(ObserverMessageFactory.SENDING_OBSERVER, observer));
+    }
+    
+    private void sendObserverToClient(IClient client, Serializable observer) {
+        sendMessageToClient(client, ObserverMessageFactory.createMessage(ObserverMessageFactory.SENDING_OBSERVER, observer));
+    }
+    
+    public void sendObserversToClient(String idClient) {
+        IClient client = observers.get(idClient).getObject();
+        sendMessageToClient(client, ObserverMessageFactory.createMessage(ObserverMessageFactory.OBSERVERS_LIST, null));
+        for (IObserverObject observer : observers.getObservers()) {
+            sendObservableToClient(client, (Serializable)observer.getObject());
+        }
+        sendMessageToClient(client, ObserverMessageFactory.createMessage(ObserverMessageFactory.DONE, null));
+    }
+    
+    public void sendTextMessageToClient(String idClient, String message) {
+        sendMessageToClient(idClient, ObserverMessageFactory.createMessage(ObserverMessageFactory.TEXT_MESSAGE, message));
+    }
+    
     public void sendMessageToClient(String idClient, IMessage message) {
         try {
             observers.get(idClient).getObject().sendMessage(message);
+        } catch (IOException ex) {
+            printer.printError("ObserverServerAdministrator: " + ex.getMessage());
+        }
+    }
+    
+    private void sendMessageToClient(IClient client, IMessage message) {
+        try {
+            client.sendMessage(message);
         } catch (IOException ex) {
             printer.printError("ObserverServerAdministrator: " + ex.getMessage());
         }

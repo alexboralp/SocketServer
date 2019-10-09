@@ -5,6 +5,7 @@
  */
 package observerserver.observers;
 
+import java.util.Collection;
 import java.util.HashMap;
 import observerserver.commoninterfaces.IListId;
 import socketserver.client.IClient;
@@ -16,6 +17,10 @@ import socketserver.client.IClient;
 public class Observers implements IListId<IObserverObject<IClient>> {
 
     private HashMap<String, IObserverObject<IClient>> observers;
+    
+    public Collection<IObserverObject<IClient>> getObservers() {
+        return observers.values();
+    }
     
     @Override
     public void add(IObserverObject<IClient> element) {

@@ -5,6 +5,8 @@
  */
 package observerserver.administrator;
 
+import java.io.Serializable;
+import observerclient.ObserverMessageFactory;
 import socketclient.ClientAdministratorFactory;
 import socketserver.administrator.ClientAdministrator;
 import socketserver.commoninterfaces.IPrintable;
@@ -25,8 +27,32 @@ public class ObserverClientAdministrator implements IObserver {
         this.printer = printer;
     }
     
-    public void addObservable(String id) {
-        administrator.sendMessage(MessageFactory.);
+    public void addObservable(Serializable observable) {
+        sendMessage(ObserverMessageFactory.createMessage(ObserverMessageFactory.ADD_OBSERVABLE, observable));
+    }
+    
+    public void removeObservable(String idObservable) {
+        sendMessage(ObserverMessageFactory.createMessage(ObserverMessageFactory.ADD_OBSERVABLE, idObservable));
+    }
+    
+    public void followObservable(String idObservable) {
+        sendMessage(ObserverMessageFactory.createMessage(ObserverMessageFactory.FOLLOW_OBSERVABLE, idObservable));
+    }
+    
+    public void unfollowObservable(String idObservable) {
+        sendMessage(ObserverMessageFactory.createMessage(ObserverMessageFactory.UNFOLLOW_OBSERVABLE, idObservable));
+    }
+    
+    public void removeMeFromObservers() {
+        sendMessage(ObserverMessageFactory.createMessage(ObserverMessageFactory.REMOVE_ME_FROM_OBSERVERS, null));
+    }
+    
+    public void closeConnection() {
+        sendMessage(ObserverMessageFactory.createMessage(ObserverMessageFactory.CLOSE_CONNECTION, null));
+    }
+    
+    public void sendInfoServer(Serializable info) {
+        sendMessage(ObserverMessageFactory.createMessage(ObserverMessageFactory.INFO, info));
     }
     
     public void sendMessage(IMessage message) {

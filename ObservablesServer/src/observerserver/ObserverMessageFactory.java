@@ -15,5 +15,8 @@ public class ObserverMessageFactory extends MessageFactory {
     
     public static final int OBSERVABLES_LIST = 3;
     public static final int OBSERVERS_LIST = 4;
-    public static final int DONE = 5;
+    public static final int TEXT_MESSAGE = 5;
+    public static final int SENDING_OBSERVABLE = 6;
+    public static final int SENDING_OBSERVER = 7;
+    public static final int DONE = 8;
 }
