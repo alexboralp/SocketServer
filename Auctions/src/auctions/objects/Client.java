@@ -12,15 +12,27 @@ import socketserver.commoninterfaces.IIdable;
  *
  * @author alexander
  */
-public class Bidder implements IIdable, Serializable {
+public class Client implements IIdable, Serializable {
 
     private String id;
+    private String name;
     
-    public Bidder() {
+    public Client() {
+        id = "";
+        name = "";
     }
 
-    public Bidder(String id) {
+    public Client(String id, String name) {
         this.id = id;
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override

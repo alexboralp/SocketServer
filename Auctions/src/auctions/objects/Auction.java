@@ -7,6 +7,7 @@ package auctions.objects;
 
 import java.io.Serializable;
 import java.util.Date;
+import javax.swing.Icon;
 import socketserver.commoninterfaces.IIdable;
 
 /**
@@ -15,31 +16,22 @@ import socketserver.commoninterfaces.IIdable;
  */
 public class Auction implements IIdable, Serializable {
     
-    private String id;
-
-    @Override
-    public String getId() {
-        return id;
-    }
-
-    @Override
-    public void setId(String id) {
-        this.id = id;
-    }
-    
     public enum STATE {
         IN_PROGRESS, CANCELED, FINISHED
     }
     
+    private String id;
+    
     private Date startDate;
     private int duration;
     private Product product;
+    private Icon image;
     
-    private Auctioneer auctioneer;
+    private Client auctioneer;
     private double actualPrice;
-    private Bidder bidder;
+    private Client bidder;
     private double nextPrice;
-    private Bidder newBidder;
+    private Client newBidder;
     
     private STATE state;
     
@@ -56,18 +48,29 @@ public class Auction implements IIdable, Serializable {
         state = STATE.IN_PROGRESS;
     }
 
-    public Auction(String id, Date startDate, int duration, Product product, double precioInicial) {
+    public Auction(String id, Date startDate, int duration, Product product, double precioInicial, Icon image) {
         this.id = id;
         this.startDate = startDate;
         this.duration = duration;
         this.product = product;
         this.actualPrice = 0;
         this.nextPrice = precioInicial;
+        this.image = image;
         
         this.auctioneer = null;
         this.bidder = null;
         this.newBidder = null;
         state = STATE.IN_PROGRESS;
+    }
+
+    @Override
+    public String getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(String id) {
+        this.id = id;
     }
     
     public void acceptNewOffer() {
@@ -102,11 +105,11 @@ public class Auction implements IIdable, Serializable {
         this.product = product;
     }
 
-    public Auctioneer getAuctioneer() {
+    public Client getAuctioneer() {
         return auctioneer;
     }
 
-    public void setAuctioneer(Auctioneer auctioneer) {
+    public void setAuctioneer(Client auctioneer) {
         this.auctioneer = auctioneer;
     }
 
@@ -118,11 +121,11 @@ public class Auction implements IIdable, Serializable {
         this.actualPrice = actualPrice;
     }
 
-    public Bidder getBidder() {
+    public Client getBidder() {
         return bidder;
     }
 
-    public void setBidder(Bidder bidder) {
+    public void setBidder(Client bidder) {
         this.bidder = bidder;
     }
 
@@ -134,11 +137,11 @@ public class Auction implements IIdable, Serializable {
         this.nextPrice = nextPrice;
     }
 
-    public Bidder getNewBidder() {
+    public Client getNewBidder() {
         return newBidder;
     }
 
-    public void setNewBidder(Bidder newBidder) {
+    public void setNewBidder(Client newBidder) {
         this.newBidder = newBidder;
     }
 
@@ -148,6 +151,14 @@ public class Auction implements IIdable, Serializable {
 
     public void setState(STATE state) {
         this.state = state;
+    }
+
+    public Icon getImage() {
+        return image;
+    }
+
+    public void setImage(Icon image) {
+        this.image= image;
     }
 
     @Override

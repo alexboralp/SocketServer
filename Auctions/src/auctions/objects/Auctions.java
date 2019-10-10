@@ -16,6 +16,10 @@ import socketserver.commoninterfaces.IList;
 public class Auctions implements IList<Auction>{
     HashMap<String, Auction> auctions;
 
+    public Auctions() {
+        auctions = new HashMap();
+    }
+
     public Auctions(HashMap<String, Auction> auctions) {
         this.auctions = auctions;
     }

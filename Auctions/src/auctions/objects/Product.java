@@ -6,6 +6,7 @@
 package auctions.objects;
 
 import java.io.Serializable;
+import javax.swing.Icon;
 import socketserver.commoninterfaces.IIdable;
 
 /**
@@ -17,7 +18,7 @@ public class Product implements IIdable, Serializable {
     private String id;
     
     private String description;
-    private String imagePath;
+    private Icon image;
     
     private double inititalPrice;
     private double finalPrice;
@@ -25,15 +26,15 @@ public class Product implements IIdable, Serializable {
     public Product() {
         this.id = "";
         this.description = "";
-        this.imagePath = "";
+        this.image = null;
         this.inititalPrice = 0;
         this.finalPrice = 0;
     }
 
-    public Product(String id, String description, String imagePath, double inititalPrice) {
+    public Product(String id, String description, Icon image, double inititalPrice) {
         this.id = id;
         this.description = description;
-        this.imagePath = imagePath;
+        this.image = image;
         this.inititalPrice = inititalPrice;
         this.finalPrice = inititalPrice;
     }
@@ -56,12 +57,12 @@ public class Product implements IIdable, Serializable {
         this.description = description;
     }
 
-    public String getImagePath() {
-        return imagePath;
+    public Icon getImage() {
+        return image;
     }
 
-    public void setImagePath(String imagePath) {
-        this.imagePath = imagePath;
+    public void setImage(Icon image) {
+        this.image = image;
     }
 
     public double getInititalPrice() {
