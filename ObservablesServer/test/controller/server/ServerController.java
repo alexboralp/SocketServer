@@ -8,7 +8,7 @@ package controller.server;
 import observerserver.administrator.ObserverServerAdministrator;
 import observerserver.ObserverServerAdministratorFactory;
 import socketserver.commoninterfaces.IPrintable;
-import vista.server.Server;
+import vista.server.ServerGUI;
 
 /**
  *
@@ -16,10 +16,10 @@ import vista.server.Server;
  */
 public class ServerController implements IPrintable {
 
-    private final Server server;
+    private final ServerGUI server;
     private final ObserverServerAdministrator observerServerAdministrator;
             
-    public ServerController(Server server, int port) {
+    public ServerController(ServerGUI server, int port) {
         this.server = server;
         
         print("Starting server on port " + port + ".");

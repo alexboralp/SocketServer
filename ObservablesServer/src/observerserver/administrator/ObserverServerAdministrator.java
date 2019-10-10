@@ -18,6 +18,7 @@ import socketserver.administrator.ServerAdministrator;
 import socketserver.client.IClient;
 import socketserver.commoninterfaces.IPrintable;
 import socketserver.message.IMessage;
+import socketserver.patterns.observer.AbsObservable;
 import socketserver.patterns.observer.IObservable;
 import socketserver.patterns.observer.IObserver;
 
@@ -25,23 +26,23 @@ import socketserver.patterns.observer.IObserver;
  *
  * @author alexander
  */
-public class ObserverServerAdministrator implements IObserver {
+public class ObserverServerAdministrator extends AbsObservable implements IObserver {
     private final ServerAdministrator administrator;
     private final IPrintable printer;
-    Observables observables;
-    Observers observers;
+    Observables observablesServer;
+    Observers observersServer;
 
     public ObserverServerAdministrator(int port, IPrintable printer) {
         administrator = ServerAdministratorFactory.createServerAdministrator(port, printer);
         administrator.startServerCleaning();
         administrator.addObserver(this);
         this.printer = printer;
-        observables = new Observables();
-        observers = new Observers();
+        observablesServer = new Observables();
+        observersServer = new Observers();
     }
     
     public void sendObservableToClient(String idClient, String idObservable) {
-        sendMessageToClient(idClient, ObserverMessageFactory.createMessage(ObserverMessageFactory.SENDING_OBSERVABLE, (Serializable)observables.get(idObservable).getObject()));
+        sendMessageToClient(idClient, ObserverMessageFactory.createMessage(ObserverMessageFactory.SENDING_OBSERVABLE, (Serializable)observablesServer.get(idObservable).getObject()));
     }
     
     public void sendObservableToClient(String idClient, Serializable observable) {
@@ -53,16 +54,16 @@ public class ObserverServerAdministrator implements IObserver {
     }
     
     public void sendObservablesToClient(String idClient) {
-        IClient client = observers.get(idClient).getObject();
+        IClient client = observersServer.get(idClient).getObject();
         sendMessageToClient(client, ObserverMessageFactory.createMessage(ObserverMessageFactory.OBSERVABLES_LIST, null));
-        for (IObservableObject observable : observables.getObservables()) {
+        for (IObservableObject observable : observablesServer.getObservables()) {
             sendObservableToClient(client, (Serializable)observable.getObject());
         }
         sendMessageToClient(client, ObserverMessageFactory.createMessage(ObserverMessageFactory.DONE, null));
     }
     
     public void sendObserverToClient(String idClient, String idSendClient) {
-        sendMessageToClient(idClient, ObserverMessageFactory.createMessage(ObserverMessageFactory.SENDING_OBSERVER, (Serializable)observers.get(idSendClient).getObject()));
+        sendMessageToClient(idClient, ObserverMessageFactory.createMessage(ObserverMessageFactory.SENDING_OBSERVER, (Serializable)observersServer.get(idSendClient).getObject()));
     }
     
     public void sendObserverToClient(String idClient, Serializable observer) {
@@ -74,9 +75,9 @@ public class ObserverServerAdministrator implements IObserver {
     }
     
     public void sendObserversToClient(String idClient) {
-        IClient client = observers.get(idClient).getObject();
+        IClient client = observersServer.get(idClient).getObject();
         sendMessageToClient(client, ObserverMessageFactory.createMessage(ObserverMessageFactory.OBSERVERS_LIST, null));
-        for (IObserverObject observer : observers.getObservers()) {
+        for (IObserverObject observer : observersServer.getObservers()) {
             sendObservableToClient(client, (Serializable)observer.getObject());
         }
         sendMessageToClient(client, ObserverMessageFactory.createMessage(ObserverMessageFactory.DONE, null));
@@ -88,7 +89,7 @@ public class ObserverServerAdministrator implements IObserver {
     
     public void sendMessageToClient(String idClient, IMessage message) {
         try {
-            observers.get(idClient).getObject().sendMessage(message);
+            observersServer.get(idClient).getObject().sendMessage(message);
         } catch (IOException ex) {
             printer.printError("ObserverServerAdministrator: " + ex.getMessage());
         }
@@ -102,59 +103,59 @@ public class ObserverServerAdministrator implements IObserver {
         }
     }
     
-    public void addObservable(IObservableObject object) {
-        observables.add(object);
+    public void addObservableToServer(IObservableObject object) {
+        observablesServer.add(object);
     }
     
-    public void removeObservable(IObservableObject object) {
-        observables.remove(object);
+    public void removeObservableToServer(IObservableObject object) {
+        observablesServer.remove(object);
     }
     
-    public void removeObservable(String id) {
-        observables.remove(id);
+    public void removeObservableToServer(String id) {
+        observablesServer.remove(id);
     }
     
-    public void getObservable(String id) {
-        observables.get(id);
+    public void getObservableToServer(String id) {
+        observablesServer.get(id);
     }
     
-    public void addObserver(IObserverObject object) {
-        observers.add(object);
+    public void addObserverToServer(IObserverObject object) {
+        observersServer.add(object);
     }
     
-    public void removeObserver(IObserverObject object) {
-        observers.remove(object.getId());
+    public void removeObserverToServer(IObserverObject object) {
+        observersServer.remove(object.getId());
         removeObserverFromObservables(object.getId());
     }
     
-    public void removeObserver(String id) {
-        observers.remove(id);
+    public void removeObserverToServer(String id) {
+        observersServer.remove(id);
         removeObserverFromObservables(id);
     }
     
-    public void getObserver(String id) {
-        observers.get(id);
+    public void getObserverToServer(String id) {
+        observersServer.get(id);
     }
     
     public void setObserverToObservable(IObserverObject observer, IObservableObject observable) {
-        if (!observers.containsKey(observer.getId())) {
-            observers.add(observer);
+        if (!observersServer.containsKey(observer.getId())) {
+            observersServer.add(observer);
         }
-        if (!observables.containsKey(observable.getId())) {
-            observables.add(observable);
+        if (!observablesServer.containsKey(observable.getId())) {
+            observablesServer.add(observable);
         }
         
-        observables.get(observable.getId()).addObserver(observers.get(observer.getId()));
+        observablesServer.get(observable.getId()).addObserver(observersServer.get(observer.getId()));
     }
     
     public void removeObserverFromObservable(IObserverObject observer, IObservableObject observable) {
-        if (observers.containsKey(observer.getId()) && observables.containsKey(observable.getId())) {
-            observables.get(observable.getId()).removeObserver(observers.get(observer.getId()));
+        if (observersServer.containsKey(observer.getId()) && observablesServer.containsKey(observable.getId())) {
+            observablesServer.get(observable.getId()).removeObserver(observersServer.get(observer.getId()));
         }
     }
     
     private void removeObserverFromObservables(String id) {
-        for (IObservable observable : observables.getObservables()) {
+        for (IObservable observable : observablesServer.getObservables()) {
             observable.removeObserver(this);
         }
     }
@@ -162,7 +163,7 @@ public class ObserverServerAdministrator implements IObserver {
     @Override
     public void update(Object message) {
         if (message instanceof IClient) {
-            observers.add(ObserverObjectFactory.create((IClient)message));
+            observersServer.add(ObserverObjectFactory.create((IClient)message));
         } else if (message instanceof IMessage) {
             printer.print(message.toString());
         }

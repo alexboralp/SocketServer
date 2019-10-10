@@ -19,4 +19,5 @@ public class ObserverMessageFactory extends MessageFactory {
     public static final int UNFOLLOW_OBSERVABLE = 5;
     public static final int REMOVE_ME_FROM_OBSERVERS = 6;
     public static final int MESSAGE_RECEIVED = 7;
+    public static final int ADD_OBSERVER = 8;
 }

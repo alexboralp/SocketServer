@@ -5,7 +5,7 @@
  */
 package controller.client;
 
-import vista.client.Client;
+import vista.client.ClientGUI;
 
 /**
  *
@@ -14,7 +14,7 @@ import vista.client.Client;
 public class SocketClient {
     
     private static ClientController clientController;
-    private static Client client;
+    private static ClientGUI client;
     
     /**
      * @param args the command line arguments
@@ -33,14 +33,18 @@ public class SocketClient {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Client.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ClientGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Client.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ClientGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Client.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ClientGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Client.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ClientGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
         //</editor-fold>
@@ -54,7 +58,7 @@ public class SocketClient {
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                client = new Client();
+                client = new ClientGUI();
                 client.setVisible(true);
                 clientController = new ClientController(client, serverName, port);
                 client.setController(clientController);

@@ -9,12 +9,12 @@ package vista.server;
  *
  * @author aborbon
  */
-public class Server extends javax.swing.JFrame {
+public class ServerGUI extends javax.swing.JFrame {
 
     /**
      * Creates new form Server
      */
-    public Server() {
+    public ServerGUI() {
         initComponents();
         
         this.setSize(800, 600);

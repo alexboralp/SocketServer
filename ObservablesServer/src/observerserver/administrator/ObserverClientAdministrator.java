@@ -27,6 +27,10 @@ public class ObserverClientAdministrator implements IObserver {
         this.printer = printer;
     }
     
+    public void addObserver(Serializable observer) {
+        sendMessage(ObserverMessageFactory.createMessage(ObserverMessageFactory.ADD_OBSERVER, observer));
+    }
+    
     public void addObservable(Serializable observable) {
         sendMessage(ObserverMessageFactory.createMessage(ObserverMessageFactory.ADD_OBSERVABLE, observable));
     }
@@ -57,6 +61,10 @@ public class ObserverClientAdministrator implements IObserver {
     
     public void sendMessage(IMessage message) {
         administrator.sendMessage(message);
+    }
+    
+    public boolean isOk() {
+        return administrator.isOk();
     }
 
     @Override

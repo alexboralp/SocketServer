@@ -5,7 +5,7 @@
  */
 package controller.server;
 
-import vista.server.Server;
+import vista.server.ServerGUI;
 
 /**
  *
@@ -13,7 +13,7 @@ import vista.server.Server;
  */
 public class SocketServer {
     
-    private static Server server;
+    private static ServerGUI server;
     private static ServerController serverController;
     
     /**
@@ -33,14 +33,18 @@ public class SocketServer {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Server.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ServerGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Server.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ServerGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Server.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ServerGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Server.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ServerGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
         //</editor-fold>
@@ -52,7 +56,7 @@ public class SocketServer {
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                server = new Server();
+                server = new ServerGUI();
                 server.setVisible(true);
                 serverController = new ServerController(server, port);
             }
