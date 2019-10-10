@@ -9,7 +9,7 @@ import socketclient.ClientAdministratorFactory;
 import socketserver.administrator.ClientAdministrator;
 import socketserver.commoninterfaces.IPrintable;
 import socketserver.message.IMessage;
-import vista.client.Client;
+import vista.client.ClientGUI;
 
 /**
  *
@@ -17,10 +17,10 @@ import vista.client.Client;
  */
 public class ClientController implements IPrintable {
 
-    Client client;
+    ClientGUI client;
     private ClientAdministrator clientAdministrator;
             
-    public ClientController(Client client, String server, int port) {
+    public ClientController(ClientGUI client, String server, int port) {
         
         this.client = client;
         
@@ -30,11 +30,11 @@ public class ClientController implements IPrintable {
         
     }
 
-    public Client getClient() {
+    public ClientGUI getClient() {
         return client;
     }
 
-    public void setClient(Client client) {
+    public void setClient(ClientGUI client) {
         this.client = client;
     }
 

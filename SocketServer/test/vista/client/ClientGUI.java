@@ -12,14 +12,14 @@ import socketclient.MessageFactory;
  *
  * @author aborbon
  */
-public class Client extends javax.swing.JFrame {
+public class ClientGUI extends javax.swing.JFrame {
 
     ClientController controller;
     
     /**
      * Creates new form Server
      */
-    public Client() {
+    public ClientGUI() {
         initComponents();
         
         this.setSize(800, 600);

@@ -33,6 +33,10 @@ public class ClientAdministrator extends AbsObservable implements IObserver{
     public void sendMessage(IMessage message) {
         waitMessagesFromServer.sendMessage(message);
     }
+    
+    public boolean isOk() {
+        return waitMessagesFromServer.isOk();
+    }
 
     @Override
     public void update(Object message) {
