@@ -60,7 +60,7 @@ public class AuctionsClient {
 
         // TODO code application logic here
     
-        String serverName = "loalhost";
+        String serverName = "localhost";
         int port = 4444;
         
         /* Create and display the form */
