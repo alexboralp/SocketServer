@@ -166,6 +166,7 @@ public class ObserverServerAdministrator extends AbsObservable implements IObser
             observersServer.add(ObserverObjectFactory.create((IClient)message));
         } else if (message instanceof IMessage) {
             printer.print(message.toString());
+            updateAll(message);
         }
     }
     

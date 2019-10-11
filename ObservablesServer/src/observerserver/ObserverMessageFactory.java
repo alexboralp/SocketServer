@@ -13,11 +13,11 @@ import socketserver.MessageFactory;
  */
 public class ObserverMessageFactory extends MessageFactory {
     
-    public static final int OBSERVABLES_LIST = 3;
-    public static final int OBSERVERS_LIST = 4;
-    public static final int TEXT_MESSAGE = 5;
-    public static final int SENDING_OBSERVABLE = 6;
-    public static final int SENDING_OBSERVER = 7;
-    public static final int TEXT_MESSAGE_TO_OBSERVER = 8;
-    public static final int DONE = 9;
+    public static final int OBSERVABLES_LIST = 100;
+    public static final int OBSERVERS_LIST = 101;
+    public static final int TEXT_MESSAGE = 102;
+    public static final int SENDING_OBSERVABLE = 103;
+    public static final int SENDING_OBSERVER = 104;
+    public static final int TEXT_MESSAGE_TO_OBSERVER = 105;
+    public static final int DONE = 106;
 }

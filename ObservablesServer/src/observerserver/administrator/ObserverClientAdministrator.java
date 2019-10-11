@@ -59,6 +59,14 @@ public class ObserverClientAdministrator implements IObserver {
         sendMessage(ObserverMessageFactory.createMessage(ObserverMessageFactory.INFO, info));
     }
     
+    public void sendAllObservers() {
+        sendMessage(ObserverMessageFactory.createMessage(ObserverMessageFactory.SEND_ALL_OBSERVERS, null));
+    }
+    
+    public void sendAllObservables() {
+        sendMessage(ObserverMessageFactory.createMessage(ObserverMessageFactory.SEND_ALL_OBSERVABLES, null));
+    }
+    
     public void sendMessage(IMessage message) {
         administrator.sendMessage(message);
     }
