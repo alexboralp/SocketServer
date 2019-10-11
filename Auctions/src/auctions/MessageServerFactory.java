@@ -19,4 +19,5 @@ public class MessageServerFactory extends ObserverServerMessageFactory {
     public static final int SENDING_AUCTION = SENDING_OBSERVABLE;
     public static final int SENDING_BIDDER = SENDING_OBSERVER;
     public static final int MESSAGE_TO_AUCTIONEER = TEXT_MESSAGE_TO_OBSERVER;
+    public static final int OFFER_ACCEPTED = 202;
 }

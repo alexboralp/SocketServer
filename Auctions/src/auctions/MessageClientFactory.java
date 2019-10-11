@@ -17,16 +17,16 @@ import observerclient.ObserverClientMessageFactory;
  */
 public class MessageClientFactory extends ObserverClientMessageFactory {
     
-    public static final int NEW_OFFER = 200;
-    public static final int ACCEPT_OFFER = 201;
+    public static final int NEW_OFFER = -200;
+    public static final int ACCEPT_OFFER = -201;
     public static final int ADD_AUCTION = ADD_OBSERVABLE;
     public static final int FOLLOW_AUCTION = FOLLOW_OBSERVABLE;
     public static final int UNFOLLOW_AUCTION = UNFOLLOW_OBSERVABLE;
     public static final int REMOVE_AUCTION = REMOVE_OBSERVABLE;
     public static final int ADD_BIDDER = ADD_OBSERVER;
-    public static final int MESSAGE_TO_BIDDER = 202;
-    public static final int AUCTION_FINISHED = 203;
-    public static final int CANCEL_AUCTION = 204;
+    public static final int MESSAGE_TO_BIDDER = -202;
+    public static final int AUCTION_FINISHED = -203;
+    public static final int CANCEL_AUCTION = -204;
     public static final int SEND_ALL_AUCTIONS = SEND_ALL_OBSERVABLES;
     public static final int SEND_ALL_BIDDERS = SEND_ALL_OBSERVERS;
     
