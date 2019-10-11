@@ -18,8 +18,8 @@ public class ClientMessageFactory {
     
     // Constantes principales del mensaje
     public static final int CLOSE_CONNECTION = 0;
-    public static final int INFO = 1;
-    public static final int MESSAGE_RECEIVED = 2;
+    public static final int INFO = -1;
+    public static final int MESSAGE_RECEIVED = -2;
     
     public static IMessage createMessage() {
         return new Message();
