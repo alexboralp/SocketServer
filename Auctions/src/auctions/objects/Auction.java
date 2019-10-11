@@ -29,9 +29,9 @@ public class Auction implements IIdable, Serializable {
     
     private Client auctioneer;
     private double actualPrice;
-    private Client bidder;
+    private String bidderId;
     private double nextPrice;
-    private Client newBidder;
+    private String newBidderId;
     
     private STATE state;
     
@@ -43,8 +43,8 @@ public class Auction implements IIdable, Serializable {
         this.actualPrice = 0;
         
         this.auctioneer = null;
-        this.bidder = null;
-        this.newBidder = null;
+        this.bidderId = "";
+        this.newBidderId = "";
         state = STATE.IN_PROGRESS;
     }
 
@@ -58,8 +58,8 @@ public class Auction implements IIdable, Serializable {
         this.image = image;
         
         this.auctioneer = null;
-        this.bidder = null;
-        this.newBidder = null;
+        this.bidderId = "";
+        this.newBidderId = "";
         state = STATE.IN_PROGRESS;
     }
 
@@ -74,10 +74,10 @@ public class Auction implements IIdable, Serializable {
     }
     
     public void acceptNewOffer() {
-        if (this.newBidder != null) {
+        if (!"".equals(this.newBidderId)) {
             setActualPrice(this.nextPrice);
-            setBidder(newBidder);
-            this.newBidder = null;
+            setBidderId(newBidderId);
+            this.newBidderId = "";
         }
     }
 
@@ -121,12 +121,12 @@ public class Auction implements IIdable, Serializable {
         this.actualPrice = actualPrice;
     }
 
-    public Client getBidder() {
-        return bidder;
+    public String getBidderId() {
+        return bidderId;
     }
 
-    public void setBidder(Client bidder) {
-        this.bidder = bidder;
+    public void setBidderId(String bidderId) {
+        this.bidderId = bidderId;
     }
 
     public double getNextPrice() {
@@ -137,12 +137,12 @@ public class Auction implements IIdable, Serializable {
         this.nextPrice = nextPrice;
     }
 
-    public Client getNewBidder() {
-        return newBidder;
+    public String getNewBidderId() {
+        return newBidderId;
     }
 
-    public void setNewBidder(Client newBidder) {
-        this.newBidder = newBidder;
+    public void setNewBidder(String newBidderId) {
+        this.newBidderId = newBidderId;
     }
 
     public STATE getState() {
@@ -163,7 +163,7 @@ public class Auction implements IIdable, Serializable {
 
     @Override
     public String toString() {
-        return "Auction{" + "id=" + id + ", startDate=" + startDate + ", duration=" + duration + ", product=" + product + ", auctioneer=" + auctioneer + ", actualPrice=" + actualPrice + ", bidder=" + bidder + ", nextPrice=" + nextPrice + ", newBidder=" + newBidder + ", state=" + state + '}';
+        return "Auction{" + "id=" + id + ", startDate=" + startDate + ", duration=" + duration + ", product=" + product + ", auctioneer=" + auctioneer + ", actualPrice=" + actualPrice + ", bidderId=" + bidderId + ", nextPrice=" + nextPrice + ", newBidderId=" + newBidderId + ", state=" + state + '}';
     }
     
 }
