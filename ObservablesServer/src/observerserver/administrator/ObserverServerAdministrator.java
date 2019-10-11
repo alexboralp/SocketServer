@@ -10,6 +10,8 @@ import java.io.Serializable;
 import observerclient.ObserverClientMessageFactory;
 import observerserver.ObserverServerMessageFactory;
 import observerserver.observables.IObservableObject;
+import observerserver.observables.ObservableObject;
+import observerserver.observables.ObservableObjectFactory;
 import observerserver.observables.Observables;
 import observerserver.observers.IObserverObject;
 import observerserver.observers.ObserverObjectFactory;
@@ -195,7 +197,8 @@ public class ObserverServerAdministrator extends AbsObservable implements IObser
         printer.print("ObserverServerAdministrator: Message received: " + message.toString());
         switch (message.getType()) {
             case ObserverClientMessageFactory.ADD_OBSERVABLE:
-                addObservableToServer((IObservableObject)message.getMessage());
+                IObservableObject newObservable = ObservableObjectFactory.create((ObservableObject)message.getMessage());
+                addObservableToServer(newObservable);
                 break;
             case ObserverClientMessageFactory.REMOVE_OBSERVABLE:
                 removeObservableFromServer((String)message.getMessage());
@@ -210,7 +213,8 @@ public class ObserverServerAdministrator extends AbsObservable implements IObser
                 removeObserverFromServer(message.getId());
                 break;
             case ObserverClientMessageFactory.ADD_OBSERVER:
-                addObserverToServer((IObserverObject)message.getMessage());
+                IObserverObject newObserver = ObserverObjectFactory.create((IClient)message.getMessage());
+                addObserverToServer(newObserver);
                 break;
             case ObserverClientMessageFactory.SEND_ALL_OBSERVERS:
                 sendObserversToClient(message.getId());
