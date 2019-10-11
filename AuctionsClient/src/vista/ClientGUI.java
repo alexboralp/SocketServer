@@ -158,8 +158,8 @@ public class ClientGUI extends javax.swing.JFrame {
         txtNewAuctionDescription = new javax.swing.JTextArea();
         jLabel22 = new javax.swing.JLabel();
         txtnewAuctionInitialPrice = new javax.swing.JTextField();
-        lblnewAuctionProductImage = new javax.swing.JLabel();
-        lblNewAuctionImage = new javax.swing.JLabel();
+        lblnewAuctionAuctionImage = new javax.swing.JLabel();
+        lblNewProductImage = new javax.swing.JLabel();
         lblMensajeError = new javax.swing.JLabel();
         jMenuBar2 = new javax.swing.JMenuBar();
         mnuArchivo = new javax.swing.JMenu();
@@ -257,9 +257,17 @@ public class ClientGUI extends javax.swing.JFrame {
             }
         });
 
+        lblAuctionImage.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblAuctionImage.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/head64.png"))); // NOI18N
+        lblAuctionImage.setText("Auction Image");
         lblAuctionImage.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        lblAuctionImage.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
+        lblProductImage.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblProductImage.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/head64.png"))); // NOI18N
+        lblProductImage.setText("Product Image");
         lblProductImage.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        lblProductImage.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -434,9 +442,17 @@ public class ClientGUI extends javax.swing.JFrame {
 
         txtYourAuctionsIdProduct.setEditable(false);
 
+        lblYourAuctionsAuctionImage.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblYourAuctionsAuctionImage.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/head64.png"))); // NOI18N
+        lblYourAuctionsAuctionImage.setText("Auction Image");
         lblYourAuctionsAuctionImage.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        lblYourAuctionsAuctionImage.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
+        lblYourAuctionsProductImage.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblYourAuctionsProductImage.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/head64.png"))); // NOI18N
+        lblYourAuctionsProductImage.setText("Product Image");
         lblYourAuctionsProductImage.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        lblYourAuctionsProductImage.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
@@ -618,15 +634,17 @@ public class ClientGUI extends javax.swing.JFrame {
 
         jLabel22.setText("Precio inicial: ");
 
-        lblnewAuctionProductImage.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblnewAuctionProductImage.setText("Product image");
-        lblnewAuctionProductImage.setVerticalAlignment(javax.swing.SwingConstants.TOP);
-        lblnewAuctionProductImage.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        lblnewAuctionAuctionImage.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblnewAuctionAuctionImage.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/head64.png"))); // NOI18N
+        lblnewAuctionAuctionImage.setText("Auction Image");
+        lblnewAuctionAuctionImage.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        lblnewAuctionAuctionImage.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
-        lblNewAuctionImage.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblNewAuctionImage.setText("AuctionImage");
-        lblNewAuctionImage.setVerticalAlignment(javax.swing.SwingConstants.TOP);
-        lblNewAuctionImage.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        lblNewProductImage.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblNewProductImage.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/head64.png"))); // NOI18N
+        lblNewProductImage.setText("Product Image");
+        lblNewProductImage.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        lblNewProductImage.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -677,8 +695,8 @@ public class ClientGUI extends javax.swing.JFrame {
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 313, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblnewAuctionProductImage, javax.swing.GroupLayout.DEFAULT_SIZE, 468, Short.MAX_VALUE)
-                    .addComponent(lblNewAuctionImage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(lblnewAuctionAuctionImage, javax.swing.GroupLayout.DEFAULT_SIZE, 468, Short.MAX_VALUE)
+                    .addComponent(lblNewProductImage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -717,14 +735,14 @@ public class ClientGUI extends javax.swing.JFrame {
                             .addComponent(txtnewAuctionInitialPrice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(22, 22, 22)
                         .addComponent(jLabel4))
-                    .addComponent(lblnewAuctionProductImage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(lblnewAuctionAuctionImage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 145, Short.MAX_VALUE)
                         .addGap(18, 18, 18)
                         .addComponent(btnCreateNewAuction))
-                    .addComponent(lblNewAuctionImage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(lblNewProductImage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -776,9 +794,9 @@ public class ClientGUI extends javax.swing.JFrame {
         if (pos != -1) {
             Auction auction = auctions.get(lstYourAuctions.getSelectedValue());
             if (auction != null) {
-                if (auction.getBidder() != null) {
+                if (!"".equals(auction.getBidderId())) {
                     String idAuction = auction.getId();
-                    String winner = auction.getBidder().getId();
+                    String winner = auction.getBidderId();
                     String message = txtMessageToWinner.getText();
                     txtMessageToWinner.setText("");
                     controller.auctionFinished(idAuction, winner, message);
@@ -860,10 +878,10 @@ public class ClientGUI extends javax.swing.JFrame {
             Auction auction = auctions.get(selectedValue);
             
             double newPrice = (double)spnNextPrice.getValue();
-            String newBidder = auction.getNewBidder().getId();
+            String newBidder = auction.getNewBidderId();
             
             auction.setNextPrice(auction.getNextPrice());
-            auction.setBidder(auction.getNewBidder());
+            auction.setBidderId(auction.getNewBidderId());
             auction.setNextPrice(newPrice);
             auction.setNewBidder(null);
             auctions.add(auction);
@@ -1030,11 +1048,11 @@ public class ClientGUI extends javax.swing.JFrame {
     private javax.swing.JScrollPane jspSubastas;
     private javax.swing.JLabel lblAuctionImage;
     private javax.swing.JLabel lblMensajeError;
-    private javax.swing.JLabel lblNewAuctionImage;
+    private javax.swing.JLabel lblNewProductImage;
     private javax.swing.JLabel lblProductImage;
     private javax.swing.JLabel lblYourAuctionsAuctionImage;
     private javax.swing.JLabel lblYourAuctionsProductImage;
-    private javax.swing.JLabel lblnewAuctionProductImage;
+    private javax.swing.JLabel lblnewAuctionAuctionImage;
     private javax.swing.JList<String> lstAvailableAuctions;
     private javax.swing.JList<String> lstFollowedAuctions;
     private javax.swing.JList<String> lstYourAuctions;
@@ -1074,13 +1092,13 @@ public class ClientGUI extends javax.swing.JFrame {
         txtYourAuctionsNewOffer.setText(Double.toString(auction.getNextPrice()));
         txtYourAuctionsIdProduct.setText(auction.getProduct().getId());
         spnNextPrice.setValue(auction.getNextPrice());
-        if (auction.getBidder() != null) {
-            txtYourAuctionsUserBestOffer.setText(auction.getBidder().getId());
+        if (!"".equals(auction.getBidderId())) {
+            txtYourAuctionsUserBestOffer.setText(auction.getBidderId());
         } else {
             txtYourAuctionsUserBestOffer.setText("");
         }
-        if (auction.getNewBidder() != null) {
-            txtYourAuctionsUserNewOffer.setText(auction.getNewBidder().getId());
+        if ("".equals(auction.getNewBidderId())) {
+            txtYourAuctionsUserNewOffer.setText(auction.getNewBidderId());
         } else {
             txtYourAuctionsUserNewOffer.setText("");
         }
@@ -1100,6 +1118,36 @@ public class ClientGUI extends javax.swing.JFrame {
 
     public Client getClient() {
         return client;
+    }
+    
+    public void newOffer(String auctionId, String bidderId, double nextPrice) {
+        Auction auction = auctions.get(auctionId);
+        if (nextPrice == auction.getNextPrice() && !"".equals(auction.getNewBidderId())) {
+            auction.setNewBidder(bidderId);
+        }
+    }
+    
+    public void offerAccepted(String auctionId, String bidderId, double newPrice) {
+        Auction auction = auctions.get(auctionId);
+        auction.setBidderId(bidderId);
+        auction.setActualPrice(newPrice);
+    }
+    
+    public void deleteAllAuctions() {
+        lstAvailableAuctionsModel.clear();
+        lstYourAuctionsModel.clear();
+    }
+    
+    public void addAuction(Auction auction) {
+        auctions.add(auction);
+        lstAvailableAuctionsModel.addElement(auction.getId());
+        if (client.getId().equals(auction.getAuctioneerId())) {
+            lstYourAuctionsModel.addElement(auction.getId());
+        }
+    }
+    
+    public void auctionFinished(String auctionId) {
+        auctions.get(auctionId).setState(Auction.STATE.FINISHED);
     }
 
     public void print(String message) {

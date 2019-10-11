@@ -44,12 +44,12 @@ public class ClientController implements IPrintable, IObserver {
         clientAdministrator = ObserverClientAdministratorFactory.createObserverClientAdministrator(serverName, port, this);
         
         if (clientAdministrator.isOk()) {
-            print("Conexión establecida.");
+            print("ClientController: Conexión establecida.");
             addClient(clientGUI.getClient());
-            clientAdministrator.addObserver(serverName);
+            clientAdministrator.addObserver(this);
             clientId = "";
         } else {
-            printError("No se pudo establecer la conexión.");
+            printError("ClientController: No se pudo establecer la conexión.");
             System.exit(1);
         }
         
@@ -130,30 +130,60 @@ public class ClientController implements IPrintable, IObserver {
     @Override
     public void update(Object message) {
         if (message instanceof IMessage) {
-            IMessage mes = (IMessage)message;
-            switch(mes.getType()) {
-                case MessageServerFactory.NEW_OFFER:
-                    break;
-                case MessageServerFactory.MESSAGE_TO_BIDDER:
-                case MessageServerFactory.INFO:
-                    break;
-                case MessageServerFactory.SENDING_ALL_AUCTIONS:
-                    break;
-                case MessageServerFactory.SENDING_ALL_BIDDERS:
-                    break;
-                case MessageServerFactory.SENDING_AUCTION:
-                    break;
-                case MessageServerFactory.SENDING_BIDDER:
-                    break;
-                case MessageServerFactory.DONE:
-                    break;
-                case MessageServerFactory.CLOSE_CONNECTION:
-                    break;
-                case MessageServerFactory.CHECKING_CONNECTION:
-                    break;
-                default:
-                    break;
-            }
+            messageReceived((IMessage)message);
+        }
+    }
+    
+    private void messageReceived(IMessage message) {
+        switch(message.getType()) {
+            case MessageClientFactory.NEW_OFFER:
+                MsgNewOffer newOffer = (MsgNewOffer)message.getMessage();
+                print("ClientController: Recibida una nueva oferta para la subasta " + newOffer.getIdAuction());
+                clientGUI.newOffer(newOffer.getIdAuction(), message.getId(), newOffer.getNewOffer());
+                break;
+            case MessageClientFactory.ACCEPT_OFFER:
+                MsgAcceptOffer acceptOffer = (MsgAcceptOffer)message.getMessage();
+                print("ClientController: Se aceptó tu oferta en la subasta " + acceptOffer.getIdAuction());
+                clientGUI.offerAccepted(acceptOffer.getIdAuction(), acceptOffer.getIdBidder(), acceptOffer.getNewPrice());
+                break;
+            case MessageClientFactory.AUCTION_FINISHED:
+                MsgAuctionFinished auctionFinished = (MsgAuctionFinished)message.getMessage();
+                print("ClientController: Se terminó la subasta" + auctionFinished.getIdAuction() + ", el ganador es " + auctionFinished.getIdWinnerBidder() + ".");
+                clientGUI.auctionFinished(auctionFinished.getIdAuction());
+                break;
+            case MessageClientFactory.MESSAGE_TO_BIDDER:
+                MsgMessageToBidder messageToBidder = (MsgMessageToBidder)message.getMessage();
+                print("ClientController: Llegó un mensaje de la subasta " + messageToBidder.getIdAuction() + ", el mensaje es: " + messageToBidder.getMessage() + ".");
+                break;
+            case MessageServerFactory.MESSAGE_TO_BIDDER:
+            case MessageServerFactory.INFO:
+                print("ClientController: Se recibió el mensaje: " + (String)message.getMessage());
+                break;
+            case MessageServerFactory.SENDING_ALL_AUCTIONS:
+                print("ClientController: Se van a recibir todas las subastas.");
+                clientGUI.deleteAllAuctions();
+                break;
+            case MessageServerFactory.SENDING_ALL_BIDDERS:
+                print("ClientController: Se van a recibir todos los postores.");
+                break;
+            case MessageServerFactory.SENDING_AUCTION:
+                print("ClientController: Se recibe una subasta.");
+                clientGUI.addAuction((Auction)message.getMessage());
+                break;
+            case MessageServerFactory.SENDING_BIDDER:
+                print("ClientController: Se recibe un postor.");
+                break;
+            case MessageServerFactory.DONE:
+                print("ClientController: Mesaje de todo realizado de parte del servidor.");
+                break;
+            case MessageServerFactory.CLOSE_CONNECTION:
+                print("ClientController: El servidor solicita cerrar la conexión.");
+                break;
+            case MessageServerFactory.CHECKING_CONNECTION:
+                print("El servidor solicitó checkar la conexión, se mandó un mensaje de confirmación.");
+                break;
+            default:
+                break;
         }
     }
     
