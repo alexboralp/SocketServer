@@ -32,7 +32,7 @@ public class WaitForClientMessages extends AbsObservable implements Runnable, IC
     public void run() {
         Object message;
         
-        printer.print("WaitForClientMessages: " + "Waiting for messages from clients");
+        printer.print("WaitForClientMessages: " + "Waiting for messages from clients.");
         try {
             while (client.isOk() && (message = client.getIn().readObject()) != null) {
                 this.updateAll(message);
