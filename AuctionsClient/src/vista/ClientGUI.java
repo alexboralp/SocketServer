@@ -11,8 +11,8 @@ import auctions.objects.Auctions;
 import auctions.objects.Client;
 import controller.ClientController;
 import java.util.Date;
-import java.util.LinkedList;
 import javax.swing.DefaultListModel;
+import javax.swing.Icon;
 import javax.swing.JOptionPane;
 import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
@@ -23,11 +23,15 @@ import javax.swing.SpinnerNumberModel;
  */
 public class ClientGUI extends javax.swing.JFrame {
     
-    private static DefaultListModel<String> lstSubastasModel;
+    private static DefaultListModel<String> lstYourAuctionsModel;
+    private static DefaultListModel<String> lstFollowedAuctionsModel;
+    private static DefaultListModel<String> lstAvailableAuctionsModel;
+    
     private static String nombre;
     
-    private Client client;
-    private Auctions subastas;
+    private final Client client;
+    private final Auctions auctions;
+    private final Auctions followedAuctions;
     
     private ClientController controller;
 
@@ -43,11 +47,19 @@ public class ClientGUI extends javax.swing.JFrame {
             
         client = ClientFactory.createClient(nombre);
             
-        subastas = new Auctions();
+        auctions = new Auctions();
+        followedAuctions = new Auctions();
             
         lstYourAuctions.removeAll();
-        lstSubastasModel = new DefaultListModel<>();
-        lstYourAuctions.setModel(lstSubastasModel);
+        lstYourAuctionsModel = new DefaultListModel<>();
+        lstYourAuctions.setModel(lstYourAuctionsModel);
+        
+        lstFollowedAuctions.removeAll();
+        lstAvailableAuctions.removeAll();
+        lstFollowedAuctionsModel = new DefaultListModel<>();
+        lstFollowedAuctions.setModel(lstFollowedAuctionsModel);
+        lstAvailableAuctionsModel = new DefaultListModel<>();
+        lstAvailableAuctions.setModel(lstAvailableAuctionsModel);
             
         SpinnerModel spnSiguientePrecioModel = new SpinnerNumberModel(0.0,0.0,Double.MAX_VALUE, 0.1);
         spnNextPrice.setModel(spnSiguientePrecioModel);
@@ -762,18 +774,18 @@ public class ClientGUI extends javax.swing.JFrame {
         int pos = lstYourAuctions.getSelectedIndex();
         
         if (pos != -1) {
-            Auction subasta = subastas.get(lstYourAuctions.getSelectedValue());
-            if (subasta != null) {
-                if (subasta.getBidder() != null) {
-                    String idAuction = subasta.getId();
-                    String winner = subasta.getBidder().getId();
+            Auction auction = auctions.get(lstYourAuctions.getSelectedValue());
+            if (auction != null) {
+                if (auction.getBidder() != null) {
+                    String idAuction = auction.getId();
+                    String winner = auction.getBidder().getId();
                     String message = txtMessageToWinner.getText();
                     txtMessageToWinner.setText("");
                     controller.auctionFinished(idAuction, winner, message);
                 }
             }
         } else {
-            System.err.println("No hay una subasta seleccionada");
+            printError("No hay una subasta seleccionada.");
         }
         
     }//GEN-LAST:event_btnSendMessageToWinnerActionPerformed
@@ -785,61 +797,55 @@ public class ClientGUI extends javax.swing.JFrame {
                     !"".equals(txtNewAuctionProductName.getText()) &&
                     !"".equals(txtNewAuctionDescription.getText()) &&
                     !"".equals(txtnewAuctionInitialPrice.getText())) {
-                String nombreSubasta = txtNewAuctionid.getText();
+                String AuctionName = txtNewAuctionid.getText();
                 int dia = (int)spnNewAuctionDay.getValue();
                 int mes = (int)spnnewAuctionMonth.getValue();
                 int anno = (int)spnnewAuctionYear.getValue();
                 int hora = (int)spnNewAuctionHour.getValue();
                 int duracion = (int)spnNewAuctionDuration.getValue();
-                String nombreProducto = txtNewAuctionProductName.getText();
+                String nombreProduct = txtNewAuctionProductName.getText();
                 String descripcion = txtNewAuctionDescription.getText();
-                double precioInicial = Double.parseDouble(txtnewAuctionInitialPrice.getText());
-
-                Producto producto = new Producto(nombreProducto, descripcion, null, precioInicial);
-                Date date = new Date(anno, mes, dia, hora, 0);
-                Subasta subasta = new Subasta(nombreSubasta, date, duracion, producto, precioInicial);
-                subasta.setEstado(Subasta.ESTADO.EN_CURSO);
-                subastas.add(subasta);
-
-                System.out.println("Enviando la solicitud de agregar la nueva subasta");
-                socket.sendMessage(new MessageServer().clientAddObservableAndOwnerByObject(subasta, subastador));
-
-                lstSubastasModel.addElement(nombreSubasta);
+                double initialPrice = Double.parseDouble(txtnewAuctionInitialPrice.getText());
+                Icon auctionImage = lblAuctionImage.getIcon();
+                Icon productImage = lblProductImage.getIcon();
+                
+                Date fecha = new Date(anno, mes, dia, hora, 0);
+                
+                print("Enviando la solicitud de agregar la nueva subasta");
+                controller.addAuction(AuctionName, fecha, duracion, nombreProduct, descripcion, productImage, initialPrice, initialPrice, auctionImage);
             } else {
-                lblMensajeError.setText("ERROR: Falta algún dato para la subasta.");
+                printError("Falta algún dato para la subasta.");
             }
         } catch(NumberFormatException ex) {
-            Logger.getLogger(ClientGUI.class.getName()).log(Level.SEVERE, null, ex);
+            printError("Revise que todos los números sean válidos.");
         }
     }//GEN-LAST:event_btnCreateNewAuctionActionPerformed
 
     private void mnuSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuSalirActionPerformed
         // TODO add your handling code here:
         
-        socket.stop();
-        socket.closeConnection();
-        System.out.println("Cerrando el programa...");
+        controller.closeConnection();
+        print("Cerrando el programa...");
         System.exit(0);
     }//GEN-LAST:event_mnuSalirActionPerformed
 
     private void lstYourAuctionsValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstYourAuctionsValueChanged
         // TODO add your handling code here:
         
-        int pos = lstYourAuctions.getSelectedIndex();
+        String selectedValue = lstYourAuctions.getSelectedValue();
         
-        if (pos != -1) {
-            Subasta subasta = subastas.get(pos);
+        if (selectedValue != null && !"".equals(selectedValue)) {
+            Auction auction = auctions.get(selectedValue);
             
-            actualizarTextos(subasta);
+            actualizarTextos(auction);
         }
     }//GEN-LAST:event_lstYourAuctionsValueChanged
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         // TODO add your handling code here:
         
-        socket.stop();
-        socket.closeConnection();
-        System.out.println("Cerrando el programa...");
+        controller.closeConnection();
+        print("Cerrando el programa...");
         System.exit(0);
     }//GEN-LAST:event_formWindowClosing
 
@@ -849,18 +855,23 @@ public class ClientGUI extends javax.swing.JFrame {
         int pos = lstYourAuctions.getSelectedIndex();
         
         if (pos != -1) {
-            Subasta subasta = subastas.get(pos);
-            subasta.setPrecioActual(subasta.getPrecioSiguiente());
-            subasta.setOferente(subasta.getNuevoOferente());
-            subasta.setPrecioSiguiente((double)spnNextPrice.getValue());
-            subasta.setNuevoOferente(null);
-            subastas.set(pos, subasta);
-            actualizarTextos(subastas.get(pos));
-            Subasta subastaClon = subasta.clonarProfundo();
-            socket.sendMessage(new MessageServer().clientReplaceObservableById(subasta.getId(), subastaClon));
-            socket.sendMessage(new MessageServer().clientSendObservableToObservers(subasta.getId(), subastaClon));
+            String selectedValue = lstYourAuctions.getSelectedValue();
+            
+            Auction auction = auctions.get(selectedValue);
+            
+            double newPrice = (double)spnNextPrice.getValue();
+            String newBidder = auction.getNewBidder().getId();
+            
+            auction.setNextPrice(auction.getNextPrice());
+            auction.setBidder(auction.getNewBidder());
+            auction.setNextPrice(newPrice);
+            auction.setNewBidder(null);
+            auctions.add(auction);
+            
+            controller.acceptOffer(selectedValue, newBidder, newPrice);
+            actualizarTextos(auction);
         } else {
-            txtMensajes.append("ERROR: Debe seleccionar alguna subasta.\n");
+            print("Debe seleccionar alguna subasta.");
         }
     }//GEN-LAST:event_btnAcceptNewOfferActionPerformed
 
@@ -870,15 +881,18 @@ public class ClientGUI extends javax.swing.JFrame {
         int pos = lstYourAuctions.getSelectedIndex();
         
         if (pos != -1) {
-            Subasta subasta = subastas.get(pos);
-            subasta.setEstado(Subasta.ESTADO.CANCELADO);
-            subastas.set(pos, subasta);
-            actualizarTextos(subastas.get(pos));
-            Subasta subastaClon = subasta.clonarProfundo();
-            socket.sendMessage(new MessageServer().clientReplaceObservableById(subasta.getId(), subastaClon));
-            socket.sendMessage(new MessageServer().clientSendObservableToObservers(subasta.getId(), subastaClon));
+            String selectedValue = lstYourAuctions.getSelectedValue();
+            
+            Auction auction = auctions.get(selectedValue);
+            
+            auction.setState(Auction.STATE.CANCELED);
+            
+            auctions.add(auction);
+            
+            controller.cancelAuction(selectedValue);
+            actualizarTextos(auction);
         } else {
-            txtMensajes.append("ERROR: Debe seleccionar alguna subasta.\n");
+            print("Debe seleccionar alguna subasta.");
         }
     }//GEN-LAST:event_btnCancelAuctionActionPerformed
 
@@ -897,24 +911,21 @@ public class ClientGUI extends javax.swing.JFrame {
 
         int pos = lstAvailableAuctions.getSelectedIndex();
         if (pos != -1) {
-            String nombreSubasta = lstAvailableAuctions.getSelectedValue();
+            String AuctionName = lstAvailableAuctions.getSelectedValue();
 
-            System.out.println("Siguiendo la nueva subasta...");
-            socket.sendMessage(new MessageServer().clientAddObserverById(nombreSubasta, oferente));
-            if (pos >= 0 && pos < lstSubastasDisponiblesModel.size()){
-                lstSubastasDisponiblesModel.remove(pos);
-            }
-            socket.sendMessage(new MessageServer().clientNeedObservable(nombreSubasta));
+            print("Solicitando seguir la subasta " + AuctionName + ".");
+            controller.followAuction(AuctionName);
         } else {
-            addMessage("ERROR: Se debe escoger una subasta.");
+            printError("Se debe escoger una subasta.");
         }
     }//GEN-LAST:event_btnFollowAuctionActionPerformed
 
     private void lstFollowedAuctionsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lstFollowedAuctionsMouseClicked
         // TODO add your handling code here:
-        elegirSubasta();
+        AuctionSelected();
     }//GEN-LAST:event_lstFollowedAuctionsMouseClicked
 
+    
     private void lstFollowedAuctionsValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstFollowedAuctionsValueChanged
         // TODO add your handling code here:
         if (lstFollowedAuctions.getSelectedIndex() != -1) {
@@ -922,7 +933,7 @@ public class ClientGUI extends javax.swing.JFrame {
         } else {
             btnUnfollowAuction.setEnabled(false);
         }
-        elegirSubasta();
+        AuctionSelected();
     }//GEN-LAST:event_lstFollowedAuctionsValueChanged
 
     private void btnUnfollowAuctionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUnfollowAuctionActionPerformed
@@ -930,15 +941,15 @@ public class ClientGUI extends javax.swing.JFrame {
 
         int pos = lstFollowedAuctions.getSelectedIndex();
         if (pos != -1) {
-            String nombreSubasta = lstFollowedAuctions.getSelectedValue();
+            String AuctionName = lstFollowedAuctions.getSelectedValue();
 
-            System.out.println("Dejando de seguir una subasta...");
-            socket.sendMessage(new MessageServer().clientRemoveObserverById(nombreSubasta, oferente.getId()));
-            if (pos >= 0 && pos < lstSubastasSeguidasModel.size()){
-                lstSubastasDisponiblesModel.addElement(lstSubastasSeguidasModel.remove(pos));
+            System.out.println("Solicitud de dejar de seguir la subasta" + AuctionName + ".");
+            controller.unfollowAuction(AuctionName);
+            if (pos >= 0 && pos < lstFollowedAuctionsModel.size()){
+                lstAvailableAuctionsModel.addElement(lstAvailableAuctionsModel.remove(pos));
             }
         } else {
-            addMessage("ERROR: Se debe escoger una subasta.");
+            printError("Se debe escoger una subasta.");
         }
     }//GEN-LAST:event_btnUnfollowAuctionActionPerformed
 
@@ -946,71 +957,22 @@ public class ClientGUI extends javax.swing.JFrame {
         // TODO add your handling code here:
         int escogido = lstFollowedAuctions.getSelectedIndex();
         if (escogido != -1) {
-            Subasta subasta = subastasSeguidas.get(escogido);
-            if (subasta.getEstado() == Subasta.ESTADO.EN_CURSO) {
-                socket.sendMessage(new MessageServer().clientSendMessageToOwnerById(subasta.getId(), oferente.getId(), Subasta.Mensaje.OFERTAR.toString()));
+            Auction auction = followedAuctions.get(lstFollowedAuctions.getSelectedValue());
+            if (auction.getState() == Auction.STATE.IN_PROGRESS) {
+                controller.newOffer(auction.getId(), auction.getNextPrice());
             }
         } else {
-            addMessage("ATENCIÓN: Se debe escoger una subasta para ofertar.");
+            printError("Se debe escoger una subasta para ofertar.");
         }
     }//GEN-LAST:event_btnMakeNewOfferActionPerformed
 
     private void txtUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtUpdateActionPerformed
         // TODO add your handling code here:
-        socket.sendMessage(new MessageServer().clientNeedObservablesId());
+        controller.sendAllAuctions();
+        lstAvailableAuctionsModel.clear();
+        lstFollowedAuctionsModel.clear();
+        lstYourAuctionsModel.clear();
     }//GEN-LAST:event_txtUpdateActionPerformed
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(ClientGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(ClientGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(ClientGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(ClientGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-
-        /* Create and display the form */
-            
-        java.awt.EventQueue.invokeLater(new Runnable() {
-                public void run() {
-                    new ClientGUI().setVisible(true);
-                }
-            });
-    }
-    
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -1105,123 +1067,20 @@ public class ClientGUI extends javax.swing.JFrame {
     private javax.swing.JTextField txtnewAuctionInitialPrice;
     // End of variables declaration//GEN-END:variables
 
-    @Override
-    public void handleGetObservablesIdsFromServer(Message message) {
-        throw new UnsupportedOperationException("Not supported."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void handleGetMessageToObserver(Message message) {
-        throw new UnsupportedOperationException("Not supported."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
-    @Override
-    public void handleGetMessageToObservers(Message message) {
-        throw new UnsupportedOperationException("Not supported."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void handleGetObservableFromServer(Message message) {
-        throw new UnsupportedOperationException("Not supported."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void handleGetObservableAndMessageFromServer(Message message) {
-        throw new UnsupportedOperationException("Not supported."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void handleGetObserverAndMessageFromServer(Message message) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void handleGetAllDone(Message message) {
-        txtMensajes.append("SERVER: ¡Hecho!" + '\n');
-    }
-
-    @Override
-    public void handleGetMessageToObserverFromOwner(Message message) {
-        throw new UnsupportedOperationException("Not supported."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void handleGetMessageToOwner(Message message) {
-        txtMensajes.append("SERVER: " + message.getMessage() + '\n');
-    }
-
-    @Override
-    public void handleGetMessageFromObserverToOwner(Message message) {
-        String mensaje = message.getMessage();
-        String nombreSubasta = message.getIdObservable();
-        String nombreOferente = message.getIdObserver();
-        
-        if ("OFERTAR".equals(mensaje)) {
-            Subasta subasta = buscarSubasta(nombreSubasta);
-            if (subasta != null) {
-                if (subasta.getNuevoOferente() == null) {
-                    subasta.setNuevoOferente(new Oferente(nombreOferente));
-                    socket.sendMessage(new MessageServer().clientSendMessageToObservers(nombreSubasta, "Subasta " + nombreSubasta + ": " + nombreOferente + " ofertó por el nuevo precio."));
-                } else {
-                    socket.sendMessage(new MessageServer().clientSendMessageToObserver(nombreSubasta, nombreOferente, "Subasta: " + nombreSubasta + ": Ya alguien realizó la oferta, está en espera de ser aceptada por el dueño."));
-                }
-            }
-        } else {
-            txtMensajes.append("Subasta: " + nombreSubasta + ": " + mensaje + '\n');
-        }
-    }
-
-    @Override
-    public void handleGetObserverIdAndMessageFromServer(Message message) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void handleGetObservableIdObserverIdAndMessageFromServer(Message message) {
-        if (Subasta.Mensaje.OFERTAR.toString().equals(message.getMessage())) {
-            Subasta subasta = buscarSubasta(message.getIdObservable());
-            if (subasta != null) {
-                if(subasta.getNuevoOferente() == null || "".equals(subasta.getNuevoOferente().getId())) {
-                    subasta.setNuevoOferente(new Oferente(message.getIdObserver()));
-                    txtMensajes.append("Subasta: " + message.getIdObservable() + ", Oferente: " + message.getIdObserver() + ": Ofertó por el producto" + '\n');
-                    if (lstYourAuctions.getSelectedValue() != null && lstYourAuctions.getSelectedValue().equals(subasta.getId())) {
-                        actualizarTextos(subasta);
-                    }
-                } else {
-                    socket.sendMessage(new MessageServer().clientSendMessageToObserver(subasta.getId(), message.getIdObserver(), "Subasta " + subasta.getId() + ": Ya hay un oferente anterior."));
-                }
-            } else {
-                socket.sendMessage(new MessageServer().clientSendMessageToObserver(message.getIdObservable(), message.getIdObserver(), "La subasta " + message.getIdObservable() + " no existe."));
-            }
-        } else {
-            txtMensajes.append(message.getIdObservable() + ", " + message.getIdObserver() + ": " + message.getMessage() + '\n');
-            socket.sendMessage(new MessageServer().clientSendMessageToObserver(message.getIdObservable(), message.getIdObserver(), "La subasta " + message.getIdObservable() + " no entendió el mensaje."));
-        }
-    }
-    
-    public Subasta buscarSubasta(String nombreSubasta) {
-        for (Subasta subasta : subastas) {
-            if (nombreSubasta.equals(subasta.getId())) {
-                return subasta;
-            }
-        }
-        return null;
-    }
-    
-    public void actualizarTextos (Subasta subasta) {
-        txtYourAuctionId.setText(subasta.getId());
-        txtYourAuctionStatus.setText(subasta.getEstado().toString());
-        txtYourAuctionBestOffer.setText(Double.toString(subasta.getPrecioActual()));
-        txtYourAuctionsNewOffer.setText(Double.toString(subasta.getPrecioSiguiente()));
-        txtYourAuctionsIdProduct.setText(subasta.getProducto().getId());
-        spnNextPrice.setValue(subasta.getPrecioSiguiente());
-        if (subasta.getOferente() != null) {
-            txtYourAuctionsUserBestOffer.setText(subasta.getOferente().getId());
+    public void actualizarTextos (Auction auction) {
+        txtYourAuctionId.setText(auction.getId());
+        txtYourAuctionStatus.setText(auction.getState().toString());
+        txtYourAuctionBestOffer.setText(Double.toString(auction.getActualPrice()));
+        txtYourAuctionsNewOffer.setText(Double.toString(auction.getNextPrice()));
+        txtYourAuctionsIdProduct.setText(auction.getProduct().getId());
+        spnNextPrice.setValue(auction.getNextPrice());
+        if (auction.getBidder() != null) {
+            txtYourAuctionsUserBestOffer.setText(auction.getBidder().getId());
         } else {
             txtYourAuctionsUserBestOffer.setText("");
         }
-        if (subasta.getNuevoOferente() != null) {
-            txtYourAuctionsUserNewOffer.setText(subasta.getNuevoOferente().getId());
+        if (auction.getNewBidder() != null) {
+            txtYourAuctionsUserNewOffer.setText(auction.getNewBidder().getId());
         } else {
             txtYourAuctionsUserNewOffer.setText("");
         }
@@ -1229,6 +1088,18 @@ public class ClientGUI extends javax.swing.JFrame {
 
     public void setController(ClientController controller) {
         this.controller = controller;
+    }
+    
+    public void AuctionSelected() {
+        String subasta = lstFollowedAuctions.getSelectedValue();
+        if (auctions.containsKey(subasta)) {
+            Auction auction = auctions.get(subasta);
+            actualizarTextos(auction);
+        }
+    }
+
+    public Client getClient() {
+        return client;
     }
 
     public void print(String message) {
