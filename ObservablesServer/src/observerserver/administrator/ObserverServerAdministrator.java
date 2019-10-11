@@ -120,8 +120,8 @@ public class ObserverServerAdministrator extends AbsObservable implements IObser
         observablesServer.remove(id);
     }
     
-    public void getObservableFromServer(String id) {
-        observablesServer.get(id);
+    public IObservableObject getObservableFromServer(String id) {
+        return observablesServer.get(id);
     }
     
     public void addObserverToServer(IObserverObject object) {
@@ -138,8 +138,8 @@ public class ObserverServerAdministrator extends AbsObservable implements IObser
         removeObserverFromObservables(id);
     }
     
-    public void getObserverFromServer(String id) {
-        observersServer.get(id);
+    public IObserverObject getObserverFromServer(String id) {
+        return observersServer.get(id);
     }
     
     public void setObserverToObservable(IObserverObject observer, IObservableObject observable) {
