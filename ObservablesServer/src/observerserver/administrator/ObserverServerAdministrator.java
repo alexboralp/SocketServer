@@ -7,7 +7,8 @@ package observerserver.administrator;
 
 import java.io.IOException;
 import java.io.Serializable;
-import observerserver.ObserverMessageFactory;
+import observerclient.ObserverClientMessageFactory;
+import observerserver.ObserverServerMessageFactory;
 import observerserver.observables.IObservableObject;
 import observerserver.observables.Observables;
 import observerserver.observers.IObserverObject;
@@ -41,50 +42,54 @@ public class ObserverServerAdministrator extends AbsObservable implements IObser
         observersServer = new Observers();
     }
     
+    public void sendIdToClient(String idClient) {
+        sendMessageToClient(idClient, ObserverServerMessageFactory.createMessage(ObserverServerMessageFactory.SENDING_ID_TO_OBSERVER, idClient));
+    }
+    
     public void sendObservableToClient(String idClient, String idObservable) {
-        sendMessageToClient(idClient, ObserverMessageFactory.createMessage(ObserverMessageFactory.SENDING_OBSERVABLE, (Serializable)observablesServer.get(idObservable).getObject()));
+        sendMessageToClient(idClient, ObserverServerMessageFactory.createMessage(ObserverServerMessageFactory.SENDING_OBSERVABLE, (Serializable)observablesServer.get(idObservable).getObject()));
     }
     
     public void sendObservableToClient(String idClient, Serializable observable) {
-        sendMessageToClient(idClient, ObserverMessageFactory.createMessage(ObserverMessageFactory.SENDING_OBSERVABLE, observable));
+        sendMessageToClient(idClient, ObserverServerMessageFactory.createMessage(ObserverServerMessageFactory.SENDING_OBSERVABLE, observable));
     }
     
     private void sendObservableToClient(IClient client, Serializable observable) {
-        sendMessageToClient(client, ObserverMessageFactory.createMessage(ObserverMessageFactory.SENDING_OBSERVABLE, observable));
+        sendMessageToClient(client, ObserverServerMessageFactory.createMessage(ObserverServerMessageFactory.SENDING_OBSERVABLE, observable));
     }
     
     public void sendObservablesToClient(String idClient) {
         IClient client = observersServer.get(idClient).getObject();
-        sendMessageToClient(client, ObserverMessageFactory.createMessage(ObserverMessageFactory.OBSERVABLES_LIST, null));
+        sendMessageToClient(client, ObserverServerMessageFactory.createMessage(ObserverServerMessageFactory.OBSERVABLES_LIST, null));
         for (IObservableObject observable : observablesServer.getObservables()) {
             sendObservableToClient(client, (Serializable)observable.getObject());
         }
-        sendMessageToClient(client, ObserverMessageFactory.createMessage(ObserverMessageFactory.DONE, null));
+        sendMessageToClient(client, ObserverServerMessageFactory.createMessage(ObserverServerMessageFactory.DONE, null));
     }
     
     public void sendObserverToClient(String idClient, String idSendClient) {
-        sendMessageToClient(idClient, ObserverMessageFactory.createMessage(ObserverMessageFactory.SENDING_OBSERVER, (Serializable)observersServer.get(idSendClient).getObject()));
+        sendMessageToClient(idClient, ObserverServerMessageFactory.createMessage(ObserverServerMessageFactory.SENDING_OBSERVER, (Serializable)observersServer.get(idSendClient).getObject()));
     }
     
     public void sendObserverToClient(String idClient, Serializable observer) {
-        sendMessageToClient(idClient, ObserverMessageFactory.createMessage(ObserverMessageFactory.SENDING_OBSERVER, observer));
+        sendMessageToClient(idClient, ObserverServerMessageFactory.createMessage(ObserverServerMessageFactory.SENDING_OBSERVER, observer));
     }
     
     private void sendObserverToClient(IClient client, Serializable observer) {
-        sendMessageToClient(client, ObserverMessageFactory.createMessage(ObserverMessageFactory.SENDING_OBSERVER, observer));
+        sendMessageToClient(client, ObserverServerMessageFactory.createMessage(ObserverServerMessageFactory.SENDING_OBSERVER, observer));
     }
     
     public void sendObserversToClient(String idClient) {
         IClient client = observersServer.get(idClient).getObject();
-        sendMessageToClient(client, ObserverMessageFactory.createMessage(ObserverMessageFactory.OBSERVERS_LIST, null));
+        sendMessageToClient(client, ObserverServerMessageFactory.createMessage(ObserverServerMessageFactory.OBSERVERS_LIST, null));
         for (IObserverObject observer : observersServer.getObservers()) {
             sendObservableToClient(client, (Serializable)observer.getObject());
         }
-        sendMessageToClient(client, ObserverMessageFactory.createMessage(ObserverMessageFactory.DONE, null));
+        sendMessageToClient(client, ObserverServerMessageFactory.createMessage(ObserverServerMessageFactory.DONE, null));
     }
     
     public void sendTextMessageToClient(String idClient, String message) {
-        sendMessageToClient(idClient, ObserverMessageFactory.createMessage(ObserverMessageFactory.TEXT_MESSAGE, message));
+        sendMessageToClient(idClient, ObserverServerMessageFactory.createMessage(ObserverServerMessageFactory.TEXT_MESSAGE, message));
     }
     
     public void sendMessageToClient(String idClient, IMessage message) {
@@ -107,15 +112,15 @@ public class ObserverServerAdministrator extends AbsObservable implements IObser
         observablesServer.add(object);
     }
     
-    public void removeObservableToServer(IObservableObject object) {
+    public void removeObservableFromServer(IObservableObject object) {
         observablesServer.remove(object);
     }
     
-    public void removeObservableToServer(String id) {
+    public void removeObservableFromServer(String id) {
         observablesServer.remove(id);
     }
     
-    public void getObservableToServer(String id) {
+    public void getObservableFromServer(String id) {
         observablesServer.get(id);
     }
     
@@ -123,17 +128,17 @@ public class ObserverServerAdministrator extends AbsObservable implements IObser
         observersServer.add(object);
     }
     
-    public void removeObserverToServer(IObserverObject object) {
+    public void removeObserverFromServer(IObserverObject object) {
         observersServer.remove(object.getId());
         removeObserverFromObservables(object.getId());
     }
     
-    public void removeObserverToServer(String id) {
+    public void removeObserverFromServer(String id) {
         observersServer.remove(id);
         removeObserverFromObservables(id);
     }
     
-    public void getObserverToServer(String id) {
+    public void getObserverFromServer(String id) {
         observersServer.get(id);
     }
     
@@ -148,9 +153,19 @@ public class ObserverServerAdministrator extends AbsObservable implements IObser
         observablesServer.get(observable.getId()).addObserver(observersServer.get(observer.getId()));
     }
     
+    public void setObserverToObservable(String observerId, String observableId) {
+        if (observersServer.containsKey(observerId) && observablesServer.containsKey(observableId)) {
+            observablesServer.get(observableId).addObserver(observersServer.get(observerId));
+        }
+    }
+    
     public void removeObserverFromObservable(IObserverObject observer, IObservableObject observable) {
-        if (observersServer.containsKey(observer.getId()) && observablesServer.containsKey(observable.getId())) {
-            observablesServer.get(observable.getId()).removeObserver(observersServer.get(observer.getId()));
+        removeObserverFromObservable(observer.getId(), observable.getId());
+    }
+    
+    public void removeObserverFromObservable(String observerId, String observableId) {
+        if (observersServer.containsKey(observerId) && observablesServer.containsKey(observableId)) {
+            observablesServer.get(observableId).removeObserver(observersServer.get(observerId));
         }
     }
     
@@ -163,10 +178,51 @@ public class ObserverServerAdministrator extends AbsObservable implements IObser
     @Override
     public void update(Object message) {
         if (message instanceof IClient) {
-            observersServer.add(ObserverObjectFactory.create((IClient)message));
+            newClientReceived((IClient)message);
         } else if (message instanceof IMessage) {
-            printer.print(message.toString());
-            updateAll(message);
+            messageReceived((IMessage)message);
+        }
+        printer.print("ObserverServerAdministrator: Sending message to all observers");
+        updateAll(message);
+    }
+    
+    private void newClientReceived(IClient client) {
+        printer.print("ObserverServerAdministrator: New client received: " + client.toString() + ".");
+        observersServer.add(ObserverObjectFactory.create(client));
+    }
+    
+    private void messageReceived(IMessage message) {
+        printer.print("ObserverServerAdministrator: Message received: " + message.toString());
+        switch (message.getType()) {
+            case ObserverClientMessageFactory.ADD_OBSERVABLE:
+                addObservableToServer((IObservableObject)message.getMessage());
+                break;
+            case ObserverClientMessageFactory.REMOVE_OBSERVABLE:
+                removeObservableFromServer((String)message.getMessage());
+                break;
+            case ObserverClientMessageFactory.FOLLOW_OBSERVABLE:
+                setObserverToObservable(message.getId(), (String)message.getMessage());
+                break;
+            case ObserverClientMessageFactory.UNFOLLOW_OBSERVABLE:
+                removeObserverFromObservable(message.getId(), (String)message.getMessage());
+                break;
+            case ObserverClientMessageFactory.REMOVE_ME_FROM_OBSERVERS:
+                removeObserverFromServer(message.getId());
+                break;
+            case ObserverClientMessageFactory.ADD_OBSERVER:
+                addObserverToServer((IObserverObject)message.getMessage());
+                break;
+            case ObserverClientMessageFactory.SEND_ALL_OBSERVERS:
+                sendObserversToClient(message.getId());
+                break;
+            case ObserverClientMessageFactory.SEND_ALL_OBSERVABLES:
+                sendObservablesToClient(message.getId());
+                break;
+            case ObserverClientMessageFactory.SEND_MY_ID:
+                sendIdToClient(message.getId());
+                break;
+            default:
+                break;
         }
     }
     

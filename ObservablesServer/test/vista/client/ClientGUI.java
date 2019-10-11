@@ -6,7 +6,7 @@
 package vista.client;
 
 import controller.client.ClientController;
-import socketclient.MessageFactory;
+import socketclient.ClientMessageFactory;
 
 /**
  *
@@ -60,7 +60,7 @@ public class ClientGUI extends javax.swing.JFrame {
     private void btnSendMessageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSendMessageActionPerformed
         // TODO add your handling code here:
         
-        controller.sendMessageToServer(MessageFactory.createMessage(MessageFactory.INFO, "¡Todo bien!"));
+        controller.sendMessageToServer(ClientMessageFactory.createMessage(ClientMessageFactory.INFO, "¡Todo bien!"));
     }//GEN-LAST:event_btnSendMessageActionPerformed
 
     

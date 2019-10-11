@@ -6,18 +6,20 @@
 package observerserver.administrator;
 
 import java.io.Serializable;
-import observerclient.ObserverMessageFactory;
+import observerclient.ObserverClientMessageFactory;
+import observerserver.ObserverServerMessageFactory;
 import socketclient.ClientAdministratorFactory;
 import socketserver.administrator.ClientAdministrator;
 import socketserver.commoninterfaces.IPrintable;
 import socketserver.message.IMessage;
+import socketserver.patterns.observer.AbsObservable;
 import socketserver.patterns.observer.IObserver;
 
 /**
  *
  * @author alexander
  */
-public class ObserverClientAdministrator implements IObserver {
+public class ObserverClientAdministrator extends AbsObservable implements IObserver {
     ClientAdministrator administrator;
     IPrintable printer;
 
@@ -27,44 +29,44 @@ public class ObserverClientAdministrator implements IObserver {
         this.printer = printer;
     }
     
-    public void addObserver(Serializable observer) {
-        sendMessage(ObserverMessageFactory.createMessage(ObserverMessageFactory.ADD_OBSERVER, observer));
+    public void addNewObserver(Serializable observer) {
+        sendMessage(ObserverClientMessageFactory.createMessage(ObserverClientMessageFactory.ADD_OBSERVER, observer));
     }
     
-    public void addObservable(Serializable observable) {
-        sendMessage(ObserverMessageFactory.createMessage(ObserverMessageFactory.ADD_OBSERVABLE, observable));
+    public void addNewObservable(Serializable observable) {
+        sendMessage(ObserverClientMessageFactory.createMessage(ObserverClientMessageFactory.ADD_OBSERVABLE, observable));
     }
     
     public void removeObservable(String idObservable) {
-        sendMessage(ObserverMessageFactory.createMessage(ObserverMessageFactory.ADD_OBSERVABLE, idObservable));
+        sendMessage(ObserverClientMessageFactory.createMessage(ObserverClientMessageFactory.ADD_OBSERVABLE, idObservable));
     }
     
     public void followObservable(String idObservable) {
-        sendMessage(ObserverMessageFactory.createMessage(ObserverMessageFactory.FOLLOW_OBSERVABLE, idObservable));
+        sendMessage(ObserverClientMessageFactory.createMessage(ObserverClientMessageFactory.FOLLOW_OBSERVABLE, idObservable));
     }
     
     public void unfollowObservable(String idObservable) {
-        sendMessage(ObserverMessageFactory.createMessage(ObserverMessageFactory.UNFOLLOW_OBSERVABLE, idObservable));
+        sendMessage(ObserverClientMessageFactory.createMessage(ObserverClientMessageFactory.UNFOLLOW_OBSERVABLE, idObservable));
     }
     
     public void removeMeFromObservers() {
-        sendMessage(ObserverMessageFactory.createMessage(ObserverMessageFactory.REMOVE_ME_FROM_OBSERVERS, null));
+        sendMessage(ObserverClientMessageFactory.createMessage(ObserverClientMessageFactory.REMOVE_ME_FROM_OBSERVERS, null));
     }
     
     public void closeConnection() {
-        sendMessage(ObserverMessageFactory.createMessage(ObserverMessageFactory.CLOSE_CONNECTION, null));
+        sendMessage(ObserverClientMessageFactory.createMessage(ObserverClientMessageFactory.CLOSE_CONNECTION, null));
     }
     
     public void sendInfoServer(Serializable info) {
-        sendMessage(ObserverMessageFactory.createMessage(ObserverMessageFactory.INFO, info));
+        sendMessage(ObserverClientMessageFactory.createMessage(ObserverClientMessageFactory.INFO, info));
     }
     
     public void sendAllObservers() {
-        sendMessage(ObserverMessageFactory.createMessage(ObserverMessageFactory.SEND_ALL_OBSERVERS, null));
+        sendMessage(ObserverClientMessageFactory.createMessage(ObserverClientMessageFactory.SEND_ALL_OBSERVERS, null));
     }
     
     public void sendAllObservables() {
-        sendMessage(ObserverMessageFactory.createMessage(ObserverMessageFactory.SEND_ALL_OBSERVABLES, null));
+        sendMessage(ObserverClientMessageFactory.createMessage(ObserverClientMessageFactory.SEND_ALL_OBSERVABLES, null));
     }
     
     public void sendMessage(IMessage message) {
@@ -78,7 +80,39 @@ public class ObserverClientAdministrator implements IObserver {
     @Override
     public void update(Object message) {
         if (message instanceof IMessage) {
-            printer.print(message.toString());
+            messageReceived((IMessage)message);
+        }
+        printer.print("ObserverClientAdministrator: Sending message to observers.");
+        updateAll(message);
+    }
+    
+    private void messageReceived(IMessage message) {
+        printer.print("ObserverClientAdministrator: New message received from server: " + message.toString());
+        switch (message.getType()) {
+            case ObserverServerMessageFactory.OBSERVABLES_LIST:
+                printer.print("ObserverClientAdministrator: Se va a recibir la lista de observables.");
+                break;
+            case ObserverServerMessageFactory.OBSERVERS_LIST:
+                printer.print("ObserverClientAdministrator: Se va a recibir la lista de observers.");
+                break;
+            case ObserverServerMessageFactory.TEXT_MESSAGE:
+            case ObserverServerMessageFactory.TEXT_MESSAGE_TO_OBSERVER:
+                printer.print("ObserverClientAdministrator: Se recibió un mensaje: " + (String)message.getMessage());
+                break;
+            case ObserverServerMessageFactory.SENDING_OBSERVABLE:
+                printer.print("ObserverClientAdministrator: Se recibe un observable.");
+                break;
+            case ObserverServerMessageFactory.SENDING_OBSERVER:
+                printer.print("ObserverClientAdministrator: Se recibe un observer.");
+                break;
+            case ObserverServerMessageFactory.SENDING_ID_TO_OBSERVER:
+                printer.print("ObserverClientAdministrator: Se recibe el id dado por el server.");
+                break;
+            case ObserverServerMessageFactory.DONE:
+                printer.print("ObserverClientAdministrator: El server avisó que terminó la solicitud anterior.");
+                break;
+            default:
+                break;
         }
     }
 }
