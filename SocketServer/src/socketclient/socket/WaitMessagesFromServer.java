@@ -35,8 +35,8 @@ public class WaitMessagesFromServer extends AbsObservable implements Runnable, I
     private Thread thread;
 
     public WaitMessagesFromServer(String serverName, int port, IPrintable printer) {
-        ok = startSocket(serverName, port);
         this.printer = printer;
+        ok = startSocket(serverName, port);
     }
     
     public void startListening() {
