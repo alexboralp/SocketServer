@@ -10,6 +10,7 @@ import socketserver.client.IClient;
 import socketserver.client.WaitClients;
 import java.io.IOException;
 import static java.lang.Thread.sleep;
+import socketclient.ClientMessageFactory;
 import socketserver.client.WaitForClientMessages;
 import socketserver.client.WaitForClientsMessages;
 import socketserver.patterns.observer.IObserver;
@@ -84,6 +85,24 @@ public class ServerAdministrator extends AbsObservable implements IObserver, Run
     private void newMessageReceived(IMessage message) {
         this.printer.print("New message from client: " + message.getId() + ".");
         this.printer.print("Message: " + message.toString() + ".");
+        switch (message.getType()) {
+            case ClientMessageFactory.CLOSE_CONNECTION:
+                this.printer.print("El cliente solicitó cerrar su conección.");
+                try {
+                    waitForClientsMessages.get(message.getId()).closeComunication();
+                } catch (IOException ex) {
+                    this.printer.printError("ServerAdministrator: " + ex.getMessage());
+                }
+                waitForClientsMessages.remove(message.getId());
+                break;
+            case ClientMessageFactory.MESSAGE_RECEIVED:
+                this.printer.print("El cliente " + message.getId() + " confirma la recepción de revisión de su conexión.");
+                break;
+            case ClientMessageFactory.INFO:
+                this.printer.print("Se recibió información del servidor.");
+                this.printer.print(message.getMessage().toString());
+                break;
+        }
         this.printer.print("Sending message to observers.");
         updateAll(message);
     }

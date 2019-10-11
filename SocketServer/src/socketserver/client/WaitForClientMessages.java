@@ -6,7 +6,7 @@
 package socketserver.client;
 
 import java.io.IOException;
-import socketserver.MessageFactory;
+import socketserver.ServerMessageFactory;
 import socketserver.commoninterfaces.IPrintable;
 import socketserver.commoninterfaces.IClientable;
 import socketserver.message.IMessage;
@@ -36,7 +36,7 @@ public class WaitForClientMessages extends AbsObservable implements Runnable, IC
         try {
             while (client.isOk() && (message = client.getIn().readObject()) != null) {
                 this.updateAll(message);
-                IMessage response = MessageFactory.createMessage(MessageFactory.INFO, "Message received."); 
+                IMessage response = ServerMessageFactory.createMessage(ServerMessageFactory.INFO, "Message received."); 
                 response.setId(client.getId());
                 client.sendMessage(response);
             }

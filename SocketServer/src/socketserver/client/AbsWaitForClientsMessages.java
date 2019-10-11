@@ -32,6 +32,10 @@ public abstract class AbsWaitForClientsMessages implements IList<WaitForClientMe
     public void remove(WaitForClientMessages waitForClientMessages) {
         waitForClientsMessages.remove(waitForClientMessages.getClient().getId());
     }
+
+    public void remove(String clientId) {
+        waitForClientsMessages.remove(clientId);
+    }
     
     @Override
     public WaitForClientMessages get(String id) {
