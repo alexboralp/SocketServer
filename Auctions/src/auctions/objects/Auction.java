@@ -27,7 +27,7 @@ public class Auction implements IIdable, Serializable {
     private Product product;
     private Icon image;
     
-    private Client auctioneer;
+    private String auctioneerId;
     private double actualPrice;
     private String bidderId;
     private double nextPrice;
@@ -42,7 +42,7 @@ public class Auction implements IIdable, Serializable {
         this.product = null;
         this.actualPrice = 0;
         
-        this.auctioneer = null;
+        this.auctioneerId = "";
         this.bidderId = "";
         this.newBidderId = "";
         state = STATE.IN_PROGRESS;
@@ -57,7 +57,7 @@ public class Auction implements IIdable, Serializable {
         this.nextPrice = precioInicial;
         this.image = image;
         
-        this.auctioneer = null;
+        this.auctioneerId = "";
         this.bidderId = "";
         this.newBidderId = "";
         state = STATE.IN_PROGRESS;
@@ -105,12 +105,12 @@ public class Auction implements IIdable, Serializable {
         this.product = product;
     }
 
-    public Client getAuctioneer() {
-        return auctioneer;
+    public String getAuctioneerId() {
+        return auctioneerId;
     }
 
-    public void setAuctioneer(Client auctioneer) {
-        this.auctioneer = auctioneer;
+    public void setAuctioneerId(String auctioneerId) {
+        this.auctioneerId = auctioneerId;
     }
 
     public double getActualPrice() {
@@ -163,7 +163,7 @@ public class Auction implements IIdable, Serializable {
 
     @Override
     public String toString() {
-        return "Auction{" + "id=" + id + ", startDate=" + startDate + ", duration=" + duration + ", product=" + product + ", auctioneer=" + auctioneer + ", actualPrice=" + actualPrice + ", bidderId=" + bidderId + ", nextPrice=" + nextPrice + ", newBidderId=" + newBidderId + ", state=" + state + '}';
+        return "Auction{" + "id=" + id + ", startDate=" + startDate + ", duration=" + duration + ", product=" + product + ", auctioneerId=" + auctioneerId + ", actualPrice=" + actualPrice + ", bidderId=" + bidderId + ", nextPrice=" + nextPrice + ", newBidderId=" + newBidderId + ", state=" + state + '}';
     }
     
 }
