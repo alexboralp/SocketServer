@@ -9,13 +9,13 @@ import auctions.messages.MsgAcceptOffer;
 import auctions.messages.MsgAuctionFinished;
 import auctions.messages.MsgMessageToBidder;
 import auctions.messages.MsgNewOffer;
-import observerclient.ObserverMessageFactory;
+import observerclient.ObserverClientMessageFactory;
 
 /**
  *
  * @author aborbon
  */
-public class MessageClientFactory extends ObserverMessageFactory {
+public class MessageClientFactory extends ObserverClientMessageFactory {
     
     public static final int NEW_OFFER = 200;
     public static final int ACCEPT_OFFER = 201;
