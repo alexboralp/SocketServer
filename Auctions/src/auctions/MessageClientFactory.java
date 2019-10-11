@@ -5,9 +5,10 @@
  */
 package auctions;
 
-import auctions.messages.AuctionFinished;
-import auctions.messages.MessageToBidder;
-import auctions.messages.NewOffer;
+import auctions.messages.MsgAcceptOffer;
+import auctions.messages.MsgAuctionFinished;
+import auctions.messages.MsgMessageToBidder;
+import auctions.messages.MsgNewOffer;
 import observerclient.ObserverMessageFactory;
 
 /**
@@ -16,25 +17,32 @@ import observerclient.ObserverMessageFactory;
  */
 public class MessageClientFactory extends ObserverMessageFactory {
     
-    public static final int NEW_OFFER = 8;
-    public static final int ACCEPT_OFFER = 9;
+    public static final int NEW_OFFER = 200;
+    public static final int ACCEPT_OFFER = 201;
     public static final int ADD_AUCTION = ADD_OBSERVABLE;
     public static final int FOLLOW_AUCTION = FOLLOW_OBSERVABLE;
     public static final int UNFOLLOW_AUCTION = UNFOLLOW_OBSERVABLE;
     public static final int REMOVE_AUCTION = REMOVE_OBSERVABLE;
     public static final int ADD_BIDDER = ADD_OBSERVER;
-    public static final int MESSAGE_TO_BIDDER = 10;
-    public static final int AUCTION_FINISHED = 11;
+    public static final int MESSAGE_TO_BIDDER = 202;
+    public static final int AUCTION_FINISHED = 203;
+    public static final int CANCEL_AUCTION = 204;
+    public static final int SEND_ALL_AUCTIONS = SEND_ALL_OBSERVABLES;
+    public static final int SEND_ALL_BIDDERS = SEND_ALL_OBSERVERS;
     
-    public static MessageToBidder createMessageToBidder(String idAuction, String idBidder, String message) {
-        return new MessageToBidder(idAuction, idBidder, message);
+    public static MsgMessageToBidder createMessageToBidder(String idAuction, String idBidder, String message) {
+        return new MsgMessageToBidder(idAuction, idBidder, message);
     }
     
-    public static AuctionFinished createAuctionFinished(String idAuction, String idBidder, String messageToWinner) {
-        return new AuctionFinished(idAuction, idBidder, messageToWinner);
+    public static MsgAuctionFinished createAuctionFinished(String idAuction, String idBidder, String messageToWinner) {
+        return new MsgAuctionFinished(idAuction, idBidder, messageToWinner);
     }
     
-    public static NewOffer createNewOffer(String idAuction, double newOffer) {
-        return new NewOffer(idAuction, newOffer);
+    public static MsgNewOffer createNewOffer(String idAuction, double newOffer) {
+        return new MsgNewOffer(idAuction, newOffer);
+    }
+    
+    public static MsgAcceptOffer createAcceptOffer(String idAuction, String idBidder, double newPrice) {
+        return new MsgAcceptOffer(idAuction,idBidder, newPrice);
     }
 }

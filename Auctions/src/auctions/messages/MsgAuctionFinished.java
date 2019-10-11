@@ -11,12 +11,12 @@ import java.io.Serializable;
  *
  * @author alexander
  */
-public class AuctionFinished implements Serializable {
+public class MsgAuctionFinished implements Serializable {
     private String idAuction;
     private String idWinnerBidder;
     private String messageToWinner;
 
-    public AuctionFinished(String idAuction, String idWinnerBidder, String messageToWinner) {
+    public MsgAuctionFinished(String idAuction, String idWinnerBidder, String messageToWinner) {
         this.idAuction = idAuction;
         this.idWinnerBidder = idWinnerBidder;
         this.messageToWinner = messageToWinner;

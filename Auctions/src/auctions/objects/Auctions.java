@@ -47,5 +47,9 @@ public class Auctions implements IList<Auction>{
         this.auctions = auctions;
     }
     
+    public boolean containsKey(String key) {
+        return auctions.containsKey(key);
+    }
+    
     
 }
