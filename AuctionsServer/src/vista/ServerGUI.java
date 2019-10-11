@@ -5,12 +5,16 @@
  */
 package vista;
 
+import controller.ServerController;
+
 /**
  *
  * @author aborbon
  */
 public class ServerGUI extends javax.swing.JFrame {
 
+    ServerController serverController;
+    
     /**
      * Creates new form Server
      */
@@ -50,6 +54,14 @@ public class ServerGUI extends javax.swing.JFrame {
      */
     public void print(String message) {
         txtMessages.append(message + '\n');
+    }
+
+    public ServerController getServerController() {
+        return serverController;
+    }
+
+    public void setServerController(ServerController serverController) {
+        this.serverController = serverController;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
