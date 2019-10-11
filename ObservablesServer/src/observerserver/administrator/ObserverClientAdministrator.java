@@ -24,7 +24,7 @@ public class ObserverClientAdministrator extends AbsObservable implements IObser
     IPrintable printer;
 
     public ObserverClientAdministrator(String serverName, int port, IPrintable printer) {
-        administrator = ClientAdministratorFactory.createClientAdministrator(serverName, 0, printer);
+        administrator = ClientAdministratorFactory.createClientAdministrator(serverName, port, printer);
         administrator.addObserver(this);
         this.printer = printer;
     }
