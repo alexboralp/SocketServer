@@ -5,10 +5,10 @@
  */
 package vista;
 
-import auctions.ClientFactory;
+import auctions.AuctionClientFact;
 import auctions.objects.Auction;
 import auctions.objects.Auctions;
-import auctions.objects.Client;
+import auctions.objects.AuctionClient;
 import controller.ClientController;
 import java.util.Date;
 import javax.swing.DefaultListModel;
@@ -29,7 +29,7 @@ public class ClientGUI extends javax.swing.JFrame {
     
     private static String nombre;
     
-    private final Client client;
+    private final AuctionClient client;
     private final Auctions auctions;
     private final Auctions followedAuctions;
     
@@ -45,7 +45,7 @@ public class ClientGUI extends javax.swing.JFrame {
             nombre = JOptionPane.showInputDialog(this, "Introduzca su nombre", "Nombre", JOptionPane.PLAIN_MESSAGE);
         } while ("".equals(nombre));
             
-        client = ClientFactory.createClient(nombre);
+        client = AuctionClientFact.createClient(nombre);
             
         auctions = new Auctions();
         followedAuctions = new Auctions();
@@ -1116,7 +1116,7 @@ public class ClientGUI extends javax.swing.JFrame {
         }
     }
 
-    public Client getClient() {
+    public AuctionClient getClient() {
         return client;
     }
     
