@@ -5,27 +5,27 @@
  */
 package controller;
 
-import auctions.MessageClientFactory;
-import auctions.messages.MsgAcceptOffer;
-import auctions.messages.MsgAuctionFinished;
-import auctions.messages.MsgMessageToBidder;
-import auctions.messages.MsgNewOffer;
+import auctions.AuctionMsgFactForClients;
+import auctions.messages.AuctionMsgAcceptOffer;
+import auctions.messages.AuctionMsgAuctionFinished;
+import auctions.messages.AuctionMsgMessageToBidder;
+import auctions.messages.AuctionMsgNewOffer;
 import auctions.objects.Auction;
-import observerserver.ObserverServerAdministratorFactory;
-import observerserver.administrator.ObserverServerAdministrator;
-import socketserver.commoninterfaces.IPrintable;
-import socketserver.message.IMessage;
-import socketserver.patterns.observer.IObserver;
+import ooserver.OOServerAdminFact;
+import ooserver.admin.OOServerAdmin;
+import ooserver.commoninterfaces.OOIMsg;
+import ooserver.commoninterfaces.OOIObserver;
+import ooserver.commoninterfaces.OOIPrintable;
 import vista.ServerGUI;
 
 /**
  *
  * @author alexander
  */
-public class ServerController implements IPrintable, IObserver {
+public class ServerController implements OOIPrintable, OOIObserver {
 
     private final ServerGUI serverGUI;
-    private final ObserverServerAdministrator serverAdministrator;
+    private final OOServerAdmin serverAdministrator;
             
     public ServerController(ServerGUI serverGUI, int port) {
         this.serverGUI = serverGUI;
@@ -33,7 +33,7 @@ public class ServerController implements IPrintable, IObserver {
         
         print("ServerController: Starting serverGUI on port " + port + ".");
         
-        serverAdministrator = ObserverServerAdministratorFactory.createObserverServerAdministrator(port, this);
+        serverAdministrator = OOServerAdminFact.createObserverServerAdministrator(port, this);
         serverAdministrator.addObserver(this);
     }
     
@@ -49,21 +49,21 @@ public class ServerController implements IPrintable, IObserver {
 
     @Override
     public void update(Object message) {
-        if (message instanceof IMessage) {
-            messageReceived((IMessage)message);
+        if (message instanceof OOIMsg) {
+            messageReceived((OOIMsg)message);
             
         }
     }
     
-    private void messageReceived(IMessage message) {
+    private void messageReceived(OOIMsg message) {
         switch(message.getType()) {
-                case MessageClientFactory.NEW_OFFER:
-                    MsgNewOffer newOffer = (MsgNewOffer)message.getMessage();
+                case AuctionMsgFactForClients.NEW_OFFER:
+                    AuctionMsgNewOffer newOffer = (AuctionMsgNewOffer)message.getMessage();
                     Auction auctionNewOffer = (Auction)serverAdministrator.getObservableFromServer(newOffer.getIdAuction());
                     serverAdministrator.sendMessageToClient(auctionNewOffer.getAuctioneerId(), message);
                     break;
-                case MessageClientFactory.ACCEPT_OFFER:
-                    MsgAcceptOffer acceptOffer = (MsgAcceptOffer)message.getMessage();
+                case AuctionMsgFactForClients.ACCEPT_OFFER:
+                    AuctionMsgAcceptOffer acceptOffer = (AuctionMsgAcceptOffer)message.getMessage();
                     Auction auctionAcceptOffer = (Auction)serverAdministrator.getObservableFromServer(acceptOffer.getIdAuction());
                     serverAdministrator.sendMessageToClient(auctionAcceptOffer.getAuctioneerId(), message);
                     break;
@@ -81,12 +81,12 @@ public class ServerController implements IPrintable, IObserver {
                     break;
                 case MessageClientFactory.SEND_ALL_BIDDERS:
                     break;*/
-                case MessageClientFactory.MESSAGE_TO_BIDDER:
-                    MsgMessageToBidder messageToBidder = (MsgMessageToBidder)message.getMessage();
+                case AuctionMsgFactForClients.MESSAGE_TO_BIDDER:
+                    AuctionMsgMessageToBidder messageToBidder = (AuctionMsgMessageToBidder)message.getMessage();
                     serverAdministrator.sendMessageToClient(messageToBidder.getIdBidder(), message);
                     break;
-                case MessageClientFactory.AUCTION_FINISHED:
-                    MsgAuctionFinished auctionFinished = (MsgAuctionFinished)message.getMessage();
+                case AuctionMsgFactForClients.AUCTION_FINISHED:
+                    AuctionMsgAuctionFinished auctionFinished = (AuctionMsgAuctionFinished)message.getMessage();
                     ((Auction)serverAdministrator.getObservableFromServer(auctionFinished.getIdAuction())).setState(Auction.STATE.FINISHED);
                     serverAdministrator.sendMessageToClient(auctionFinished.getIdWinnerBidder(), message);
                     break;
