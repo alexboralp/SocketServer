@@ -60,7 +60,7 @@ public class AuctionsServer {
             public void run() {
                 serverGUI = new ServerGUI();
                 admin = new Admin(port, serverGUI);
-                controller = new Controller(serverGUI, admin);
+                controller = new Controller(serverGUI, admin, serverGUI);
                 serverGUI.setVisible(true);
             }
         });
