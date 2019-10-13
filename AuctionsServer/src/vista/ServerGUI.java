@@ -5,15 +5,13 @@
  */
 package vista;
 
-import controller.ServerController;
+import ooserver.commoninterfaces.OOIPrintable;
 
 /**
  *
  * @author aborbon
  */
-public class ServerGUI extends javax.swing.JFrame {
-
-    ServerController serverController;
+public class ServerGUI extends javax.swing.JFrame implements OOIPrintable {
     
     /**
      * Creates new form Server
@@ -47,25 +45,22 @@ public class ServerGUI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    
-    /**
-     * Imprime un mensaje en la pantalla
-     * @param message Mensaje que se desea imprimir
-     */
-    public void print(String message) {
-        txtMessages.append(message + '\n');
-    }
-
-    public ServerController getServerController() {
-        return serverController;
-    }
-
-    public void setServerController(ServerController serverController) {
-        this.serverController = serverController;
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea txtMessages;
+    public javax.swing.JTextArea txtMessages;
     // End of variables declaration//GEN-END:variables
+
+    
+    
+    @Override
+    public void print(String message) {
+        txtMessages.append(message + "\n");
+    }
+
+    @Override
+    public void printError(String message) {
+        txtMessages.append("ERROR: " + message + "\n");
+    }
+
 }

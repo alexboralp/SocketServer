@@ -5,6 +5,7 @@
  */
 package controller;
 
+import admin.Admin;
 import vista.ServerGUI;
 
 /**
@@ -13,8 +14,9 @@ import vista.ServerGUI;
  */
 public class AuctionsServer {
     
-    private static ServerGUI server;
-    private static ServerController serverController;
+    private static ServerGUI serverGUI;
+    private static Admin admin;
+    private static Controller controller;
     
     /**
      * @param args the command line arguments
@@ -56,9 +58,10 @@ public class AuctionsServer {
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                server = new ServerGUI();
-                server.setVisible(true);
-                serverController = new ServerController(server, port);
+                serverGUI = new ServerGUI();
+                admin = new Admin(port, serverGUI);
+                controller = new Controller(serverGUI, admin);
+                serverGUI.setVisible(true);
             }
         });
     }
