@@ -5,26 +5,26 @@
  */
 package controller.server;
 
-import observerserver.administrator.ObserverServerAdministrator;
-import observerserver.ObserverServerAdministratorFactory;
-import socketserver.commoninterfaces.IPrintable;
+import ooserver.admin.OOServerAdmin;
+import ooserver.OOServerAdminFact;
+import ooserver.commoninterfaces.OOIPrintable;
 import vista.server.ServerGUI;
 
 /**
  *
  * @author alexander
  */
-public class ServerController implements IPrintable {
+public class ServerController implements OOIPrintable {
 
     private final ServerGUI server;
-    private final ObserverServerAdministrator observerServerAdministrator;
+    private final OOServerAdmin observerServerAdministrator;
             
     public ServerController(ServerGUI server, int port) {
         this.server = server;
         
         print("Starting server on port " + port + ".");
         
-        observerServerAdministrator = ObserverServerAdministratorFactory.createObserverServerAdministrator(port, this);
+        observerServerAdministrator = OOServerAdminFact.createObserverServerAdministrator(port, this);
         
     }
     

@@ -5,20 +5,20 @@
  */
 package controller.client;
 
-import observerserver.administrator.ObserverClientAdministrator;
-import observerclient.ObserverClientAdministratorFactory;
-import socketserver.commoninterfaces.IPrintable;
-import socketserver.message.IMessage;
+import ooserver.admin.OOClientAdmin;
+import ooclient.OOClientAdminFact;
+import ooserver.commoninterfaces.OOIMsg;
+import ooserver.commoninterfaces.OOIPrintable;
 import vista.client.ClientGUI;
 
 /**
  *
  * @author alexander
  */
-public class ClientController implements IPrintable {
+public class ClientController implements OOIPrintable {
 
     ClientGUI client;
-    private ObserverClientAdministrator clientAdministrator;
+    private OOClientAdmin clientAdministrator;
             
     public ClientController(ClientGUI client, String server, int port) {
         
@@ -26,7 +26,7 @@ public class ClientController implements IPrintable {
         
         print("Connecting server " + server + " on port " + port + ".");
         
-        clientAdministrator = ObserverClientAdministratorFactory.createObserverClientAdministrator(server, port, this);
+        clientAdministrator = OOClientAdminFact.createObserverClientAdministrator(server, port, this);
         
     }
 
@@ -38,15 +38,15 @@ public class ClientController implements IPrintable {
         this.client = client;
     }
 
-    public ObserverClientAdministrator getObserverClientAdministrator() {
+    public OOClientAdmin getObserverClientAdministrator() {
         return clientAdministrator;
     }
 
-    public void setObserverClientAdministrator(ObserverClientAdministrator clientAdministrator) {
+    public void setObserverClientAdministrator(OOClientAdmin clientAdministrator) {
         this.clientAdministrator = clientAdministrator;
     }
     
-    public void sendMessageToServer(IMessage message) {
+    public void sendMessageToServer(OOIMsg message) {
         clientAdministrator.sendMessage(message);
     }
     
