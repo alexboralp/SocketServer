@@ -5,20 +5,20 @@
  */
 package controller.client;
 
-import socketclient.ClientAdministratorFactory;
-import socketserver.administrator.ClientAdministrator;
-import socketserver.commoninterfaces.IPrintable;
-import socketserver.message.IMessage;
+import ssclient.SSClientAdminFact;
+import ssserver.admin.SSClientAdmin;
 import vista.client.ClientGUI;
+import ssserver.commoninterfaces.SSIPrintable;
+import ssserver.msg.SSIMsg;
 
 /**
  *
  * @author alexander
  */
-public class ClientController implements IPrintable {
+public class ClientController implements SSIPrintable {
 
     ClientGUI client;
-    private ClientAdministrator clientAdministrator;
+    private SSClientAdmin clientAdministrator;
             
     public ClientController(ClientGUI client, String server, int port) {
         
@@ -26,7 +26,7 @@ public class ClientController implements IPrintable {
         
         print("Connecting server " + server + " on port " + port + ".");
         
-        clientAdministrator = ClientAdministratorFactory.createClientAdministrator(server, port, this);
+        clientAdministrator = SSClientAdminFact.createClientAdministrator(server, port, this);
         
     }
 
@@ -38,15 +38,15 @@ public class ClientController implements IPrintable {
         this.client = client;
     }
 
-    public ClientAdministrator getClientAdministrator() {
+    public SSClientAdmin getClientAdministrator() {
         return clientAdministrator;
     }
 
-    public void setClientAdministrator(ClientAdministrator clientAdministrator) {
+    public void setClientAdministrator(SSClientAdmin clientAdministrator) {
         this.clientAdministrator = clientAdministrator;
     }
     
-    public void sendMessageToServer(IMessage message) {
+    public void sendMessageToServer(SSIMsg message) {
         clientAdministrator.sendMessage(message);
     }
     

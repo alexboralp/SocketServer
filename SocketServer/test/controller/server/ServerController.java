@@ -5,26 +5,26 @@
  */
 package controller.server;
 
-import socketserver.ServerAdministratorFactory;
-import socketserver.administrator.ServerAdministrator;
-import socketserver.commoninterfaces.IPrintable;
+import ssserver.SSServerAdminFact;
+import ssserver.admin.SSServerAdmin;
 import vista.server.ServerGUI;
+import ssserver.commoninterfaces.SSIPrintable;
 
 /**
  *
  * @author alexander
  */
-public class ServerController implements IPrintable {
+public class ServerController implements SSIPrintable {
 
     private final ServerGUI server;
-    private final ServerAdministrator serverAdministrator;
+    private final SSServerAdmin serverAdministrator;
             
     public ServerController(ServerGUI server, int port) {
         this.server = server;
         
         print("Starting server on port " + port + ".");
         
-        serverAdministrator = ServerAdministratorFactory.createServerAdministrator(port, this);
+        serverAdministrator = SSServerAdminFact.createServerAdministrator(port, this);
         
     }
     
