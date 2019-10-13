@@ -5,26 +5,23 @@
  */
 package auctions.objects;
 
-import java.io.Serializable;
 import java.util.Date;
 import javax.swing.Icon;
-import socketserver.commoninterfaces.IIdable;
+import ooserver.observermsg.OOAbsSendableObj;
 
 /**
  *
  * @author alexander
  */
-public class Auction implements IIdable, Serializable {
+public class Auction extends OOAbsSendableObj {
     
     public enum STATE {
         IN_PROGRESS, CANCELED, FINISHED
     }
     
-    private String id;
-    
     private Date startDate;
     private int duration;
-    private Product product;
+    private AuctionProduct product;
     private Icon image;
     
     private String auctioneerId;
@@ -36,7 +33,7 @@ public class Auction implements IIdable, Serializable {
     private STATE state;
     
     public Auction() {
-        this.id = "";
+        super("");
         this.startDate = null;
         this.duration = 0;
         this.product = null;
@@ -48,8 +45,8 @@ public class Auction implements IIdable, Serializable {
         state = STATE.IN_PROGRESS;
     }
 
-    public Auction(String id, Date startDate, int duration, Product product, double precioInicial, Icon image) {
-        this.id = id;
+    public Auction(String id, Date startDate, int duration, AuctionProduct product, double precioInicial, Icon image) {
+        super(id);
         this.startDate = startDate;
         this.duration = duration;
         this.product = product;
@@ -61,16 +58,6 @@ public class Auction implements IIdable, Serializable {
         this.bidderId = "";
         this.newBidderId = "";
         state = STATE.IN_PROGRESS;
-    }
-
-    @Override
-    public String getId() {
-        return id;
-    }
-
-    @Override
-    public void setId(String id) {
-        this.id = id;
     }
     
     public void acceptNewOffer() {
@@ -97,11 +84,11 @@ public class Auction implements IIdable, Serializable {
         this.duration = duration;
     }
 
-    public Product getProduct() {
+    public AuctionProduct getProduct() {
         return product;
     }
 
-    public void setProduct(Product product) {
+    public void setProduct(AuctionProduct product) {
         this.product = product;
     }
 

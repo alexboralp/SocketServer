@@ -11,11 +11,11 @@ import java.io.Serializable;
  *
  * @author alexander
  */
-public class MsgNewOffer implements Serializable{
+public class AuctionMsgNewOffer implements Serializable{
     private String idAuction;
     private double newOffer;
 
-    public MsgNewOffer(String idAuction, double newOffer) {
+    public AuctionMsgNewOffer(String idAuction, double newOffer) {
         this.idAuction = idAuction;
         this.newOffer = newOffer;
     }

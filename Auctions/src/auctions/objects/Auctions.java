@@ -6,14 +6,14 @@
 package auctions.objects;
 
 import java.util.HashMap;
-import socketserver.commoninterfaces.IList;
+import ooserver.commoninterfaces.OOIListId;
 
 
 /**
  *
  * @author alexander
  */
-public class Auctions implements IList<Auction>{
+public class Auctions implements OOIListId<Auction>{
     HashMap<String, Auction> auctions;
 
     public Auctions() {
@@ -21,6 +21,14 @@ public class Auctions implements IList<Auction>{
     }
 
     public Auctions(HashMap<String, Auction> auctions) {
+        this.auctions = auctions;
+    }
+
+    public HashMap<String, Auction> getAuctions() {
+        return auctions;
+    }
+
+    public void setAuctions(HashMap<String, Auction> auctions) {
         this.auctions = auctions;
     }
     
@@ -38,17 +46,15 @@ public class Auctions implements IList<Auction>{
     public Auction get (String id) {
         return auctions.get(id);
     }
-
-    public HashMap<String, Auction> getAuctions() {
-        return auctions;
-    }
-
-    public void setAuctions(HashMap<String, Auction> auctions) {
-        this.auctions = auctions;
-    }
     
-    public boolean containsKey(String key) {
-        return auctions.containsKey(key);
+    @Override
+    public boolean containsKey(String id) {
+        return auctions.containsKey(id);
+    }
+
+    @Override
+    public void remove(String id) {
+        auctions.remove(id);
     }
     
     

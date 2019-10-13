@@ -5,13 +5,13 @@
  */
 package auctions;
 
-import observerserver.ObserverServerMessageFactory;
+import ooserver.OOServerMsgFact;
 
 /**
  *
  * @author aborbon
  */
-public class MessageServerFactory extends ObserverServerMessageFactory {
+public class AuctionMsgFactForServer extends OOServerMsgFact {
     public static final int MESSAGE_TO_BIDDER = TEXT_MESSAGE_TO_OBSERVER;
     public static final int SENDING_ALL_AUCTIONS = OBSERVABLES_LIST;
     public static final int SENDING_ALL_BIDDERS = OBSERVERS_LIST;

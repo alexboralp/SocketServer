@@ -11,15 +11,15 @@ import java.io.Serializable;
  *
  * @author alexander
  */
-public class MsgMessageToBidder implements Serializable{
-    private String idBidder;
-    private String Message;
-    private String idAuction;
+public class AuctionMsgAcceptOffer implements Serializable {
+    String idAuction;
+    String idBidder;
+    double newPrice;
 
-    public MsgMessageToBidder(String idAuction, String idBidder, String Message) {
+    public AuctionMsgAcceptOffer(String idAuction, String idBidder, double newPrice) {
         this.idAuction = idAuction;
         this.idBidder = idBidder;
-        this.Message = Message;
+        this.newPrice = newPrice;
     }
 
     public String getIdAuction() {
@@ -38,12 +38,12 @@ public class MsgMessageToBidder implements Serializable{
         this.idBidder = idBidder;
     }
 
-    public String getMessage() {
-        return Message;
+    public double getNewPrice() {
+        return newPrice;
     }
 
-    public void setMessage(String Message) {
-        this.Message = Message;
+    public void setNewPrice(double newPrice) {
+        this.newPrice = newPrice;
     }
     
     

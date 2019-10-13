@@ -5,17 +5,14 @@
  */
 package auctions.objects;
 
-import java.io.Serializable;
 import javax.swing.Icon;
-import socketserver.commoninterfaces.IIdable;
+import ooserver.observermsg.OOAbsSendableObj;
 
 /**
  *
  * @author alexander
  */
-public class Product implements IIdable, Serializable {
-    
-    private String id;
+public class AuctionProduct extends OOAbsSendableObj {
     
     private String description;
     private Icon image;
@@ -23,30 +20,20 @@ public class Product implements IIdable, Serializable {
     private double inititalPrice;
     private double finalPrice;
     
-    public Product() {
-        this.id = "";
+    public AuctionProduct() {
+        super("");
         this.description = "";
         this.image = null;
         this.inititalPrice = 0;
         this.finalPrice = 0;
     }
 
-    public Product(String id, String description, Icon image, double inititalPrice) {
-        this.id = id;
+    public AuctionProduct(String id, String description, Icon image, double inititalPrice) {
+        super(id);
         this.description = description;
         this.image = image;
         this.inititalPrice = inititalPrice;
         this.finalPrice = inititalPrice;
-    }
-
-    @Override
-    public String getId() {
-        return id;
-    }
-
-    @Override
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getDescription() {
