@@ -68,7 +68,9 @@ public class AuctionProduct extends OOAbsSendableObj {
         this.finalPrice = finalPrice;
     }
 
-    
-    
+    @Override
+    public String toString() {
+        return "AuctionProduct{" + "description=" + description + ", image=" + image + ", inititalPrice=" + inititalPrice + ", finalPrice=" + finalPrice + '}';
+    }
     
 }

@@ -5,15 +5,17 @@
  */
 package auctions;
 
+import auctions.objects.Auction;
 import auctions.objects.AuctionProduct;
+import java.util.Date;
 import javax.swing.Icon;
 
 /**
  *
  * @author aborbon
  */
-public class AuctionProductFact {
-    public static AuctionProduct createProduct(String id, String description, Icon image, double inititalPrice) {
-        return new AuctionProduct(id, description, image, inititalPrice);
+public class AuctionsFact {
+    public static Auction createAuction(String id, Date startDate, int duration, AuctionProduct product, double initialPrice, Icon image) {
+        return new Auction(id, startDate, duration, product, initialPrice, image);
     }
 }

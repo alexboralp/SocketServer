@@ -3,14 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package auctions.objects;
+package auctions.interfaces;
 
-import ooserver.commoninterfaces.OOIMsg;
+import auctions.messages.AuctionsMsg;
 
 /**
  *
  * @author alexander
  */
 public interface AuctionsIMsgHandler {
-    public void handleMessage(OOIMsg message);
+    public void handleMessage(AuctionsMsg message);
 }

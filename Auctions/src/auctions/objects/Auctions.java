@@ -56,6 +56,11 @@ public class Auctions implements OOIListId<Auction>{
     public void remove(String id) {
         auctions.remove(id);
     }
+
+    @Override
+    public String toString() {
+        return "Auctions{" + "auctions=" + auctions + '}';
+    }
     
     
 }
