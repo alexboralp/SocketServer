@@ -91,36 +91,39 @@ public class OOClientAdmin extends OOAbsObservable implements OOIObserver {
     @Override
     public void update(Object message) {
         if (message instanceof OOIMsg) {
+            printer.print("OOClientAdmin: OOIMsg message received.");
             messageReceived((OOIMsg)message);
+        } else {
+            printer.print("OOClientAdmin: Non OOIMsg message received.");
         }
-        printer.print("ObserverClientAdministrator: Sending message to observers.");
+        printer.print("OOClientAdmin: Resending message to observers.");
         updateAll(message);
     }
     
     private void messageReceived(OOIMsg message) {
-        printer.print("ObserverClientAdministrator: New message received from server: " + message.toString());
+        printer.print("OOClientAdmin: New message received from server: " + message.toString());
         switch (message.getType()) {
             case OOServerMsgFact.OBSERVABLES_LIST:
-                printer.print("ObserverClientAdministrator: Se va a recibir la lista de observables.");
+                printer.print("OOClientAdmin: OBSERVABLES_LIST, se va a recibir la lista de observables.");
                 break;
             case OOServerMsgFact.OBSERVERS_LIST:
-                printer.print("ObserverClientAdministrator: Se va a recibir la lista de observers.");
+                printer.print("OOClientAdmin: OBSERVERS_LIST, se va a recibir la lista de observers.");
                 break;
             case OOServerMsgFact.TEXT_MESSAGE:
             case OOServerMsgFact.TEXT_MESSAGE_TO_OBSERVER:
-                printer.print("ObserverClientAdministrator: Se recibió un mensaje: " + (String)message.getMessage());
+                printer.print("OOClientAdmin: TEXT_MESSAGE, se recibió un mensaje: " + (String)message.getMessage());
                 break;
             case OOServerMsgFact.SENDING_OBSERVABLE:
-                printer.print("ObserverClientAdministrator: Se recibe un observable.");
+                printer.print("OOClientAdmin: SENDING_OBSERVABLE, se recibe un observable.");
                 break;
             case OOServerMsgFact.SENDING_OBSERVER:
-                printer.print("ObserverClientAdministrator: Se recibe un observer.");
+                printer.print("OOClientAdmin: SENDING_OBSERVER, se recibe un observer.");
                 break;
             case OOServerMsgFact.SENDING_ID_TO_OBSERVER:
-                printer.print("ObserverClientAdministrator: Se recibe el id dado por el server.");
+                printer.print("OOClientAdmin: SENDING_ID_TO_OBSERVER, se recibe el id dado por el server.");
                 break;
             case OOServerMsgFact.DONE:
-                printer.print("ObserverClientAdministrator: El server avisó que terminó la solicitud anterior.");
+                printer.print("OOClientAdmin: DONE, el server avisó que terminó la solicitud anterior.");
                 break;
             default:
                 break;

@@ -5,6 +5,7 @@
  */
 package ooserver.msg;
 
+import java.io.Serializable;
 import ooserver.commoninterfaces.OOIMsg;
 import ssserver.msg.SSIMsg;
 import ssserver.msg.SSMsg;
@@ -19,6 +20,17 @@ public class OOMsg extends SSMsg implements OOIMsg{
         this.id = message.getId();
         this.type = message.getType();
         this.message = message.getMessage();
+    }
+
+    public OOMsg() {
+    }
+
+    public OOMsg(int type, Serializable mensaje) {
+        super(type, mensaje);
+    }
+
+    public OOMsg(String id, int type, Serializable mensaje) {
+        super(id, type, mensaje);
     }
     
 }

@@ -33,6 +33,9 @@ public class OOSendableObj implements OOISerializableIdable {
         this.id = id;
     }
 
-    
+    @Override
+    public String toString() {
+        return "OOSendableObj{" + "id=" + id + '}';
+    }
     
 }

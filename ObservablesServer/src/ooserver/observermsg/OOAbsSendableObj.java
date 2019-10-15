@@ -31,4 +31,10 @@ public class OOAbsSendableObj implements OOISerializableIdable {
     public void setId(String id) {
         this.id = id;
     }
+
+    @Override
+    public String toString() {
+        return "OOAbsSendableObj{" + "id=" + id + '}';
+    }
+    
 }

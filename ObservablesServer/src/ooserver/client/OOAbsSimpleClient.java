@@ -33,4 +33,11 @@ public abstract class OOAbsSimpleClient extends OOAbsSendableObj implements OOIS
     public void setName(String name) {
         this.name = name;
     }
+
+    @Override
+    public String toString() {
+        return "OOAbsSimpleClient{" + "name=" + name + super.toString() + '}';
+    }
+    
+    
 }

@@ -82,5 +82,10 @@ public abstract class OOAbsObservableObj<T extends OOISerializableIdable> implem
 
     @Override
     public abstract void update(OOIObserverObj observer, Object message);
+
+    @Override
+    public String toString() {
+        return "OOAbsObservableObj{" + "observers=" + observers + ", object=" + object + ", ownerId=" + ownerId + '}';
+    }
     
 }

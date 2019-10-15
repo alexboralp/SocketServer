@@ -18,6 +18,10 @@ public class OOObservables implements OOIListId<OOIObservableObj> {
     
     protected HashMap<String, OOIObservableObj> observables;
 
+    public OOObservables() {
+        observables = new HashMap();
+    }
+
     @Override
     public void add(OOIObservableObj element) {
         observables.put(element.getId(), element);
@@ -57,6 +61,11 @@ public class OOObservables implements OOIListId<OOIObservableObj> {
     
     public Collection<OOIObservableObj> getObservables() {
         return observables.values();
+    }
+
+    @Override
+    public String toString() {
+        return "OOObservables{" + "observables=" + observables + '}';
     }
     
 }

@@ -32,6 +32,6 @@ public class OOClientMsgFact extends SSClientMsgFact {
     }
     
     public static OOIMsg createMsg(int type, Serializable message) {
-        return new OOMsg(SSClientMsgFact.createMsg(type, message));
+        return new OOMsg(type, message);
     }
 }

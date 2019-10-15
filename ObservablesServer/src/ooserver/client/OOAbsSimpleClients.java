@@ -43,5 +43,10 @@ public abstract class OOAbsSimpleClients implements OOISimpleClients {
     public OOISimpleClient get(String id) {
         return simpleClients.get(id);
     }
+
+    @Override
+    public String toString() {
+        return "OOAbsSimpleClients{" + "simpleClients=" + simpleClients + '}';
+    }
     
 }

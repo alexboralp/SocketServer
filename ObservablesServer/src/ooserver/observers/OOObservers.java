@@ -8,15 +8,19 @@ package ooserver.observers;
 import java.util.Collection;
 import java.util.HashMap;
 import ooserver.commoninterfaces.OOIListId;
+import ooserver.commoninterfaces.OOIMsg;
 
 /**
  *
  * @author alexander
- * @param <T>
  */
 public class OOObservers implements OOIListId<OOIObserverObj> {
 
     private HashMap<String, OOIObserverObj> observers;
+
+    public OOObservers() {
+        observers = new HashMap();
+    }
     
     public Collection<OOIObserverObj> getObservers() {
         return observers.values();
@@ -45,6 +49,11 @@ public class OOObservers implements OOIListId<OOIObserverObj> {
     @Override
     public boolean containsKey(String id) {
         return observers.containsKey(id);
+    }
+
+    @Override
+    public String toString() {
+        return "OOObservers{" + "observers=" + observers + '}';
     }
     
 }
