@@ -6,7 +6,7 @@
 package controller;
 
 import admin.Admin;
-import ooserver.commoninterfaces.OOIPrintable;
+import auctions.interfaces.AuctionsIPrintable;
 import vista.ServerGUI;
 
 /**
@@ -15,10 +15,10 @@ import vista.ServerGUI;
  */
 public class Controller{
     private final ServerGUI serverGUI;
-    Admin admin;
-    OOIPrintable printer;
+    private final Admin admin;
+    private final AuctionsIPrintable printer;
 
-    public Controller(ServerGUI serverGUI, Admin admin, OOIPrintable printer) {
+    public Controller(ServerGUI serverGUI, Admin admin, AuctionsIPrintable printer) {
         this.serverGUI = serverGUI;
         this.admin = admin;
         this.printer = printer;

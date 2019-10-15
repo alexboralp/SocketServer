@@ -5,13 +5,13 @@
  */
 package vista;
 
-import ooserver.commoninterfaces.OOIPrintable;
+import auctions.interfaces.AuctionsIPrintable;
 
 /**
  *
  * @author aborbon
  */
-public class ServerGUI extends javax.swing.JFrame implements OOIPrintable {
+public class ServerGUI extends javax.swing.JFrame implements AuctionsIPrintable {
     
     /**
      * Creates new form Server
