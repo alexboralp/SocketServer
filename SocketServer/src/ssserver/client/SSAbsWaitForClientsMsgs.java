@@ -57,8 +57,14 @@ public abstract class SSAbsWaitForClientsMsgs implements SSIList<SSWaitForClient
             try {
                 waitForClientMessages.closeComunication();
             } catch (IOException ex) {
-                printer.printError("AbsWaitForClientsMessages: " + "Could not close communication to client " + waitForClientMessages.getClient().getId() + ".");
+                printer.printError("SSAbsWaitForClientsMsgs: " + "Could not close communication to client " + waitForClientMessages.getClient().getId() + ".");
             }
         }
     }
+
+    @Override
+    public String toString() {
+        return "SSAbsWaitForClientsMsgs{" + "waitForClientsMessages=" + waitForClientsMessages + ", printer=" + printer + '}';
+    }
+    
 }

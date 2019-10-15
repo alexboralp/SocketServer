@@ -64,7 +64,13 @@ public class SSAbsMsg<T extends Serializable> implements Serializable, SSIMsg<T>
 
     @Override
     public String toString() {
-        return "AbsMessage{" + "id=" + id + ", type=" + type + ", message=" + message + '}';
+        String msg;
+        if (message == null) {
+            msg = "null";
+        } else {
+            msg = message.toString();
+        }
+        return "SSAbsMessage{" + "id=" + id + ", type=" + type + ", message=" + msg + '}';
     }
     
     

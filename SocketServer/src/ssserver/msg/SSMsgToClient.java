@@ -6,41 +6,16 @@
 package ssserver.msg;
 
 import java.io.Serializable;
-import ssserver.commoninterfaces.SSIIdable;
-import ssserver.commoninterfaces.SSIMessageable;
+import ssclient.SSClientMsgFact;
 
 /**
  *
  * @author alexander
  */
-public class SSMsgToClient implements Serializable, SSIIdable, SSIMessageable{
-    private String idClient;
-    private String message;
+public class SSMsgToClient extends SSMsg<Serializable> {
 
-    public SSMsgToClient(String idClient, String message) {
-        this.idClient = idClient;
-        this.message = message;
+    public SSMsgToClient(String idClient, Serializable message) {
+        super(idClient, SSClientMsgFact.SEND_MESSAGE_TO_CLIENT, message);
     }
-
-    @Override
-    public String getId() {
-        return idClient;
-    }
-
-    @Override
-    public void setId(String id) {
-        this.idClient = id;
-    }
-
-    @Override
-    public String getMessage() {
-        return message;
-    }
-
-    @Override
-    public void setMessage(Serializable message) {
-        this.message = (String)message;
-    }
-    
     
 }

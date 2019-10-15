@@ -32,7 +32,7 @@ public class SSWaitForClientMsgs extends SSAbsObservable implements Runnable, SS
     public void run() {
         SSIMsg message;
         
-        printer.print("WaitForClientMessages: " + "Waiting for messages from clients.");
+        printer.print("SSWaitForClientMsgs: " + "Waiting for messages from clients.");
         try {
             while (client.isOk() && (message = (SSIMsg)client.getIn().readObject()) != null) {
                 message.setId(client.getId());
@@ -42,7 +42,7 @@ public class SSWaitForClientMsgs extends SSAbsObservable implements Runnable, SS
                 client.sendMessage(response);
             }
         } catch (IOException | ClassNotFoundException ex) {
-            printer.printError("WaitForClientMessages: " + ex.getMessage());
+            printer.printError("SSWaitForClientMsgs: " + ex.getMessage());
         }
         listening = false;
     }
@@ -53,7 +53,7 @@ public class SSWaitForClientMsgs extends SSAbsObservable implements Runnable, SS
             socketThread = new Thread(this);
             socketThread.start();
         } else {
-            printer.printError("WaitForClientMessages: " + "Hay algún error con el cliente.");
+            printer.printError("SSWaitForClientMsgs: " + "Hay algún error con el cliente.");
         }
     }
     
@@ -80,4 +80,11 @@ public class SSWaitForClientMsgs extends SSAbsObservable implements Runnable, SS
     public void setClient(SSIClient client) {
         this.client = client;
     }
+
+    @Override
+    public String toString() {
+        return "SSWaitForClientMsgs{" + "client=" + client + ", listening=" + listening + ", socketThread=" + socketThread + ", printer=" + printer + '}';
+    }
+    
+    
 }

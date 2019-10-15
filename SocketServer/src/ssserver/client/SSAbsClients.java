@@ -16,8 +16,8 @@ import ssserver.msg.SSIMsg;
  * @author alexander
  */
 public abstract class SSAbsClients implements SSIList<SSIClient>, SSIClients{
-    private HashMap<String, SSIClient> clients;
-    SSIPrintable printer;
+    private final HashMap<String, SSIClient> clients;
+    private final SSIPrintable printer;
 
     public SSAbsClients(SSIPrintable printer) {
         clients = new HashMap();
@@ -59,9 +59,16 @@ public abstract class SSAbsClients implements SSIList<SSIClient>, SSIClients{
                 try {
                     client.sendMessage(message);
                 } catch (IOException ex) {
-                    printer.printError("AbsClient: " + "Error al enviar el mensaje al cliente " + client.getId() + ".");
+                    printer.printError("SSAbsClients: " + "Error al enviar el mensaje al cliente " + client.getId() + ".");
                 }
             }
         }
     }
+
+    @Override
+    public String toString() {
+        return "SSAbsClients{" + "clients=" + clients + ", printer=" + printer + '}';
+    }
+    
+    
 }

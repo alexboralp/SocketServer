@@ -29,7 +29,7 @@ public class SSClientAdmin extends SSAbsObservable implements SSIObserver{
 
         this.printer = printer;
 
-        this.printer.print("Waiting for messages from server.");
+        this.printer.print("SSClientAdmin: " + "Waiting for messages from server.");
     }
     
     public void sendMessage(SSIMsg message) {
@@ -42,36 +42,46 @@ public class SSClientAdmin extends SSAbsObservable implements SSIObserver{
 
     @Override
     public void update(Object message) {
+        this.printer.print("SSClientAdmin: " + "Message received: " + message.toString());
         if (message instanceof SSIMsg) {
+            this.printer.print("SSClientAdmin: " + "SSIMsg received.");
             newMessageReceived((SSIMsg) message);
+        } else {
+            this.printer.print("SSClientAdmin: " + "Non SSIMsg message received.");
         }
-        this.printer.print("Sending message to observers.");
+        this.printer.print("SSClientAdmin: " + "Resending message to observers.");
         updateAll(message);
     }
     
     private void newMessageReceived(SSIMsg message) {
-        this.printer.print("New message from server: " + message.getId() + ".");
-        this.printer.print("Message: " + message.toString() + ".");
+        this.printer.print("SSClientAdmin: " + "New message from server: " + message.getId() + ".");
+        this.printer.print("SSClientAdmin: " + "Message: " + message.toString() + ".");
         switch (message.getType()) {
             case SSServerMsgFact.CLOSE_CONNECTION:
-                this.printer.print("El servidor solicitó cerrar la conección.");
+                this.printer.print("SSClientAdmin: " + "El servidor solicitó cerrar la conección.");
                 waitMessagesFromServer.closeConnection();
                 break;
             case SSServerMsgFact.CHECKING_CONNECTION:
-                this.printer.print("El servidor está checkeando la conección.");
+                this.printer.print("SSClientAdmin: " + "El servidor está checkeando la conección.");
                 sendMessage(SSClientMsgFact.createMsg(SSClientMsgFact.MESSAGE_RECEIVED, null));
                 break;
             case SSServerMsgFact.INFO:
-                this.printer.print("Se recibió información del servidor.");
+                this.printer.print("SSClientAdmin: " + "Se recibió información del servidor.");
                 this.printer.print(message.getMessage().toString());
                 break;
             case SSServerMsgFact.RESENDING_MESSAGE_FROM_CLIENT:
-                this.printer.print("Se recibió un mensaje del cliente " + message.getId());
+                this.printer.print("SSClientAdmin: " + "Se recibió un mensaje del cliente " + message.getId());
                 this.printer.print((String)message.getMessage());
                 break;
             default:
                 break;
         }
     }
+
+    @Override
+    public String toString() {
+        return "SSClientAdmin{" + "printer=" + printer + ", waitMessagesFromServer=" + waitMessagesFromServer + '}';
+    }
+    
     
 }

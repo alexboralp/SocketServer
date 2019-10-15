@@ -120,4 +120,10 @@ public abstract class SSAbsClient<T extends Serializable> implements SSIClient<T
     public void setId(String id) {
         this.id = id;
     }
+
+    @Override
+    public String toString() {
+        return "SSAbsClient{" + "socket=" + socket + ", in=" + in + ", out=" + out + ", id=" + id + '}';
+    }
+    
 }

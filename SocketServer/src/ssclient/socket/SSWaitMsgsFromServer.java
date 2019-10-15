@@ -31,7 +31,7 @@ public class SSWaitMsgsFromServer extends SSAbsObservable implements Runnable, S
     private static ObjectOutputStream out;
     private static ObjectInputStream in;
     
-    SSIPrintable printer;
+    private final SSIPrintable printer;
     private Thread thread;
 
     public SSWaitMsgsFromServer(String serverName, int port, SSIPrintable printer) {
@@ -82,6 +82,7 @@ public class SSWaitMsgsFromServer extends SSAbsObservable implements Runnable, S
         ok = startSocket(serverName, port);
     }
 
+    @Override
     public boolean isOk() {
         return ok;
     }
@@ -97,11 +98,11 @@ public class SSWaitMsgsFromServer extends SSAbsObservable implements Runnable, S
     public void sendMessage(SSIMsg message) {
         try {
             message.setId(socket.getLocalSocketAddress().toString());
-            printer.print("Sending the message: " + message.toString());
+            printer.print("SSWaitMsgsFromServer: " + "Sending the message: " + message.toString());
             out.writeObject(message);
             out.flush();
         } catch (IOException ex) {
-            printer.printError("WaitMessagesFromServer: " + ex.getMessage());
+            printer.printError("SSWaitMsgsFromServer: " + ex.getMessage());
         }
     }
     
@@ -115,7 +116,7 @@ public class SSWaitMsgsFromServer extends SSAbsObservable implements Runnable, S
             }
             ok = false;
         } catch (IOException ex) {
-            printer.printError("WaitMessagesFromServer: " + ex.getMessage());
+            printer.printError("SSWaitMsgsFromServer: " + ex.getMessage());
         }
     }
     
@@ -125,7 +126,7 @@ public class SSWaitMsgsFromServer extends SSAbsObservable implements Runnable, S
             out = new ObjectOutputStream(socket.getOutputStream());
             in = new ObjectInputStream(socket.getInputStream());
         } catch (IOException e) {
-            printer.printError("WaitMessagesFromServer: Could not listen on server " + serverName + ", port: " + port + ".");
+            printer.printError("SSWaitMsgsFromServer: Could not listen on server " + serverName + ", port: " + port + ".");
             ok = false;
             return false;
         }
@@ -136,12 +137,12 @@ public class SSWaitMsgsFromServer extends SSAbsObservable implements Runnable, S
     public void run() {
         try {
             while (ok && (message = (SSIMsg) in.readObject()) != null) {
-                printer.print("New message from server: " + message.toString());
+                printer.print("SSWaitMsgsFromServer: " + "New message from server: " + message.toString());
                 updateAll(message);
             }
         } catch (IOException | ClassNotFoundException ex) {
             Logger.getLogger(SSWaitMsgsFromServer.class.getName()).log(Level.SEVERE, null, ex);
-            printer.printError("WaitMessagesFromServer: " + ex.getMessage());
+            printer.printError("SSWaitMsgsFromServer: " + ex.getMessage());
         }
     }
 }

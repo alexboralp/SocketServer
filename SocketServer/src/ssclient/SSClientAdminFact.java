@@ -7,7 +7,6 @@ package ssclient;
 
 import ssserver.admin.SSClientAdmin;
 import ssserver.commoninterfaces.SSIPrintable;
-import ssserver.patterns.observer.SSIObserver;
 
 /**
  *

@@ -20,8 +20,8 @@ public class SSWaitForClients extends SSAbsObservable implements Runnable{
     
     // Socket del server que está a la espera de clientes
     private final ServerSocket serverSocket;
-    SSIPrintable printer;
-    Thread thread;
+    private final SSIPrintable printer;
+    private Thread thread;
 
     /**
      * Constructor que recibe el puerto en el que se escuchará por clientes
@@ -49,12 +49,21 @@ public class SSWaitForClients extends SSAbsObservable implements Runnable{
         while (true) {
             try {
                 Socket socketClient = serverSocket.accept();
-                updateAll(new SSClient(socketClient));
-                printer.print("WaitClients: " + "New client accepted: " + socketClient.getRemoteSocketAddress().toString() + ".");
+                printer.print("SSWaitForClients: " + "New client accepted: " + socketClient.getRemoteSocketAddress().toString() + ".");
+                SSIClient client = new SSClient(socketClient);
+                client.setId(socketClient.getRemoteSocketAddress().toString());
+                updateAll(client);
             } catch (IOException ex) {
-                printer.printError("WaitClients: " + ex.getMessage());
+                printer.printError("SSWaitForClients: " + ex.getMessage());
             }
         }
     }
+
+    @Override
+    public String toString() {
+        return "SSWaitForClients{" + "serverSocket=" + serverSocket + ", printer=" + printer + ", thread=" + thread + '}';
+    }
+    
+    
     
 }
