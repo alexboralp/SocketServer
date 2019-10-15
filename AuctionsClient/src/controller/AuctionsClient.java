@@ -5,6 +5,7 @@
  */
 package controller;
 
+import admin.Admin;
 import vista.ClientGUI;
 
 /**
@@ -14,7 +15,8 @@ import vista.ClientGUI;
 public class AuctionsClient {
 
     private static ClientGUI clientGUI;
-    private static ClientController clientController;
+    private static Admin admin;
+    private static Controller controller;
     
     /**
      * @param args the command line arguments
@@ -68,8 +70,9 @@ public class AuctionsClient {
             @Override
             public void run() {
                 clientGUI = new ClientGUI();
+                admin = new Admin(serverName, port, clientGUI);
+                controller =  new Controller(clientGUI, admin, clientGUI);
                 clientGUI.setVisible(true);
-                clientController = new ClientController(clientGUI, serverName, port);
             }
         });
     

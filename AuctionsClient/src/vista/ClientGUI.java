@@ -5,64 +5,20 @@
  */
 package vista;
 
-import auctions.AuctionClientFact;
-import auctions.objects.Auction;
-import auctions.objects.Auctions;
-import auctions.objects.AuctionClient;
-import controller.ClientController;
-import java.util.Date;
-import javax.swing.DefaultListModel;
-import javax.swing.Icon;
+import auctions.interfaces.AuctionsIPrintable;
 import javax.swing.JOptionPane;
-import javax.swing.SpinnerModel;
-import javax.swing.SpinnerNumberModel;
 
 /**
  *
  * @author alexander
  */
-public class ClientGUI extends javax.swing.JFrame {
-    
-    private static DefaultListModel<String> lstYourAuctionsModel;
-    private static DefaultListModel<String> lstFollowedAuctionsModel;
-    private static DefaultListModel<String> lstAvailableAuctionsModel;
-    
-    private static String nombre;
-    
-    private final AuctionClient client;
-    private final Auctions auctions;
-    private final Auctions followedAuctions;
-    
-    private ClientController controller;
+public class ClientGUI extends javax.swing.JFrame implements AuctionsIPrintable {
 
     /**
      * Creates new form OferenteFrame
      */
     public ClientGUI() {
         initComponents();
-        
-        do {
-            nombre = JOptionPane.showInputDialog(this, "Introduzca su nombre", "Nombre", JOptionPane.PLAIN_MESSAGE);
-        } while ("".equals(nombre));
-            
-        client = AuctionClientFact.createClient(nombre);
-            
-        auctions = new Auctions();
-        followedAuctions = new Auctions();
-            
-        lstYourAuctions.removeAll();
-        lstYourAuctionsModel = new DefaultListModel<>();
-        lstYourAuctions.setModel(lstYourAuctionsModel);
-        
-        lstFollowedAuctions.removeAll();
-        lstAvailableAuctions.removeAll();
-        lstFollowedAuctionsModel = new DefaultListModel<>();
-        lstFollowedAuctions.setModel(lstFollowedAuctionsModel);
-        lstAvailableAuctionsModel = new DefaultListModel<>();
-        lstAvailableAuctions.setModel(lstAvailableAuctionsModel);
-            
-        SpinnerModel spnSiguientePrecioModel = new SpinnerNumberModel(0.0,0.0,Double.MAX_VALUE, 0.1);
-        spnNextPrice.setModel(spnSiguientePrecioModel);
 
     }
     
@@ -122,7 +78,7 @@ public class ClientGUI extends javax.swing.JFrame {
         jLabel16 = new javax.swing.JLabel();
         spnNextPrice = new javax.swing.JSpinner();
         btnAcceptNewOffer = new javax.swing.JButton();
-        btnSendMessageToWinner = new javax.swing.JButton();
+        btnSendMsgToWinner = new javax.swing.JButton();
         btnCancelAuction = new javax.swing.JButton();
         jLabel18 = new javax.swing.JLabel();
         txtAuctionEndTime = new javax.swing.JTextField();
@@ -132,7 +88,7 @@ public class ClientGUI extends javax.swing.JFrame {
         lblYourAuctionsAuctionImage = new javax.swing.JLabel();
         lblYourAuctionsProductImage = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        txtYourAuctionsDescription = new javax.swing.JTextArea();
         jScrollPane6 = new javax.swing.JScrollPane();
         txtMessageToWinner = new javax.swing.JTextArea();
         jPanel2 = new javax.swing.JPanel();
@@ -172,20 +128,10 @@ public class ClientGUI extends javax.swing.JFrame {
         jMenuBar1.add(jMenu2);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowClosing(java.awt.event.WindowEvent evt) {
-                formWindowClosing(evt);
-            }
-        });
 
         jTabbedPane1.setTabPlacement(javax.swing.JTabbedPane.LEFT);
 
         lstAvailableAuctions.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        lstAvailableAuctions.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
-            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
-                lstAvailableAuctionsValueChanged(evt);
-            }
-        });
         jspSubastas.setViewportView(lstAvailableAuctions);
 
         jLabel24.setText("Subastas disponibles:");
@@ -196,23 +142,8 @@ public class ClientGUI extends javax.swing.JFrame {
 
         btnFollowAuction.setText("=>");
         btnFollowAuction.setEnabled(false);
-        btnFollowAuction.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnFollowAuctionActionPerformed(evt);
-            }
-        });
 
         lstFollowedAuctions.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        lstFollowedAuctions.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                lstFollowedAuctionsMouseClicked(evt);
-            }
-        });
-        lstFollowedAuctions.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
-            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
-                lstFollowedAuctionsValueChanged(evt);
-            }
-        });
         jScrollPane4.setViewportView(lstFollowedAuctions);
 
         txtActualPrice.setEditable(false);
@@ -223,11 +154,6 @@ public class ClientGUI extends javax.swing.JFrame {
 
         btnUnfollowAuction.setText("<=");
         btnUnfollowAuction.setEnabled(false);
-        btnUnfollowAuction.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnUnfollowAuctionActionPerformed(evt);
-            }
-        });
 
         jLabel28.setText("Mensajes:");
 
@@ -242,20 +168,10 @@ public class ClientGUI extends javax.swing.JFrame {
         txtProductId.setEditable(false);
 
         btnMakeNewOffer.setText("Ofertar");
-        btnMakeNewOffer.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnMakeNewOfferActionPerformed(evt);
-            }
-        });
 
         jLabel30.setText("Estado: ");
 
         txtUpdate.setText("Actualizar");
-        txtUpdate.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtUpdateActionPerformed(evt);
-            }
-        });
 
         lblAuctionImage.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblAuctionImage.setIcon(new javax.swing.ImageIcon(getClass().getResource("/vista/images/head64.png"))); // NOI18N
@@ -380,11 +296,6 @@ public class ClientGUI extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabel2.setText("Tus subastas");
 
-        lstYourAuctions.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
-            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
-                lstYourAuctionsValueChanged(evt);
-            }
-        });
         jScrollPane1.setViewportView(lstYourAuctions);
 
         txtYourAuctionId.setEditable(false);
@@ -412,25 +323,10 @@ public class ClientGUI extends javax.swing.JFrame {
         jLabel16.setText("Definir siguiente precio: ");
 
         btnAcceptNewOffer.setText("Aceptar nueva oferta");
-        btnAcceptNewOffer.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAcceptNewOfferActionPerformed(evt);
-            }
-        });
 
-        btnSendMessageToWinner.setText("Enviar mensaje al ganador");
-        btnSendMessageToWinner.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSendMessageToWinnerActionPerformed(evt);
-            }
-        });
+        btnSendMsgToWinner.setText("Enviar mensaje al ganador");
 
         btnCancelAuction.setText("Cancela la subasta");
-        btnCancelAuction.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCancelAuctionActionPerformed(evt);
-            }
-        });
 
         jLabel18.setText("Tiempo para finalizar la subasta: ");
 
@@ -454,9 +350,9 @@ public class ClientGUI extends javax.swing.JFrame {
         lblYourAuctionsProductImage.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         lblYourAuctionsProductImage.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane3.setViewportView(jTextArea1);
+        txtYourAuctionsDescription.setColumns(20);
+        txtYourAuctionsDescription.setRows(5);
+        jScrollPane3.setViewportView(txtYourAuctionsDescription);
 
         txtMessageToWinner.setColumns(20);
         txtMessageToWinner.setRows(5);
@@ -523,7 +419,7 @@ public class ClientGUI extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(btnSendMessageToWinner, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnSendMsgToWinner, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btnCancelAuction, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
@@ -593,7 +489,7 @@ public class ClientGUI extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(btnCancelAuction)
-                            .addComponent(btnSendMessageToWinner)
+                            .addComponent(btnSendMsgToWinner)
                             .addComponent(btnAcceptNewOffer, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addContainerGap())
                     .addComponent(jScrollPane1)))
@@ -616,11 +512,6 @@ public class ClientGUI extends javax.swing.JFrame {
         jLabel10.setText("horas");
 
         btnCreateNewAuction.setText("Crear la nueva subasta");
-        btnCreateNewAuction.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCreateNewAuctionActionPerformed(evt);
-            }
-        });
 
         jLabel20.setText("Hora:");
 
@@ -751,11 +642,6 @@ public class ClientGUI extends javax.swing.JFrame {
         mnuArchivo.setText("Archivo");
 
         mnuSalir.setText("Salir");
-        mnuSalir.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mnuSalirActionPerformed(evt);
-            }
-        });
         mnuArchivo.add(mnuSalir);
 
         jMenuBar2.add(mnuArchivo);
@@ -786,221 +672,16 @@ public class ClientGUI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnSendMessageToWinnerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSendMessageToWinnerActionPerformed
-        // TODO add your handling code here:
         
-        int pos = lstYourAuctions.getSelectedIndex();
-        
-        if (pos != -1) {
-            Auction auction = auctions.get(lstYourAuctions.getSelectedValue());
-            if (auction != null) {
-                if (!"".equals(auction.getBidderId())) {
-                    String idAuction = auction.getId();
-                    String winner = auction.getBidderId();
-                    String message = txtMessageToWinner.getText();
-                    txtMessageToWinner.setText("");
-                    controller.auctionFinished(idAuction, winner, message);
-                }
-            }
-        } else {
-            printError("No hay una subasta seleccionada.");
-        }
-        
-    }//GEN-LAST:event_btnSendMessageToWinnerActionPerformed
-
-    private void btnCreateNewAuctionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateNewAuctionActionPerformed
-        // TODO add your handling code here:
-        try{
-            if (!"".equals(txtNewAuctionid.getText()) && 
-                    !"".equals(txtNewAuctionProductName.getText()) &&
-                    !"".equals(txtNewAuctionDescription.getText()) &&
-                    !"".equals(txtnewAuctionInitialPrice.getText())) {
-                String AuctionName = txtNewAuctionid.getText();
-                int dia = (int)spnNewAuctionDay.getValue();
-                int mes = (int)spnnewAuctionMonth.getValue();
-                int anno = (int)spnnewAuctionYear.getValue();
-                int hora = (int)spnNewAuctionHour.getValue();
-                int duracion = (int)spnNewAuctionDuration.getValue();
-                String nombreProduct = txtNewAuctionProductName.getText();
-                String descripcion = txtNewAuctionDescription.getText();
-                double initialPrice = Double.parseDouble(txtnewAuctionInitialPrice.getText());
-                Icon auctionImage = lblAuctionImage.getIcon();
-                Icon productImage = lblProductImage.getIcon();
-                
-                Date fecha = new Date(anno, mes, dia, hora, 0);
-                
-                print("Enviando la solicitud de agregar la nueva subasta");
-                controller.addAuction(AuctionName, fecha, duracion, nombreProduct, descripcion, productImage, initialPrice, initialPrice, auctionImage);
-            } else {
-                printError("Falta algún dato para la subasta.");
-            }
-        } catch(NumberFormatException ex) {
-            printError("Revise que todos los números sean válidos.");
-        }
-    }//GEN-LAST:event_btnCreateNewAuctionActionPerformed
-
-    private void mnuSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuSalirActionPerformed
-        // TODO add your handling code here:
-        
-        controller.closeConnection();
-        print("Cerrando el programa...");
-        System.exit(0);
-    }//GEN-LAST:event_mnuSalirActionPerformed
-
-    private void lstYourAuctionsValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstYourAuctionsValueChanged
-        // TODO add your handling code here:
-        
-        String selectedValue = lstYourAuctions.getSelectedValue();
-        
-        if (selectedValue != null && !"".equals(selectedValue)) {
-            Auction auction = auctions.get(selectedValue);
-            
-            actualizarTextos(auction);
-        }
-    }//GEN-LAST:event_lstYourAuctionsValueChanged
-
-    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        // TODO add your handling code here:
-        
-        controller.closeConnection();
-        print("Cerrando el programa...");
-        System.exit(0);
-    }//GEN-LAST:event_formWindowClosing
-
-    private void btnAcceptNewOfferActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAcceptNewOfferActionPerformed
-        // TODO add your handling code here:
-        
-        int pos = lstYourAuctions.getSelectedIndex();
-        
-        if (pos != -1) {
-            String selectedValue = lstYourAuctions.getSelectedValue();
-            
-            Auction auction = auctions.get(selectedValue);
-            
-            double newPrice = (double)spnNextPrice.getValue();
-            String newBidder = auction.getNewBidderId();
-            
-            auction.setNextPrice(auction.getNextPrice());
-            auction.setBidderId(auction.getNewBidderId());
-            auction.setNextPrice(newPrice);
-            auction.setNewBidder(null);
-            auctions.add(auction);
-            
-            controller.acceptOffer(selectedValue, newBidder, newPrice);
-            actualizarTextos(auction);
-        } else {
-            print("Debe seleccionar alguna subasta.");
-        }
-    }//GEN-LAST:event_btnAcceptNewOfferActionPerformed
-
-    private void btnCancelAuctionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelAuctionActionPerformed
-        // TODO add your handling code here:
-        
-        int pos = lstYourAuctions.getSelectedIndex();
-        
-        if (pos != -1) {
-            String selectedValue = lstYourAuctions.getSelectedValue();
-            
-            Auction auction = auctions.get(selectedValue);
-            
-            auction.setState(Auction.STATE.CANCELED);
-            
-            auctions.add(auction);
-            
-            controller.cancelAuction(selectedValue);
-            actualizarTextos(auction);
-        } else {
-            print("Debe seleccionar alguna subasta.");
-        }
-    }//GEN-LAST:event_btnCancelAuctionActionPerformed
-
-    private void lstAvailableAuctionsValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstAvailableAuctionsValueChanged
-        // TODO add your handling code here:
-
-        if (lstAvailableAuctions.isSelectionEmpty()) {
-            btnFollowAuction.setEnabled(false);
-        } else {
-            btnFollowAuction.setEnabled(true);
-        }
-    }//GEN-LAST:event_lstAvailableAuctionsValueChanged
-
-    private void btnFollowAuctionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFollowAuctionActionPerformed
-        // TODO add your handling code here:
-
-        int pos = lstAvailableAuctions.getSelectedIndex();
-        if (pos != -1) {
-            String AuctionName = lstAvailableAuctions.getSelectedValue();
-
-            print("Solicitando seguir la subasta " + AuctionName + ".");
-            controller.followAuction(AuctionName);
-        } else {
-            printError("Se debe escoger una subasta.");
-        }
-    }//GEN-LAST:event_btnFollowAuctionActionPerformed
-
-    private void lstFollowedAuctionsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lstFollowedAuctionsMouseClicked
-        // TODO add your handling code here:
-        AuctionSelected();
-    }//GEN-LAST:event_lstFollowedAuctionsMouseClicked
-
-    
-    private void lstFollowedAuctionsValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstFollowedAuctionsValueChanged
-        // TODO add your handling code here:
-        if (lstFollowedAuctions.getSelectedIndex() != -1) {
-            btnUnfollowAuction.setEnabled(true);
-        } else {
-            btnUnfollowAuction.setEnabled(false);
-        }
-        AuctionSelected();
-    }//GEN-LAST:event_lstFollowedAuctionsValueChanged
-
-    private void btnUnfollowAuctionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUnfollowAuctionActionPerformed
-        // TODO add your handling code here:
-
-        int pos = lstFollowedAuctions.getSelectedIndex();
-        if (pos != -1) {
-            String AuctionName = lstFollowedAuctions.getSelectedValue();
-
-            System.out.println("Solicitud de dejar de seguir la subasta" + AuctionName + ".");
-            controller.unfollowAuction(AuctionName);
-            if (pos >= 0 && pos < lstFollowedAuctionsModel.size()){
-                lstAvailableAuctionsModel.addElement(lstAvailableAuctionsModel.remove(pos));
-            }
-        } else {
-            printError("Se debe escoger una subasta.");
-        }
-    }//GEN-LAST:event_btnUnfollowAuctionActionPerformed
-
-    private void btnMakeNewOfferActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMakeNewOfferActionPerformed
-        // TODO add your handling code here:
-        int escogido = lstFollowedAuctions.getSelectedIndex();
-        if (escogido != -1) {
-            Auction auction = followedAuctions.get(lstFollowedAuctions.getSelectedValue());
-            if (auction.getState() == Auction.STATE.IN_PROGRESS) {
-                controller.newOffer(auction.getId(), auction.getNextPrice());
-            }
-        } else {
-            printError("Se debe escoger una subasta para ofertar.");
-        }
-    }//GEN-LAST:event_btnMakeNewOfferActionPerformed
-
-    private void txtUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtUpdateActionPerformed
-        // TODO add your handling code here:
-        controller.sendAllAuctions();
-        lstAvailableAuctionsModel.clear();
-        lstFollowedAuctionsModel.clear();
-        lstYourAuctionsModel.clear();
-    }//GEN-LAST:event_txtUpdateActionPerformed
-    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnAcceptNewOffer;
-    private javax.swing.JButton btnCancelAuction;
-    private javax.swing.JButton btnCreateNewAuction;
-    private javax.swing.JButton btnFollowAuction;
-    private javax.swing.JButton btnMakeNewOffer;
-    private javax.swing.JButton btnSendMessageToWinner;
-    private javax.swing.JToggleButton btnUnfollowAuction;
+    public javax.swing.JButton btnAcceptNewOffer;
+    public javax.swing.JButton btnCancelAuction;
+    public javax.swing.JButton btnCreateNewAuction;
+    public javax.swing.JButton btnFollowAuction;
+    public javax.swing.JButton btnMakeNewOffer;
+    public javax.swing.JButton btnSendMsgToWinner;
+    public javax.swing.JToggleButton btnUnfollowAuction;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -1044,118 +725,64 @@ public class ClientGUI extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JScrollPane jspSubastas;
-    private javax.swing.JLabel lblAuctionImage;
+    public javax.swing.JLabel lblAuctionImage;
     private javax.swing.JLabel lblMensajeError;
-    private javax.swing.JLabel lblNewProductImage;
-    private javax.swing.JLabel lblProductImage;
-    private javax.swing.JLabel lblYourAuctionsAuctionImage;
-    private javax.swing.JLabel lblYourAuctionsProductImage;
-    private javax.swing.JLabel lblnewAuctionAuctionImage;
-    private javax.swing.JList<String> lstAvailableAuctions;
-    private javax.swing.JList<String> lstFollowedAuctions;
-    private javax.swing.JList<String> lstYourAuctions;
+    public javax.swing.JLabel lblNewProductImage;
+    public javax.swing.JLabel lblProductImage;
+    public javax.swing.JLabel lblYourAuctionsAuctionImage;
+    public javax.swing.JLabel lblYourAuctionsProductImage;
+    public javax.swing.JLabel lblnewAuctionAuctionImage;
+    public javax.swing.JList<String> lstAvailableAuctions;
+    public javax.swing.JList<String> lstFollowedAuctions;
+    public javax.swing.JList<String> lstYourAuctions;
     private javax.swing.JMenu mnuArchivo;
-    private javax.swing.JMenuItem mnuSalir;
-    private javax.swing.JSpinner spnNewAuctionDay;
-    private javax.swing.JSpinner spnNewAuctionDuration;
-    private javax.swing.JSpinner spnNewAuctionHour;
-    private javax.swing.JSpinner spnNextPrice;
-    private javax.swing.JSpinner spnnewAuctionMonth;
-    private javax.swing.JSpinner spnnewAuctionYear;
-    private javax.swing.JTextField txtActualPrice;
-    private javax.swing.JTextField txtAuctionEndTime;
-    private javax.swing.JTextArea txtMessageToWinner;
-    private javax.swing.JTextArea txtMessagesFromServer;
-    private javax.swing.JTextArea txtNewAuctionDescription;
-    private javax.swing.JTextField txtNewAuctionProductName;
-    private javax.swing.JTextField txtNewAuctionid;
-    private javax.swing.JTextField txtNextPrice;
-    private javax.swing.JTextField txtProductId;
-    private javax.swing.JTextField txtState;
-    private javax.swing.JButton txtUpdate;
-    private javax.swing.JTextField txtYourAuctionBestOffer;
-    private javax.swing.JTextField txtYourAuctionId;
-    private javax.swing.JTextField txtYourAuctionStatus;
-    private javax.swing.JTextField txtYourAuctionsIdProduct;
-    private javax.swing.JTextField txtYourAuctionsNewOffer;
-    private javax.swing.JTextField txtYourAuctionsUserBestOffer;
-    private javax.swing.JTextField txtYourAuctionsUserNewOffer;
-    private javax.swing.JTextField txtnewAuctionInitialPrice;
+    public javax.swing.JMenuItem mnuSalir;
+    public javax.swing.JSpinner spnNewAuctionDay;
+    public javax.swing.JSpinner spnNewAuctionDuration;
+    public javax.swing.JSpinner spnNewAuctionHour;
+    public javax.swing.JSpinner spnNextPrice;
+    public javax.swing.JSpinner spnnewAuctionMonth;
+    public javax.swing.JSpinner spnnewAuctionYear;
+    public javax.swing.JTextField txtActualPrice;
+    public javax.swing.JTextField txtAuctionEndTime;
+    public javax.swing.JTextArea txtMessageToWinner;
+    public javax.swing.JTextArea txtMessagesFromServer;
+    public javax.swing.JTextArea txtNewAuctionDescription;
+    public javax.swing.JTextField txtNewAuctionProductName;
+    public javax.swing.JTextField txtNewAuctionid;
+    public javax.swing.JTextField txtNextPrice;
+    public javax.swing.JTextField txtProductId;
+    public javax.swing.JTextField txtState;
+    public javax.swing.JButton txtUpdate;
+    public javax.swing.JTextField txtYourAuctionBestOffer;
+    public javax.swing.JTextField txtYourAuctionId;
+    public javax.swing.JTextField txtYourAuctionStatus;
+    public javax.swing.JTextArea txtYourAuctionsDescription;
+    public javax.swing.JTextField txtYourAuctionsIdProduct;
+    public javax.swing.JTextField txtYourAuctionsNewOffer;
+    public javax.swing.JTextField txtYourAuctionsUserBestOffer;
+    public javax.swing.JTextField txtYourAuctionsUserNewOffer;
+    public javax.swing.JTextField txtnewAuctionInitialPrice;
     // End of variables declaration//GEN-END:variables
 
-    public void actualizarTextos (Auction auction) {
-        txtYourAuctionId.setText(auction.getId());
-        txtYourAuctionStatus.setText(auction.getState().toString());
-        txtYourAuctionBestOffer.setText(Double.toString(auction.getActualPrice()));
-        txtYourAuctionsNewOffer.setText(Double.toString(auction.getNextPrice()));
-        txtYourAuctionsIdProduct.setText(auction.getProduct().getId());
-        spnNextPrice.setValue(auction.getNextPrice());
-        if (!"".equals(auction.getBidderId())) {
-            txtYourAuctionsUserBestOffer.setText(auction.getBidderId());
-        } else {
-            txtYourAuctionsUserBestOffer.setText("");
-        }
-        if ("".equals(auction.getNewBidderId())) {
-            txtYourAuctionsUserNewOffer.setText(auction.getNewBidderId());
-        } else {
-            txtYourAuctionsUserNewOffer.setText("");
-        }
-    }
 
-    public void setController(ClientController controller) {
-        this.controller = controller;
-    }
-    
-    public void AuctionSelected() {
-        String subasta = lstFollowedAuctions.getSelectedValue();
-        if (auctions.containsKey(subasta)) {
-            Auction auction = auctions.get(subasta);
-            actualizarTextos(auction);
-        }
-    }
-
-    public AuctionClient getClient() {
-        return client;
-    }
-    
-    public void newOffer(String auctionId, String bidderId, double nextPrice) {
-        Auction auction = auctions.get(auctionId);
-        if (nextPrice == auction.getNextPrice() && !"".equals(auction.getNewBidderId())) {
-            auction.setNewBidder(bidderId);
-        }
-    }
-    
-    public void offerAccepted(String auctionId, String bidderId, double newPrice) {
-        Auction auction = auctions.get(auctionId);
-        auction.setBidderId(bidderId);
-        auction.setActualPrice(newPrice);
-    }
-    
-    public void deleteAllAuctions() {
-        lstAvailableAuctionsModel.clear();
-        lstYourAuctionsModel.clear();
-    }
-    
-    public void addAuction(Auction auction) {
-        auctions.add(auction);
-        lstAvailableAuctionsModel.addElement(auction.getId());
-        if (client.getId().equals(auction.getAuctioneerId())) {
-            lstYourAuctionsModel.addElement(auction.getId());
-        }
-    }
-    
-    public void auctionFinished(String auctionId) {
-        auctions.get(auctionId).setState(Auction.STATE.FINISHED);
-    }
-
+    @Override
     public void print(String message) {
-        txtMessagesFromServer.setText(txtMessagesFromServer.getText() + '\n' + message);
+        txtMessagesFromServer.append(message + '\n');
     }
 
+    @Override
     public void printError(String message) {
-        txtMessagesFromServer.setText(txtMessagesFromServer.getText() + '\n' + "ERROR: " + message);
+        txtMessagesFromServer.append("ERROR: " + message + '\n');
+    }
+    
+    public String getClientName() {
+        String name = "";
+        do {
+            name = JOptionPane.showInputDialog(this, "Introduzca su nombre", "Nombre", JOptionPane.PLAIN_MESSAGE);
+        } while ("".equals(name));
+        return name;
     }
     
 }
