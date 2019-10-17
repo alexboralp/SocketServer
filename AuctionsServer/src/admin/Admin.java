@@ -5,17 +5,21 @@
  */
 package admin;
 
+import auctions.AuctionsClientAdminFact;
 import auctions.AuctionsMsgFactForClients;
+import auctions.AuctionsMsgFactForServer;
 import auctions.AuctionsServerAdminFact;
 import auctions.admin.AuctionsServerAdmin;
+import auctions.interfaces.AuctionsIMsgHandler;
 import auctions.interfaces.AuctionsIObserver;
 import auctions.interfaces.AuctionsIPrintable;
-import auctions.messages.AuctionsMsg;
-import auctions.messages.AuctionsMsgAcceptOffer;
-import auctions.messages.AuctionsMsgAuctionFinished;
-import auctions.messages.AuctionsMsgMessageToBidder;
-import auctions.messages.AuctionsMsgNewOffer;
+import auctions.msgs.AuctionsMsg;
+import auctions.msgs.AuctionsMsgAcceptOffer;
+import auctions.msgs.AuctionsMsgAuctionFinished;
+import auctions.msgs.AuctionsMsgMessageToBidder;
+import auctions.msgs.AuctionsMsgNewOffer;
 import auctions.objects.Auction;
+import auctions.objects.AuctionClient;
 
 /**
  *
@@ -23,69 +27,91 @@ import auctions.objects.Auction;
  */
 public class Admin implements AuctionsIObserver {
 
-    private final AuctionsServerAdmin serverAdministrator;
-    private AuctionsIPrintable printer;
+    private final AuctionsServerAdmin serverAdmin;
+    private final AuctionsIPrintable printer;
+    private AuctionsIMsgHandler msgHandler;
             
     public Admin(int port, AuctionsIPrintable printer) {
         this.printer = printer;
         
-        printer.print("Admin: " + "Starting serverGUI on port " + port + ".");
+        printer.print("Admin: " + "Starting server on port " + port + ".");
         
-        serverAdministrator = AuctionsServerAdminFact.createAuctionsServerAdmin(port, printer);
-        serverAdministrator.addObserver(this);
+        serverAdmin = AuctionsServerAdminFact.createAuctionsServerAdmin(port, printer);
+        serverAdmin.addObserver(this);
     }
 
     @Override
     public void update(Object message) {
+        printer.print("Admin: New message received.");
         if (message instanceof AuctionsMsg) {
-            messageReceived((AuctionsMsg)message);
+            printer.print("Admin: AuctionMsg received.");
+            handleMsg((AuctionsMsg)message);
+            if (msgHandler != null) {
+                printer.print("Admin: Resending message to MsgHandler.");
+                msgHandler.handleMsg((AuctionsMsg)message);
+            }
+        } else {
+            printer.print("Admin: Non AuctionMsg received.");
         }
     }
     
-    private void messageReceived(AuctionsMsg message) {
+    private void handleMsg(AuctionsMsg message) {
         switch(message.getType()) {
             case AuctionsMsgFactForClients.NEW_OFFER:
                 printer.print("Admin: " + "Se recibió una nueva oferta, se envía al subastador.");
                 AuctionsMsgNewOffer newOffer = (AuctionsMsgNewOffer)message.getMessage();
-                Auction auctionNewOffer = (Auction)serverAdministrator.getObservableFromServer(newOffer.getIdAuction());
-                serverAdministrator.sendMessageToClient(auctionNewOffer.getAuctioneerId(), message);
+                Auction auctionNewOffer = (Auction)serverAdmin.getObservableFromServer(newOffer.getIdAuction());
+                serverAdmin.sendMessageToClient(auctionNewOffer.getAuctioneerId(), message);
                 break;
             case AuctionsMsgFactForClients.ACCEPT_OFFER:
                 printer.print("Admin: " + "Se aceptó una oferta, se envía al postor.");
                 AuctionsMsgAcceptOffer acceptOffer = (AuctionsMsgAcceptOffer)message.getMessage();
-                Auction auctionAcceptOffer = (Auction)serverAdministrator.getObservableFromServer(acceptOffer.getIdAuction());
-                serverAdministrator.sendMessageToClient(auctionAcceptOffer.getAuctioneerId(), message);
+                Auction auctionAcceptOffer = (Auction)serverAdmin.getObservableFromServer(acceptOffer.getIdAuction());
+                serverAdmin.sendMessageToClient(auctionAcceptOffer.getAuctioneerId(), message);
                 break;
-            /*case MessageClientFactory.ADD_AUCTION:
+            case AuctionsMsgFactForClients.ADD_AUCTION:
+                printer.print("Admin: " + "Se agregó una subasta, se envía la nueva subasta a todos los clientes.");
+                Auction newAuction = (Auction)message.getMessage();
+                newAuction.setOwnerId(message.getId());
+                serverAdmin.sendMessageToAllObservers(AuctionsMsgFactForServer.createMsg(AuctionsMsgFactForServer.SENDING_AUCTION, newAuction));
                 break;
-            case MessageClientFactory.FOLLOW_AUCTION:
+            /*case MessageClientFactory.FOLLOW_AUCTION:
                 break;
             case MessageClientFactory.UNFOLLOW_AUCTION:
                 break;
             case MessageClientFactory.REMOVE_AUCTION:
                 break;
-            case MessageClientFactory.ADD_BIDDER:
-                break;
             case MessageClientFactory.SEND_ALL_AUCTIONS:
                 break;
             case MessageClientFactory.SEND_ALL_BIDDERS:
                 break;*/
+            case AuctionsMsgFactForClients.ADD_BIDDER:
+                serverAdmin.addObserverToServer(AuctionsClientAdminFact.createObserverObj(message.getId(), (AuctionClient)message.getMessage()));
+                break;
             case AuctionsMsgFactForClients.MESSAGE_TO_BIDDER:
                 printer.print("Admin: " + "Se recibió un mensaje para un postor, se envía al postor.");
                 AuctionsMsgMessageToBidder messageToBidder = (AuctionsMsgMessageToBidder)message.getMessage();
-                serverAdministrator.sendMessageToClient(messageToBidder.getIdBidder(), message);
+                serverAdmin.sendMessageToClient(messageToBidder.getIdBidder(), message);
                 break;
             case AuctionsMsgFactForClients.AUCTION_FINISHED:
                 printer.print("Admin: " + "Se terminó una subasta, se envía mensaje al ganador.");
                 AuctionsMsgAuctionFinished auctionFinished = (AuctionsMsgAuctionFinished)message.getMessage();
-                ((Auction)serverAdministrator.getObservableFromServer(auctionFinished.getIdAuction())).setState(Auction.STATE.FINISHED);
-                serverAdministrator.sendMessageToClient(auctionFinished.getIdWinnerBidder(), message);
+                ((Auction)serverAdmin.getObservableFromServer(auctionFinished.getIdAuction())).setState(Auction.STATE.FINISHED);
+                serverAdmin.sendMessageToClient(auctionFinished.getIdWinnerBidder(), message);
                 break;
             /*case MessageClientFactory.CLOSE_CONNECTION:
                 break;*/
             default:
                 break;
         }
+    }
+
+    public AuctionsIMsgHandler getMessageHandler() {
+        return msgHandler;
+    }
+
+    public void setMessageHandler(AuctionsIMsgHandler msgHandler) {
+        this.msgHandler = msgHandler;
     }
     
 }
