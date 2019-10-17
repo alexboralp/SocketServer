@@ -32,5 +32,12 @@ public class OOMsg extends SSMsg implements OOIMsg{
     public OOMsg(String id, int type, Serializable mensaje) {
         super(id, type, mensaje);
     }
+
+    @Override
+    public String toString() {
+        return "OOMsg{" + super.toString() + '}';
+    }
+    
+    
     
 }

@@ -9,6 +9,7 @@ import java.io.Serializable;
 import ooserver.commoninterfaces.OOIMsg;
 import ooserver.msg.OOMsg;
 import ssclient.SSClientMsgFact;
+import ssserver.msg.SSIMsg;
 
 /**
  *
@@ -28,10 +29,14 @@ public class OOClientMsgFact extends SSClientMsgFact {
     public static final int SEND_MY_ID = -109;
     
     public static OOIMsg createMsg() {
-        return new OOMsg(SSClientMsgFact.createMsg());
+        return new OOMsg();
     }
     
     public static OOIMsg createMsg(int type, Serializable message) {
         return new OOMsg(type, message);
+    }
+    
+    public static OOIMsg createMsg(SSIMsg message) {
+        return new OOMsg(message.getType(), message.getMessage());
     }
 }

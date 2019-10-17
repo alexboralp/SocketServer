@@ -26,10 +26,10 @@ public class OOServerMsgFact extends SSServerMsgFact {
     public static final int DONE = 107;
     
     public static OOIMsg createMsg() {
-        return new OOMsg(SSServerMsgFact.createMsg());
+        return new OOMsg();
     }
     
     public static OOIMsg createMsg(int type, Serializable message) {
-        return new OOMsg(SSServerMsgFact.createMsg(type, message));
+        return new OOMsg(type, message);
     }
 }

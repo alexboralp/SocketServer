@@ -8,7 +8,6 @@ package ooserver.observers;
 import java.util.Collection;
 import java.util.HashMap;
 import ooserver.commoninterfaces.OOIListId;
-import ooserver.commoninterfaces.OOIMsg;
 
 /**
  *

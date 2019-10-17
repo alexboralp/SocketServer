@@ -10,6 +10,7 @@ import ooclient.OOClientMsgFact;
 import ooserver.OOServerMsgFact;
 import ooserver.client.OOISimpleClient;
 import ooserver.commoninterfaces.OOIMsg;
+import ooserver.commoninterfaces.OOIMsgHandler;
 import ooserver.commoninterfaces.OOIObserver;
 import ooserver.commoninterfaces.OOIPrintable;
 import ooserver.commoninterfaces.OOISerializableIdable;
@@ -21,7 +22,7 @@ import ssserver.admin.SSClientAdmin;
  *
  * @author alexander
  */
-public class OOClientAdmin extends OOAbsObservable implements OOIObserver {
+public class OOClientAdmin extends OOAbsObservable implements OOIMsgHandler<OOIMsg>, OOIObserver {
     SSClientAdmin administrator;
     OOIPrintable printer;
     private String id;
@@ -91,8 +92,8 @@ public class OOClientAdmin extends OOAbsObservable implements OOIObserver {
     @Override
     public void update(Object message) {
         if (message instanceof OOIMsg) {
-            printer.print("OOClientAdmin: OOIMsg message received.");
-            messageReceived((OOIMsg)message);
+            printer.print("OOClientAdmin: Message received.");
+            handleMsg((OOIMsg)message);
         } else {
             printer.print("OOClientAdmin: Non OOIMsg message received.");
         }
@@ -100,7 +101,8 @@ public class OOClientAdmin extends OOAbsObservable implements OOIObserver {
         updateAll(message);
     }
     
-    private void messageReceived(OOIMsg message) {
+    @Override
+    public void handleMsg(OOIMsg message) {
         printer.print("OOClientAdmin: New message received from server: " + message.toString());
         switch (message.getType()) {
             case OOServerMsgFact.OBSERVABLES_LIST:
