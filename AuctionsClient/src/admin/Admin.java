@@ -11,21 +11,22 @@ import auctions.AuctionsFact;
 import auctions.AuctionsMsgFactForClients;
 import auctions.AuctionsProductFact;
 import auctions.admin.AuctionsClientAdmin;
-import auctions.messages.AuctionsMsgAcceptOffer;
-import auctions.messages.AuctionsMsgAuctionFinished;
+import auctions.msgs.AuctionsMsgAcceptOffer;
+import auctions.msgs.AuctionsMsgAuctionFinished;
 import auctions.objects.Auction;
 import auctions.objects.AuctionClient;
-import auctions.messages.AuctionsMsgMessageToBidder;
-import auctions.messages.AuctionsMsgNewOffer;
+import auctions.msgs.AuctionsMsgMessageToBidder;
+import auctions.msgs.AuctionsMsgNewOffer;
 import auctions.objects.AuctionProduct;
 import auctions.objects.Auctions;
 import auctions.interfaces.AuctionsIMsgHandler;
 import auctions.interfaces.AuctionsIObserver;
 import auctions.interfaces.AuctionsIPrintable;
-import auctions.messages.AuctionsMsg;
+import auctions.msgs.AuctionsMsg;
 import auctions.objects.AuctionsAbsObservable;
 import java.util.Date;
 import javax.swing.Icon;
+import ooserver.commoninterfaces.OOIMsg;
 
 /**
  *
@@ -35,8 +36,6 @@ public class Admin extends AuctionsAbsObservable implements AuctionsIObserver {
 
     private final AuctionsClientAdmin clientAdministrator;
     
-    private String clientId;
-    private static String nombre;
     private AuctionsIMsgHandler messageHandler;
     
     private final AuctionsIPrintable printer;
@@ -59,9 +58,12 @@ public class Admin extends AuctionsAbsObservable implements AuctionsIObserver {
         }
         
         printer.print("Admin: " + "Conexión establecida.");
+        printer.print("Admin: " + "Solicitando nuestro ID.");
+        clientAdministrator.sendMessage(AuctionsMsgFactForClients.createMsg(AuctionsMsgFactForClients.SEND_MY_ID, null));
 
         clientAdministrator.addObserver(this);
-        clientId = "";
+        
+        client = AuctionsClientFact.createClient(null, null);
 
         auctions = new Auctions();
         followedAuctions = new Auctions();
@@ -70,7 +72,7 @@ public class Admin extends AuctionsAbsObservable implements AuctionsIObserver {
     
     //TODO: Arreglar esta función
     public void addMeAsAClient() {
-        clientAdministrator.sendMessage(AuctionsMsgFactForClients.createMsg(AuctionsMsgFactForClients.ADD_BIDDER, ""));
+        clientAdministrator.sendMessage(AuctionsMsgFactForClients.createMsg(AuctionsMsgFactForClients.ADD_BIDDER, client));
     }
     
     public void addClient(AuctionClient client) {
@@ -137,24 +139,37 @@ public class Admin extends AuctionsAbsObservable implements AuctionsIObserver {
 
     @Override
     public void update(Object message) {
+        printer.print("Admin: message received.");
         if (message instanceof AuctionsMsg) {
-            messageHandler.handleMessage((AuctionsMsg)message);
+            printer.print("Admin: AuctionMsg received.");
+            if (messageHandler != null) {
+                printer.print("Admin: Resending message to MessageHandler.");
+                messageHandler.handleMsg((AuctionsMsg)message);
+            }
+        } else if (message instanceof OOIMsg) {
+            printer.print("Admin: OOIMsg received.");
+            message = AuctionsMsgFactForClients.createMsg((OOIMsg)message);
+            if (messageHandler != null) {
+                printer.print("Admin: Resending message to MessageHandler.");
+                messageHandler.handleMsg((AuctionsMsg)message);
+            }
+        } else {
+            printer.print("Admin: Non AuctionMsg received.");
         }
     }
 
-    public String getNombre() {
-        return nombre;
+    public void setClientName(String name) {
+        client.setName(name);
+        if (client.getId() != null) {
+            addMeAsAClient();
+        }
     }
 
-    public void setNombre(String nombre) {
-        Admin.nombre = nombre;
-
-        client = AuctionsClientFact.createClient(nombre);
-        addClient(client);
-    }
-
-    public String getClientId() {
-        return clientId;
+    public void setClientId(String clientId) {
+        client.setId(clientId);
+        if (client.getName() != null) {
+            addMeAsAClient();
+        }
     }
 
     public AuctionClient getClient() {

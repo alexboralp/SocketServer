@@ -48,9 +48,6 @@ public class ClientGUI extends javax.swing.JFrame implements AuctionsIPrintable 
         jLabel27 = new javax.swing.JLabel();
         txtNextPrice = new javax.swing.JTextField();
         btnUnfollowAuction = new javax.swing.JToggleButton();
-        jLabel28 = new javax.swing.JLabel();
-        jScrollPane5 = new javax.swing.JScrollPane();
-        txtMessagesFromServer = new javax.swing.JTextArea();
         jLabel29 = new javax.swing.JLabel();
         txtProductId = new javax.swing.JTextField();
         btnMakeNewOffer = new javax.swing.JButton();
@@ -116,7 +113,8 @@ public class ClientGUI extends javax.swing.JFrame implements AuctionsIPrintable 
         txtnewAuctionInitialPrice = new javax.swing.JTextField();
         lblnewAuctionAuctionImage = new javax.swing.JLabel();
         lblNewProductImage = new javax.swing.JLabel();
-        lblMensajeError = new javax.swing.JLabel();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        txtMessagesFromServer = new javax.swing.JTextArea();
         jMenuBar2 = new javax.swing.JMenuBar();
         mnuArchivo = new javax.swing.JMenu();
         mnuSalir = new javax.swing.JMenuItem();
@@ -154,14 +152,6 @@ public class ClientGUI extends javax.swing.JFrame implements AuctionsIPrintable 
 
         btnUnfollowAuction.setText("<=");
         btnUnfollowAuction.setEnabled(false);
-
-        jLabel28.setText("Mensajes:");
-
-        txtMessagesFromServer.setEditable(false);
-        txtMessagesFromServer.setColumns(20);
-        txtMessagesFromServer.setLineWrap(true);
-        txtMessagesFromServer.setRows(5);
-        jScrollPane5.setViewportView(txtMessagesFromServer);
 
         jLabel29.setText("Producto");
 
@@ -221,10 +211,6 @@ public class ClientGUI extends javax.swing.JFrame implements AuctionsIPrintable 
                                 .addComponent(jLabel25)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(txtActualPrice))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                                .addComponent(jLabel28)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(btnMakeNewOffer, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -236,7 +222,7 @@ public class ClientGUI extends javax.swing.JFrame implements AuctionsIPrintable 
                                         .addComponent(lblAuctionImage, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                         .addComponent(lblProductImage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                                .addGap(0, 0, Short.MAX_VALUE)))))
+                                .addGap(0, 28, Short.MAX_VALUE)))))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -275,16 +261,12 @@ public class ClientGUI extends javax.swing.JFrame implements AuctionsIPrintable 
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel27)
                             .addComponent(txtNextPrice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(106, 106, 106)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblProductImage, javax.swing.GroupLayout.DEFAULT_SIZE, 69, Short.MAX_VALUE)
+                            .addComponent(lblAuctionImage, javax.swing.GroupLayout.DEFAULT_SIZE, 69, Short.MAX_VALUE))
                         .addGap(18, 18, 18)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblAuctionImage, javax.swing.GroupLayout.DEFAULT_SIZE, 141, Short.MAX_VALUE)
-                            .addComponent(lblProductImage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(18, 18, 18)
-                        .addComponent(btnMakeNewOffer)
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel28)))
+                        .addComponent(btnMakeNewOffer))
                     .addComponent(jScrollPane4))
                 .addContainerGap())
         );
@@ -368,7 +350,7 @@ public class ClientGUI extends javax.swing.JFrame implements AuctionsIPrintable 
                         .addContainerGap()
                         .addComponent(jLabel2))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 16, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel18)
@@ -481,7 +463,7 @@ public class ClientGUI extends javax.swing.JFrame implements AuctionsIPrintable 
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(0, 33, Short.MAX_VALUE)
+                                .addGap(0, 0, Short.MAX_VALUE)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(spnNextPrice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -586,7 +568,7 @@ public class ClientGUI extends javax.swing.JFrame implements AuctionsIPrintable 
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 313, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblnewAuctionAuctionImage, javax.swing.GroupLayout.DEFAULT_SIZE, 468, Short.MAX_VALUE)
+                    .addComponent(lblnewAuctionAuctionImage, javax.swing.GroupLayout.DEFAULT_SIZE, 488, Short.MAX_VALUE)
                     .addComponent(lblNewProductImage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -630,7 +612,7 @@ public class ClientGUI extends javax.swing.JFrame implements AuctionsIPrintable 
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 145, Short.MAX_VALUE)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 73, Short.MAX_VALUE)
                         .addGap(18, 18, 18)
                         .addComponent(btnCreateNewAuction))
                     .addComponent(lblNewProductImage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -638,6 +620,17 @@ public class ClientGUI extends javax.swing.JFrame implements AuctionsIPrintable 
         );
 
         jTabbedPane1.addTab("Crear subasta", jPanel2);
+
+        getContentPane().add(jTabbedPane1, java.awt.BorderLayout.CENTER);
+        jTabbedPane1.getAccessibleContext().setAccessibleName("tpSubastas");
+
+        txtMessagesFromServer.setEditable(false);
+        txtMessagesFromServer.setColumns(20);
+        txtMessagesFromServer.setLineWrap(true);
+        txtMessagesFromServer.setRows(5);
+        jScrollPane5.setViewportView(txtMessagesFromServer);
+
+        getContentPane().add(jScrollPane5, java.awt.BorderLayout.SOUTH);
 
         mnuArchivo.setText("Archivo");
 
@@ -647,27 +640,6 @@ public class ClientGUI extends javax.swing.JFrame implements AuctionsIPrintable 
         jMenuBar2.add(mnuArchivo);
 
         setJMenuBar(jMenuBar2);
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jTabbedPane1)
-                .addContainerGap())
-            .addComponent(lblMensajeError, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jTabbedPane1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblMensajeError))
-        );
-
-        jTabbedPane1.getAccessibleContext().setAccessibleName("tpSubastas");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -701,7 +673,6 @@ public class ClientGUI extends javax.swing.JFrame implements AuctionsIPrintable 
     private javax.swing.JLabel jLabel25;
     private javax.swing.JLabel jLabel26;
     private javax.swing.JLabel jLabel27;
-    private javax.swing.JLabel jLabel28;
     private javax.swing.JLabel jLabel29;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel30;
@@ -727,7 +698,6 @@ public class ClientGUI extends javax.swing.JFrame implements AuctionsIPrintable 
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JScrollPane jspSubastas;
     public javax.swing.JLabel lblAuctionImage;
-    private javax.swing.JLabel lblMensajeError;
     public javax.swing.JLabel lblNewProductImage;
     public javax.swing.JLabel lblProductImage;
     public javax.swing.JLabel lblYourAuctionsAuctionImage;

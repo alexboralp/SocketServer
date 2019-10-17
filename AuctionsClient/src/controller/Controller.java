@@ -8,14 +8,14 @@ package controller;
 import admin.Admin;
 import auctions.AuctionsMsgFactForClients;
 import auctions.AuctionsMsgFactForServer;
-import auctions.messages.AuctionsMsgAcceptOffer;
-import auctions.messages.AuctionsMsgAuctionFinished;
-import auctions.messages.AuctionsMsgMessageToBidder;
-import auctions.messages.AuctionsMsgNewOffer;
+import auctions.msgs.AuctionsMsgAcceptOffer;
+import auctions.msgs.AuctionsMsgAuctionFinished;
+import auctions.msgs.AuctionsMsgMessageToBidder;
+import auctions.msgs.AuctionsMsgNewOffer;
 import auctions.objects.Auction;
 import auctions.interfaces.AuctionsIMsgHandler;
 import auctions.interfaces.AuctionsIPrintable;
-import auctions.messages.AuctionsMsg;
+import auctions.msgs.AuctionsMsg;
 import controller.actions.ActionBtnAcceptNewOffer;
 import controller.actions.ActionBtnCancelAuction;
 import controller.actions.ActionBtnCreateNewAuction;
@@ -37,13 +37,11 @@ import vista.ClientGUI;
  *
  * @author alexander
  */
-public class Controller implements AuctionsIMsgHandler {
+public class Controller implements AuctionsIMsgHandler<AuctionsMsg> {
     
     private ClientGUI clientGUI;
     private final Admin admin;
     private final AuctionsIPrintable printer;
-    
-    private String nombre;
 
     public Controller(ClientGUI clientGUI, Admin admin, AuctionsIPrintable printer) {
         this.clientGUI = clientGUI;
@@ -87,6 +85,9 @@ public class Controller implements AuctionsIMsgHandler {
         clientGUI.lstYourAuctions.addListSelectionListener(new ActionLstYourAuctions(admin, clientGUI, this, printer));
         clientGUI.mnuSalir.addActionListener(new ActionMnuSalir(admin, clientGUI, this, printer));
         clientGUI.addWindowListener(new ActionWindowListener(admin, clientGUI, this, printer));
+        
+        String nombre = clientGUI.getClientName();
+        admin.setClientName(nombre);
     }
 
     public ClientGUI getClientGUI() {
@@ -155,7 +156,8 @@ public class Controller implements AuctionsIMsgHandler {
     }
 
     @Override
-    public void handleMessage(AuctionsMsg message) {
+    public void handleMsg(AuctionsMsg message) {
+        printer.print("ClientController: Nuevo mensaje recibido: " + message.toString());
         switch(message.getType()) {
             case AuctionsMsgFactForClients.NEW_OFFER:
                 AuctionsMsgNewOffer newOffer = (AuctionsMsgNewOffer)message.getMessage();
@@ -197,6 +199,10 @@ public class Controller implements AuctionsIMsgHandler {
             case AuctionsMsgFactForServer.DONE:
                 printer.print("ClientController: Todo realizado de parte del servidor.");
                 break;
+            case AuctionsMsgFactForServer.SENDING_BIDDER_ID:
+                setId((String)message.getMessage());
+                printer.print("ClientController: El servidor nos envía nuestro id: " + admin.getClient().getId() + ".");
+                break;
             case AuctionsMsgFactForServer.CLOSE_CONNECTION:
                 printer.print("ClientController: El servidor solicita cerrar la conexión.");
                 break;
@@ -207,5 +213,11 @@ public class Controller implements AuctionsIMsgHandler {
                 break;
         }
     }
+
+    public void setId(String id) {
+        admin.setClientId(id);
+    }
+    
+    
     
 }
