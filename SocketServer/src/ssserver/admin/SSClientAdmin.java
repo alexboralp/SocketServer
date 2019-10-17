@@ -8,6 +8,7 @@ package ssserver.admin;
 import ssclient.SSClientMsgFact;
 import ssclient.socket.SSWaitMsgsFromServer;
 import ssserver.SSServerMsgFact;
+import ssserver.commoninterfaces.SSIMsgHandler;
 import ssserver.patterns.observer.SSAbsObservable;
 import ssserver.commoninterfaces.SSIPrintable;
 import ssserver.msg.SSIMsg;
@@ -17,7 +18,7 @@ import ssserver.patterns.observer.SSIObserver;
  *
  * @author alexander
  */
-public class SSClientAdmin extends SSAbsObservable implements SSIObserver{
+public class SSClientAdmin extends SSAbsObservable implements SSIObserver, SSIMsgHandler<SSIMsg> {
     
     private final SSIPrintable printer;
     private final SSWaitMsgsFromServer waitMessagesFromServer;
@@ -39,13 +40,17 @@ public class SSClientAdmin extends SSAbsObservable implements SSIObserver{
     public boolean isOk() {
         return waitMessagesFromServer.isOk();
     }
+    
+    public void closeConnection() {
+        waitMessagesFromServer.closeConnection();
+    }
 
     @Override
     public void update(Object message) {
         this.printer.print("SSClientAdmin: " + "Message received: " + message.toString());
         if (message instanceof SSIMsg) {
             this.printer.print("SSClientAdmin: " + "SSIMsg received.");
-            newMessageReceived((SSIMsg) message);
+            handleMsg((SSIMsg) message);
         } else {
             this.printer.print("SSClientAdmin: " + "Non SSIMsg message received.");
         }
@@ -53,13 +58,14 @@ public class SSClientAdmin extends SSAbsObservable implements SSIObserver{
         updateAll(message);
     }
     
-    private void newMessageReceived(SSIMsg message) {
+    @Override
+    public void handleMsg(SSIMsg message) {
         this.printer.print("SSClientAdmin: " + "New message from server: " + message.getId() + ".");
         this.printer.print("SSClientAdmin: " + "Message: " + message.toString() + ".");
         switch (message.getType()) {
             case SSServerMsgFact.CLOSE_CONNECTION:
                 this.printer.print("SSClientAdmin: " + "El servidor solicitó cerrar la conección.");
-                waitMessagesFromServer.closeConnection();
+                closeConnection();
                 break;
             case SSServerMsgFact.CHECKING_CONNECTION:
                 this.printer.print("SSClientAdmin: " + "El servidor está checkeando la conección.");
@@ -71,7 +77,7 @@ public class SSClientAdmin extends SSAbsObservable implements SSIObserver{
                 break;
             case SSServerMsgFact.RESENDING_MESSAGE_FROM_CLIENT:
                 this.printer.print("SSClientAdmin: " + "Se recibió un mensaje del cliente " + message.getId());
-                this.printer.print((String)message.getMessage());
+                this.printer.print(message.getMessage().toString());
                 break;
             default:
                 break;

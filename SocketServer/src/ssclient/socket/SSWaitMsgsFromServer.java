@@ -26,7 +26,7 @@ public class SSWaitMsgsFromServer extends SSAbsObservable implements Runnable, S
     
     private Socket socket;
     private boolean ok;
-    private SSIMsg message;
+    private Object message;
     
     private static ObjectOutputStream out;
     private static ObjectInputStream in;
@@ -87,7 +87,7 @@ public class SSWaitMsgsFromServer extends SSAbsObservable implements Runnable, S
         return ok;
     }
 
-    public SSIMsg getResponse() {
+    public Object getResponse() {
         return message;
     }
 
@@ -136,7 +136,7 @@ public class SSWaitMsgsFromServer extends SSAbsObservable implements Runnable, S
     @Override
     public void run() {
         try {
-            while (ok && (message = (SSIMsg) in.readObject()) != null) {
+            while (ok && (message = in.readObject()) != null) {
                 printer.print("SSWaitMsgsFromServer: " + "New message from server: " + message.toString());
                 updateAll(message);
             }

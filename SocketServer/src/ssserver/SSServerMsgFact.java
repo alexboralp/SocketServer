@@ -26,9 +26,10 @@ public class SSServerMsgFact {
     }
     
     public static SSIMsg createMsg(int type, Serializable message) {
-        SSIMsg mes = new SSMsg();
-        mes.setType(type);
-        mes.setMessage(message);
-        return mes;
+        return new SSMsg(type, message);
+    }
+    
+    public static SSIMsg createMsg(String id, int type, Serializable message) {
+        return new SSMsg(id, type, message);
     }
 }

@@ -3,15 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ssserver.client;
-
-import java.io.Serializable;
-import ssserver.commoninterfaces.SSICleanable;
+package ssserver.commoninterfaces;
 
 /**
  *
  * @author alexander
+ * @param <T>
  */
-public interface SSIClients extends SSICleanable {
-    public void sendMessageToAllClients(Serializable message);
+public interface SSIMsgHandler<T> {
+    public void handleMsg(T message);
 }

@@ -6,6 +6,7 @@
 package ssserver.client;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.HashMap;
 import ssserver.commoninterfaces.SSIPrintable;
 import ssserver.commoninterfaces.SSIList;
@@ -53,7 +54,7 @@ public abstract class SSAbsClients implements SSIList<SSIClient>, SSIClients{
     }
 
     @Override
-    public void sendMessageToAllClients(SSIMsg message) {
+    public void sendMessageToAllClients(Serializable message) {
         for (SSIClient client: clients.values()) {
             if (client.isOk()) {
                 try {

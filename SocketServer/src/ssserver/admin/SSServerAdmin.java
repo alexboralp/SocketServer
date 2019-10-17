@@ -20,13 +20,14 @@ import ssserver.msg.SSIMsg;
 import ssserver.patterns.observer.SSIObserver;
 import ssserver.client.SSIClient;
 import ssserver.client.SSWaitForClientMsgs;
+import ssserver.commoninterfaces.SSIMsgHandler;
 import ssserver.msg.SSMsgToClient;
 
 /**
  *
  * @author alexander
  */
-public class SSServerAdmin extends SSAbsObservable implements SSIObserver, Runnable {
+public class SSServerAdmin extends SSAbsObservable implements SSIObserver, SSIMsgHandler<SSIMsg>, Runnable {
     
     private SSWaitForClients waitClients;
     private SSClients clients;
@@ -58,10 +59,15 @@ public class SSServerAdmin extends SSAbsObservable implements SSIObserver, Runna
     
     public void sendMessageToClient(String clientId, Serializable message) {
         try {
+            this.printer.print("SSServerAdmin: " + "Sending message to client: " + clientId + ".");
             getClient(clientId).sendMessage(message);
         } catch (IOException ex) {
             printer.printError("SSServerAdmin: " + "No se pudo enviar el mensaje " + message.toString() + " to client " + clientId + ", mensaje de error: " + ex.getMessage());
         }
+    }
+    
+    public void sendMessageToAllClients(Serializable message) {
+        clients.sendMessageToAllClients(message);
     }
         
     public void stopServer() {
@@ -87,12 +93,15 @@ public class SSServerAdmin extends SSAbsObservable implements SSIObserver, Runna
         } else if (message instanceof SSIMsg) {
             this.printer.print("SSServerAdmin: " + "SSIMsg received.");
             this.printer.print("SSServerAdmin: " + "New message from client: " + message.toString() + ".");
-            newMessageReceived((SSIMsg) message);
+            handleMsg((SSIMsg) message);
+            this.printer.print("SSServerAdmin: " + "Resending message to observers.");
+            updateAll(message);
         } else {
             this.printer.print("SSServerAdmin: " + "Non SSIMsg message received.");
+            updateAll(message);
         }
-        this.printer.print("SSServerAdmin: " + "Resending message to observers.");
-        updateAll(message);
+        
+        
     }
     
     private void addNewClient(SSIClient client) {
@@ -104,7 +113,12 @@ public class SSServerAdmin extends SSAbsObservable implements SSIObserver, Runna
         this.printer.print("SSServerAdmin: " + "New client added.");
     }
     
-    private void newMessageReceived(SSIMsg message) {
+    /**
+     *
+     * @param message
+     */
+    @Override
+    public void handleMsg(SSIMsg message) {
         switch (message.getType()) {
             case SSClientMsgFact.CLOSE_CONNECTION:
                 this.printer.print("SSServerAdmin: " + "El cliente solicitó cerrar su conección.");

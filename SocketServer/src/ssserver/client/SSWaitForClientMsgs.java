@@ -10,7 +10,7 @@ import ssserver.SSServerMsgFact;
 import ssserver.patterns.observer.SSAbsObservable;
 import ssserver.commoninterfaces.SSIPrintable;
 import ssserver.commoninterfaces.SSIClientable;
-import ssserver.msg.SSIMsg;
+import ssserver.commoninterfaces.SSIIdable;
 
 /**
  *
@@ -30,16 +30,17 @@ public class SSWaitForClientMsgs extends SSAbsObservable implements Runnable, SS
     
     @Override
     public void run() {
-        SSIMsg message;
+        Object message;
         
         printer.print("SSWaitForClientMsgs: " + "Waiting for messages from clients.");
         try {
-            while (client.isOk() && (message = (SSIMsg)client.getIn().readObject()) != null) {
-                message.setId(client.getId());
+            while (client.isOk() && (message = client.getIn().readObject()) != null) {
+                if (message instanceof SSIIdable){
+                    ((SSIIdable)message).setId(((SSIIdable)client).getId());
+                }
                 this.updateAll(message);
-                SSIMsg response = SSServerMsgFact.createMsg(SSServerMsgFact.INFO, "Message received."); 
-                response.setId(client.getId());
-                client.sendMessage(response);
+                
+                client.sendMessage(SSServerMsgFact.createMsg(client.getId(), SSServerMsgFact.INFO, "Message received."));
             }
         } catch (IOException | ClassNotFoundException ex) {
             printer.printError("SSWaitForClientMsgs: " + ex.getMessage());
