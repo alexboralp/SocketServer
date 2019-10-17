@@ -5,13 +5,12 @@
  */
 package auctions.interfaces;
 
-import ooserver.commoninterfaces.OOIMsgHandler;
+import ooserver.commoninterfaces.OOIMsg;
 
 /**
  *
  * @author alexander
- * @param <T>
  */
-public interface AuctionsIMsgHandler<T> extends OOIMsgHandler<T> {
+public interface AuctionsIMsg extends OOIMsg {
     
 }

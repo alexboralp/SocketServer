@@ -5,7 +5,7 @@
  */
 package auctions;
 
-import auctions.messages.AuctionsMsg;
+import auctions.msgs.AuctionsMsg;
 import java.io.Serializable;
 import ooserver.OOServerMsgFact;
 import ooserver.commoninterfaces.OOIMsg;
@@ -21,6 +21,7 @@ public class AuctionsMsgFactForServer extends OOServerMsgFact {
     public static final int SENDING_AUCTION = SENDING_OBSERVABLE;
     public static final int SENDING_BIDDER = SENDING_OBSERVER;
     public static final int MESSAGE_TO_AUCTIONEER = TEXT_MESSAGE_TO_OBSERVER;
+    public static final int SENDING_BIDDER_ID = SENDING_ID_TO_OBSERVER;
     
     public static AuctionsMsg createMsg() {
         return new AuctionsMsg();

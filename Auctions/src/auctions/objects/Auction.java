@@ -32,6 +32,8 @@ public class Auction extends OOAbsSendableObj {
     
     private STATE state;
     
+    private String ownerId;
+    
     public Auction() {
         super("");
         this.startDate = null;
@@ -151,6 +153,14 @@ public class Auction extends OOAbsSendableObj {
     @Override
     public String toString() {
         return "Auction{" + "id=" + id + ", startDate=" + startDate + ", duration=" + duration + ", product=" + product + ", auctioneerId=" + auctioneerId + ", actualPrice=" + actualPrice + ", bidderId=" + bidderId + ", nextPrice=" + nextPrice + ", newBidderId=" + newBidderId + ", state=" + state + '}';
+    }
+
+    public String getOwnerId() {
+        return ownerId;
+    }
+
+    public void setOwnerId(String ownerId) {
+        this.ownerId = ownerId;
     }
     
 }

@@ -5,16 +5,14 @@
  */
 package auctions;
 
-import auctions.messages.AuctionsMsg;
-import auctions.messages.AuctionsMsgAcceptOffer;
-import auctions.messages.AuctionsMsgAuctionFinished;
-import auctions.messages.AuctionsMsgMessageToBidder;
-import auctions.messages.AuctionsMsgNewOffer;
+import auctions.msgs.AuctionsMsg;
+import auctions.msgs.AuctionsMsgAcceptOffer;
+import auctions.msgs.AuctionsMsgAuctionFinished;
+import auctions.msgs.AuctionsMsgMessageToBidder;
+import auctions.msgs.AuctionsMsgNewOffer;
 import java.io.Serializable;
 import ooclient.OOClientMsgFact;
 import ooserver.commoninterfaces.OOIMsg;
-import ooserver.msg.OOMsg;
-import ssclient.SSClientMsgFact;
 
 /**
  *
@@ -52,7 +50,11 @@ public class AuctionsMsgFactForClients extends OOClientMsgFact {
     }
     
     public static AuctionsMsg createMsg() {
-        return new AuctionsMsg(SSClientMsgFact.createMsg());
+        return new AuctionsMsg();
+    }
+    
+    public static AuctionsMsg createMsg(OOIMsg message) {
+        return new AuctionsMsg(message);
     }
     
     public static AuctionsMsg createMsg(int type, Serializable message) {
