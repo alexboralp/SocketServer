@@ -5,7 +5,7 @@
  */
 package controller;
 
-import admin.Admin;
+import auctions.admin.AuctionsServerAdmin;
 import auctions.interfaces.AuctionsIPrintable;
 import vista.ServerGUI;
 
@@ -15,10 +15,10 @@ import vista.ServerGUI;
  */
 public class Controller{
     private final ServerGUI serverGUI;
-    private final Admin admin;
+    private final AuctionsServerAdmin admin;
     private final AuctionsIPrintable printer;
 
-    public Controller(ServerGUI serverGUI, Admin admin, AuctionsIPrintable printer) {
+    public Controller(ServerGUI serverGUI, AuctionsServerAdmin admin, AuctionsIPrintable printer) {
         this.serverGUI = serverGUI;
         this.admin = admin;
         this.printer = printer;

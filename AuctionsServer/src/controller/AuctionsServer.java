@@ -5,7 +5,8 @@
  */
 package controller;
 
-import admin.Admin;
+import auctions.AuctionsServerAdminFact;
+import auctions.admin.AuctionsServerAdmin;
 import vista.ServerGUI;
 
 /**
@@ -15,7 +16,7 @@ import vista.ServerGUI;
 public class AuctionsServer {
     
     private static ServerGUI serverGUI;
-    private static Admin admin;
+    private static AuctionsServerAdmin admin;
     private static Controller controller;
     
     /**
@@ -59,7 +60,7 @@ public class AuctionsServer {
             @Override
             public void run() {
                 serverGUI = new ServerGUI();
-                admin = new Admin(port, serverGUI);
+                admin = AuctionsServerAdminFact.createAuctionsServerAdmin(port, serverGUI);
                 controller = new Controller(serverGUI, admin, serverGUI);
                 serverGUI.setVisible(true);
             }
