@@ -51,7 +51,7 @@ public class AuctionsServerMsgHandler extends OOServerMsgHandler implements Auct
                 case AuctionsMsgFactForClients.ADD_AUCTION:
                     printer.print("AuctionsServerMsgHandler: " + "Se agregó una subasta, se envía la nueva subasta a todos los clientes.");
                     Auction newAuction = (Auction)msg.getMessage();
-                    newAuction.setOwnerId(msg.getId());
+                    //newAuction.setAuctioneerId(msg.getId());
                     aAdmin.sendMessageToAllObservers(AuctionsMsgFactForServer.createMsg(AuctionsMsgFactForServer.SENDING_AUCTION, newAuction));
                     break;
                 /*case MessageClientFactory.FOLLOW_AUCTION:

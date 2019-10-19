@@ -82,7 +82,7 @@ public class AuctionsClientAdmin extends OOClientAdmin {
     
     public void addAuction(String id, Date date, int duration, String productId, String productDescription, Icon productImage, double productInititalPrice, double initialPrice, Icon image) {
         AuctionProduct product = AuctionsProductFact.createProduct(productId, productDescription, productImage, productInititalPrice);
-        Auction auction = AuctionsFact.createAuction(id, date, duration, product, initialPrice, image);
+        Auction auction = AuctionsFact.createAuction(this.getMyId(), id, date, duration, product, initialPrice, image);
         this.sendMessage(AuctionsMsgFactForClients.createMsg(AuctionsMsgFactForClients.ADD_AUCTION, auction));
     }
     

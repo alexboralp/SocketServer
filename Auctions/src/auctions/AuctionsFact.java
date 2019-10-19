@@ -15,7 +15,7 @@ import javax.swing.Icon;
  * @author aborbon
  */
 public class AuctionsFact {
-    public static Auction createAuction(String id, Date startDate, int duration, AuctionProduct product, double initialPrice, Icon image) {
-        return new Auction(id, startDate, duration, product, initialPrice, image);
+    public static Auction createAuction(String auctioneerId, String id, Date startDate, int duration, AuctionProduct product, double initialPrice, Icon image) {
+        return new Auction(auctioneerId, id, startDate, duration, product, initialPrice, image);
     }
 }
