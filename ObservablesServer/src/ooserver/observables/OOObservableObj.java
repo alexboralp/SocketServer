@@ -23,6 +23,11 @@ public class OOObservableObj extends OOAbsObservableObj{
         
     }
 
+    @Override
+    public void updateAll(Object message) {
+        
+    }
+
     
     
 }

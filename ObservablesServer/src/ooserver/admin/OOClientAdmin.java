@@ -7,29 +7,29 @@ package ooserver.admin;
 
 import java.io.Serializable;
 import ooclient.OOClientMsgFact;
-import ooserver.OOServerMsgFact;
 import ooserver.client.OOISimpleClient;
 import ooserver.commoninterfaces.OOIMsg;
-import ooserver.commoninterfaces.OOIMsgHandler;
-import ooserver.commoninterfaces.OOIObserver;
 import ooserver.commoninterfaces.OOIPrintable;
 import ooserver.commoninterfaces.OOISerializableIdable;
-import ooserver.observables.OOAbsObservable;
-import ssclient.SSClientAdminFact;
+import ooserver.msg.OOClientMsgHandler;
 import ssserver.admin.SSClientAdmin;
 
 /**
  *
  * @author alexander
  */
-public class OOClientAdmin extends OOAbsObservable implements OOIMsgHandler<OOIMsg>, OOIObserver {
-    SSClientAdmin administrator;
-    OOIPrintable printer;
-    private String id;
+public class OOClientAdmin extends SSClientAdmin {
+    protected String id;
 
     public OOClientAdmin(String serverName, int port, OOIPrintable printer) {
-        administrator = SSClientAdminFact.createClientAdministrator(serverName, port, printer);
-        administrator.addObserver(this);
+        super(serverName, port, printer);
+        this.printer = printer;
+        msgHandler = new OOClientMsgHandler(printer, this);
+        this.replaceMsgHandler(msgHandler);
+    }
+
+    public OOClientAdmin(String serverName, int port, OOIPrintable printer, OOClientMsgHandler msgHandler) {
+        super(serverName, port, printer, msgHandler);
         this.printer = printer;
     }
     
@@ -61,10 +61,6 @@ public class OOClientAdmin extends OOAbsObservable implements OOIMsgHandler<OOIM
         sendMessage(OOClientMsgFact.createMsg(OOClientMsgFact.REMOVE_ME_FROM_OBSERVERS, null));
     }
     
-    public void closeConnection() {
-        sendMessage(OOClientMsgFact.createMsg(OOClientMsgFact.CLOSE_CONNECTION, null));
-    }
-    
     public void sendInfoServer(Serializable info) {
         sendMessage(OOClientMsgFact.createMsg(OOClientMsgFact.INFO, info));
     }
@@ -82,53 +78,7 @@ public class OOClientAdmin extends OOAbsObservable implements OOIMsgHandler<OOIM
     }
     
     public void sendMessage(OOIMsg message) {
-        administrator.sendMessage(message);
+        super.sendMessage(message);
     }
     
-    public boolean isOk() {
-        return administrator.isOk();
-    }
-
-    @Override
-    public void update(Object message) {
-        if (message instanceof OOIMsg) {
-            printer.print("OOClientAdmin: Message received.");
-            handleMsg((OOIMsg)message);
-        } else {
-            printer.print("OOClientAdmin: Non OOIMsg message received.");
-        }
-        printer.print("OOClientAdmin: Resending message to observers.");
-        updateAll(message);
-    }
-    
-    @Override
-    public void handleMsg(OOIMsg message) {
-        printer.print("OOClientAdmin: New message received from server: " + message.toString());
-        switch (message.getType()) {
-            case OOServerMsgFact.OBSERVABLES_LIST:
-                printer.print("OOClientAdmin: OBSERVABLES_LIST, se va a recibir la lista de observables.");
-                break;
-            case OOServerMsgFact.OBSERVERS_LIST:
-                printer.print("OOClientAdmin: OBSERVERS_LIST, se va a recibir la lista de observers.");
-                break;
-            case OOServerMsgFact.TEXT_MESSAGE:
-            case OOServerMsgFact.TEXT_MESSAGE_TO_OBSERVER:
-                printer.print("OOClientAdmin: TEXT_MESSAGE, se recibió un mensaje: " + (String)message.getMessage());
-                break;
-            case OOServerMsgFact.SENDING_OBSERVABLE:
-                printer.print("OOClientAdmin: SENDING_OBSERVABLE, se recibe un observable.");
-                break;
-            case OOServerMsgFact.SENDING_OBSERVER:
-                printer.print("OOClientAdmin: SENDING_OBSERVER, se recibe un observer.");
-                break;
-            case OOServerMsgFact.SENDING_ID_TO_OBSERVER:
-                printer.print("OOClientAdmin: SENDING_ID_TO_OBSERVER, se recibe el id dado por el server.");
-                break;
-            case OOServerMsgFact.DONE:
-                printer.print("OOClientAdmin: DONE, el server avisó que terminó la solicitud anterior.");
-                break;
-            default:
-                break;
-        }
-    }
 }

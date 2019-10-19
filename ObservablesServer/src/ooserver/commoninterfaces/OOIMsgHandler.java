@@ -10,8 +10,7 @@ import ssserver.commoninterfaces.SSIMsgHandler;
 /**
  *
  * @author alexander
- * @param <T>
  */
-public interface OOIMsgHandler<T> extends SSIMsgHandler<T> {
+public interface OOIMsgHandler extends SSIMsgHandler {
     
 }

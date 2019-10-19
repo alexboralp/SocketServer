@@ -7,7 +7,6 @@ package ooserver.observermsg;
 
 import java.io.Serializable;
 import ooclient.OOClientMsgFact;
-import ssclient.SSClientMsgFact;
 
 /**
  *

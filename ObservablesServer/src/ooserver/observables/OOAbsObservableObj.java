@@ -66,9 +66,7 @@ public abstract class OOAbsObservableObj<T extends OOISerializableIdable> implem
     }
 
     @Override
-    public void updateAll(Object message) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    public abstract void updateAll(Object message);
 
     @Override
     public void addObserver(OOIObserverObj observer) {

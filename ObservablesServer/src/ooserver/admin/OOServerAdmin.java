@@ -7,39 +7,41 @@ package ooserver.admin;
 
 import java.io.IOException;
 import java.io.Serializable;
-import ooclient.OOClientMsgFact;
-import ooserver.OOServerAdminFact;
 import ooserver.OOServerMsgFact;
 import ooserver.client.OOISimpleClient;
 import ooserver.commoninterfaces.OOIMsg;
 import ooserver.commoninterfaces.OOIMsgHandler;
 import ooserver.commoninterfaces.OOIObservable;
-import ooserver.commoninterfaces.OOIObserver;
 import ooserver.commoninterfaces.OOIPrintable;
-import ooserver.commoninterfaces.OOISerializableIdable;
-import ooserver.observables.OOAbsObservable;
+import ooserver.msg.OOServerMsgHandler;
 import ooserver.observables.OOObservables;
 import ooserver.observers.OOObservers;
-import ssserver.SSServerAdminFact;
 import ssserver.admin.SSServerAdmin;
 import ooserver.observers.OOIObserverObj;
 import ooserver.observables.OOIObservableObj;
-import ssserver.msg.SSIMsg;
 
 /**
  *
  * @author alexander
  */
-public class OOServerAdmin extends OOAbsObservable implements OOIMsgHandler<OOIMsg>, OOIObserver {
-    private final SSServerAdmin administrator;
-    private final OOIPrintable printer;
+public class OOServerAdmin extends SSServerAdmin {
     OOObservables observablesServer;
     OOObservers observersServer;
 
     public OOServerAdmin(int port, OOIPrintable printer) {
-        administrator = SSServerAdminFact.createServerAdministrator(port, printer);
-        administrator.startServerCleaning();
-        administrator.addObserver(this);
+        super(port, printer);
+        _init_(port, printer);
+    }
+
+    public OOServerAdmin(int port, OOIPrintable printer, OOIMsgHandler msgHandler) {
+        super(port, printer, msgHandler);
+    }
+    
+    private void _init_(int port, OOIPrintable printer) {
+        OOServerMsgHandler ooMsgHandler = new OOServerMsgHandler(printer, this);
+        this.setMsgHandler(ooMsgHandler);
+        this.startServerCleaning();
+        //this.addObserver(this);
         this.printer = printer;
         observablesServer = new OOObservables();
         observersServer = new OOObservers();
@@ -88,9 +90,9 @@ public class OOServerAdmin extends OOAbsObservable implements OOIMsgHandler<OOIM
     public void sendMessageToClient(String idClient, OOIMsg message) {
         try {
             printer.print("OOServerAdmin: " + "Sending message to client " + idClient + ".");
-            administrator.getClient(idClient).sendMessage(message);
+            getClient(idClient).sendMessage(message);
         } catch (IOException ex) {
-            printer.printError("OOServerAdministrator: " + ex.getMessage());
+            printer.printError("OOServerAdmin: " + ex.getMessage());
         }
     }
     
@@ -105,7 +107,10 @@ public class OOServerAdmin extends OOAbsObservable implements OOIMsgHandler<OOIM
     
     public void addObservableToServer(OOIObservableObj object) {
         observablesServer.add(object);
-        printer.print("OOServerAdministrator: " + "Sending observable to all clients.");
+    }
+    
+    public void sendObservableToAllClients(OOIObservableObj object) {
+        printer.print("OOServerAdmin: " + "Sending observable to all clients.");
         sendMessageToAllObservers(OOServerMsgFact.createMsg(OOServerMsgFact.SENDING_OBSERVABLE, (Serializable)object.getObject()));
     }
     
@@ -123,6 +128,11 @@ public class OOServerAdmin extends OOAbsObservable implements OOIMsgHandler<OOIM
     
     public void addObserverToServer(OOIObserverObj object) {
         observersServer.add(object);
+    }
+    
+    public void sendObserverToAllClients(OOIObservableObj object) {
+        printer.print("OOServerAdmin: " + "Sending observer to all clients.");
+        sendMessageToAllObservers(OOServerMsgFact.createMsg(OOServerMsgFact.SENDING_OBSERVER, (Serializable)object.getObject()));
     }
     
     public void removeObserverFromServer(OOIObserverObj object) {
@@ -171,70 +181,5 @@ public class OOServerAdmin extends OOAbsObservable implements OOIMsgHandler<OOIM
             observable.removeObserver(this);
         }
     }
-
-    @Override
-    public void update(Object message) {
-        
-        if (message instanceof OOIMsg) {
-            printer.print("OOServerAdministrator: OOIMsg message received.");
-            handleMsg((OOIMsg)message);
-        } else if (message instanceof SSIMsg) {
-            printer.print("OOServerAdministrator: SSIMsg message received, converting.");
-            message=OOClientMsgFact.createMsg((SSIMsg)message);
-        }
-        
-        printer.print("OOServerAdministrator: Sending message to all observers");
-        updateAll(message);
-    }
-    
-    @Override
-    public void handleMsg(OOIMsg message) {
-        printer.print("OOServerAdministrator: Message received: " + message.toString());
-        switch (message.getType()) {
-            case OOClientMsgFact.ADD_OBSERVABLE:
-                printer.print("OOServerAdministrator: ADD_OBSERVABLE.");
-                addObservableToServer(OOServerAdminFact.createObservableObj(message.getId(), (OOISerializableIdable)message.getMessage()));
-                break;
-            case OOClientMsgFact.REMOVE_OBSERVABLE:
-                printer.print("OOServerAdministrator: REMOVE_OBSERVABLE.");
-                removeObservableFromServer((String)message.getMessage());
-                break;
-            case OOClientMsgFact.FOLLOW_OBSERVABLE:
-                printer.print("OOServerAdministrator: FOLLOW_OBSERVABLE.");
-                setObserverToObservable(message.getId(), (String)message.getMessage());
-                break;
-            case OOClientMsgFact.UNFOLLOW_OBSERVABLE:
-                printer.print("OOServerAdministrator: UNFOLLOW_OBSERVABLE.");
-                removeObserverFromObservable(message.getId(), (String)message.getMessage());
-                break;
-            case OOClientMsgFact.REMOVE_ME_FROM_OBSERVERS:
-                printer.print("OOServerAdministrator: REMOVE_ME_FROM_OBSERVERS.");
-                removeObserverFromServer(message.getId());
-                break;
-            case OOClientMsgFact.ADD_ME_TO_OBSERVERS:
-                printer.print("OOServerAdministrator: ADD_ME_TO_OBSERVERS.");
-                addObserverToServer(OOServerAdminFact.createObserverObj(message.getId(), (OOISimpleClient)message.getMessage()));
-                break;
-            case OOClientMsgFact.ADD_OBSERVER:
-                printer.print("OOServerAdministrator: ADD_OBSERVER.");
-                addObserverToServer(OOServerAdminFact.createObserverObj(message.getId(), (OOISerializableIdable)message.getMessage()));
-                break;
-            case OOClientMsgFact.SEND_ALL_OBSERVERS:
-                printer.print("OOServerAdministrator: SEND_ALL_OBSERVERS.");
-                sendObserversToClient(message.getId());
-                break;
-            case OOClientMsgFact.SEND_ALL_OBSERVABLES:
-                printer.print("OOServerAdministrator: SEND_ALL_OBSERVABLES.");
-                sendObservablesToClient(message.getId());
-                break;
-            case OOClientMsgFact.SEND_MY_ID:
-                printer.print("OOServerAdministrator: SEND_MY_ID.");
-                sendIdToClient(message.getId());
-                break;
-            default:
-                break;
-        }
-    }
-    
     
 }
