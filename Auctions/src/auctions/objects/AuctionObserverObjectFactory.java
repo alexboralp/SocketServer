@@ -5,7 +5,6 @@
  */
 package auctions.objects;
 
-import ooserver.observers.OOIObserverObj;
 
 
 /**
@@ -13,7 +12,7 @@ import ooserver.observers.OOIObserverObj;
  * @author alexander
  */
 public class AuctionObserverObjectFactory {
-    public static OOIObserverObj<Auction> create(String ownerId, Auction object) {
+    public static AuctionObserverObject create(String ownerId, Auction object) {
         return new AuctionObserverObject(ownerId, object);
     }
 }

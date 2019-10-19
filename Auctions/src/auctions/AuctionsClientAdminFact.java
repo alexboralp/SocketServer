@@ -6,15 +6,20 @@
 package auctions;
 
 import auctions.admin.AuctionsClientAdmin;
+import auctions.interfaces.AuctionsIPrintable;
+import auctions.msgs.AuctionsClientMsgHandler;
 import ooclient.OOClientAdminFact;
-import ooserver.commoninterfaces.OOIPrintable;
 
 /**
  *
  * @author alexander
  */
 public class AuctionsClientAdminFact extends OOClientAdminFact {
-    public static AuctionsClientAdmin createAuctionsClientAdmin(String serverName, int port, OOIPrintable printer) {
+    public static AuctionsClientAdmin createAuctionsClientAdmin(String serverName, int port, AuctionsIPrintable printer) {
         return new AuctionsClientAdmin(serverName, port, printer);
+    }
+    
+    public static AuctionsClientAdmin createAuctionsClientAdmin(String serverName, int port, AuctionsIPrintable printer, AuctionsClientMsgHandler msgHandler) {
+        return new AuctionsClientAdmin(serverName, port, printer, msgHandler);
     }
 }

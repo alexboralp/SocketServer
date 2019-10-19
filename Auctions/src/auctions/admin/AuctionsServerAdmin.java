@@ -5,8 +5,10 @@
  */
 package auctions.admin;
 
+import auctions.interfaces.AuctionsIMsgHandler;
+import auctions.interfaces.AuctionsIPrintable;
+import auctions.msgs.AuctionsServerMsgHandler;
 import ooserver.admin.OOServerAdmin;
-import ooserver.commoninterfaces.OOIPrintable;
 
 /**
  *
@@ -14,8 +16,15 @@ import ooserver.commoninterfaces.OOIPrintable;
  */
 public class AuctionsServerAdmin extends OOServerAdmin {
 
-    public AuctionsServerAdmin(int port, OOIPrintable printer) {
+    public AuctionsServerAdmin(int port, AuctionsIPrintable printer) {
         super(port, printer);
+        msgHandler = new AuctionsServerMsgHandler(printer, this);
     }
+
+    public AuctionsServerAdmin(int port, AuctionsIPrintable printer, AuctionsIMsgHandler msgHandler) {
+        super(port, printer, msgHandler);
+    }
+    
+    
     
 }

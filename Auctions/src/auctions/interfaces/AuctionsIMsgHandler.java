@@ -10,8 +10,7 @@ import ooserver.commoninterfaces.OOIMsgHandler;
 /**
  *
  * @author alexander
- * @param <T>
  */
-public interface AuctionsIMsgHandler<T> extends OOIMsgHandler<T> {
+public interface AuctionsIMsgHandler extends OOIMsgHandler {
     
 }
