@@ -5,12 +5,11 @@
  */
 package controller.actions;
 
-import admin.Admin;
+import auctions.admin.AuctionsClientAdmin;
 import auctions.interfaces.AuctionsIPrintable;
 import controller.Controller;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import ooserver.commoninterfaces.OOIPrintable;
 import vista.ClientGUI;
 
 /**
@@ -19,12 +18,12 @@ import vista.ClientGUI;
  */
 public class ActionWindowListener implements WindowListener {
 
-    private final Admin admin;
+    private final AuctionsClientAdmin admin;
     private final ClientGUI clientGUI;
     private final Controller controller;
     private final AuctionsIPrintable printer;
 
-    public ActionWindowListener(Admin admin, ClientGUI clientGUI, Controller controller, AuctionsIPrintable printer) {
+    public ActionWindowListener(AuctionsClientAdmin admin, ClientGUI clientGUI, Controller controller, AuctionsIPrintable printer) {
         this.admin = admin;
         this.clientGUI = clientGUI;
         this.controller = controller;

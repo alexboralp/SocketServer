@@ -5,7 +5,7 @@
  */
 package controller.actions;
 
-import admin.Admin;
+import auctions.admin.AuctionsClientAdmin;
 import auctions.interfaces.AuctionsIPrintable;
 import auctions.objects.Auction;
 import controller.Controller;
@@ -19,12 +19,12 @@ import vista.ClientGUI;
  */
 public class ActionBtnAcceptNewOffer implements ActionListener {
 
-    private final Admin admin;
+    private final AuctionsClientAdmin admin;
     private final ClientGUI clientGUI;
     private final Controller controller;
     private final AuctionsIPrintable printer;
 
-    public ActionBtnAcceptNewOffer(Admin admin, ClientGUI clientGUI, Controller controller, AuctionsIPrintable printer) {
+    public ActionBtnAcceptNewOffer(AuctionsClientAdmin admin, ClientGUI clientGUI, Controller controller, AuctionsIPrintable printer) {
         this.admin = admin;
         this.clientGUI = clientGUI;
         this.controller = controller;
@@ -40,7 +40,7 @@ public class ActionBtnAcceptNewOffer implements ActionListener {
             
             Auction auction = admin.getAuctions().get(selectedValue);
             
-            double newPrice = (double)clientGUI.spnNextPrice.getValue();
+            double newPrice = (double)clientGUI.spnYourAuctionsNextPrice.getValue();
             String newBidder = auction.getNewBidderId();
             
             auction.setNextPrice(auction.getNextPrice());
@@ -50,7 +50,7 @@ public class ActionBtnAcceptNewOffer implements ActionListener {
             admin.getAuctions().add(auction);
             
             admin.acceptOffer(selectedValue, newBidder, newPrice);
-            controller.actualizarTextos(auction);
+            controller.updateGUIYourAuctionSelectedInfo(auction);
         } else {
             printer.print("Debe seleccionar alguna subasta.");
         }

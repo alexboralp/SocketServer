@@ -5,7 +5,7 @@
  */
 package controller.actions;
 
-import admin.Admin;
+import auctions.admin.AuctionsClientAdmin;
 import auctions.interfaces.AuctionsIPrintable;
 import controller.Controller;
 import java.awt.event.ActionEvent;
@@ -20,12 +20,12 @@ import vista.ClientGUI;
  */
 public class ActionBtnCreateNewAuction implements ActionListener {
 
-    private final Admin admin;
+    private final AuctionsClientAdmin admin;
     private final ClientGUI clientGUI;
     private final Controller controller;
     private final AuctionsIPrintable printer;
 
-    public ActionBtnCreateNewAuction(Admin admin, ClientGUI clientGUI, Controller controller, AuctionsIPrintable printer) {
+    public ActionBtnCreateNewAuction(AuctionsClientAdmin admin, ClientGUI clientGUI, Controller controller, AuctionsIPrintable printer) {
         this.admin = admin;
         this.clientGUI = clientGUI;
         this.controller = controller;

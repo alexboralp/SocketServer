@@ -5,7 +5,7 @@
  */
 package controller.actions;
 
-import admin.Admin;
+import auctions.admin.AuctionsClientAdmin;
 import auctions.interfaces.AuctionsIPrintable;
 import auctions.objects.Auction;
 import controller.Controller;
@@ -19,12 +19,12 @@ import vista.ClientGUI;
  */
 public class ActionBtnCancelAuction implements ActionListener {
 
-    Admin admin;
+    AuctionsClientAdmin admin;
     ClientGUI clientGUI;
     Controller controller;
     AuctionsIPrintable printer;
 
-    public ActionBtnCancelAuction(Admin admin, ClientGUI clientGUI, Controller controller, AuctionsIPrintable printer) {
+    public ActionBtnCancelAuction(AuctionsClientAdmin admin, ClientGUI clientGUI, Controller controller, AuctionsIPrintable printer) {
         this.admin = admin;
         this.clientGUI = clientGUI;
         this.controller = controller;
@@ -45,7 +45,7 @@ public class ActionBtnCancelAuction implements ActionListener {
             admin.getAuctions().add(auction);
             
             admin.cancelAuction(selectedValue);
-            controller.actualizarTextos(auction);
+            controller.updateGUIYourAuctionSelectedInfo(auction);
         } else {
             printer.print("Debe seleccionar alguna subasta.");
         }

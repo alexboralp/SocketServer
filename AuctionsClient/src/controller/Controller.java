@@ -5,17 +5,11 @@
  */
 package controller;
 
-import admin.Admin;
-import auctions.AuctionsMsgFactForClients;
-import auctions.AuctionsMsgFactForServer;
-import auctions.msgs.AuctionsMsgAcceptOffer;
-import auctions.msgs.AuctionsMsgAuctionFinished;
-import auctions.msgs.AuctionsMsgMessageToBidder;
-import auctions.msgs.AuctionsMsgNewOffer;
+import auctions.admin.AuctionsClientAdmin;
+import auctions.interfaces.AuctionsIObserver;
 import auctions.objects.Auction;
-import auctions.interfaces.AuctionsIMsgHandler;
 import auctions.interfaces.AuctionsIPrintable;
-import auctions.msgs.AuctionsMsg;
+import auctions.msgs.AuctionsAtributeChanged;
 import controller.actions.ActionBtnAcceptNewOffer;
 import controller.actions.ActionBtnCancelAuction;
 import controller.actions.ActionBtnCreateNewAuction;
@@ -37,13 +31,17 @@ import vista.ClientGUI;
  *
  * @author alexander
  */
-public class Controller implements AuctionsIMsgHandler<AuctionsMsg> {
+public class Controller implements AuctionsIObserver {
     
     private ClientGUI clientGUI;
-    private final Admin admin;
+    private final AuctionsClientAdmin admin;
     private final AuctionsIPrintable printer;
+    
+    DefaultListModel<String> lstYourAuctionsModel;
+    DefaultListModel<String> lstFollowedAuctionsModel;
+    DefaultListModel<String> lstAvailableAuctionsModel;
 
-    public Controller(ClientGUI clientGUI, Admin admin, AuctionsIPrintable printer) {
+    public Controller(ClientGUI clientGUI, AuctionsClientAdmin admin, AuctionsIPrintable printer) {
         this.clientGUI = clientGUI;
         this.admin = admin;
         this.printer = printer;
@@ -53,11 +51,7 @@ public class Controller implements AuctionsIMsgHandler<AuctionsMsg> {
     
     private void _init_() {
         
-        admin.setMessageHandler(this);
-    
-        DefaultListModel<String> lstYourAuctionsModel;
-        DefaultListModel<String> lstFollowedAuctionsModel;
-        DefaultListModel<String> lstAvailableAuctionsModel;
+        admin.addObserver(this);
     
         clientGUI.lstYourAuctions.removeAll();
         lstYourAuctionsModel = new DefaultListModel<>();
@@ -71,7 +65,7 @@ public class Controller implements AuctionsIMsgHandler<AuctionsMsg> {
         clientGUI.lstAvailableAuctions.setModel(lstAvailableAuctionsModel);
             
         SpinnerModel spnSiguientePrecioModel = new SpinnerNumberModel(0.0,0.0,Double.MAX_VALUE, 0.1);
-        clientGUI.spnNextPrice.setModel(spnSiguientePrecioModel);
+        clientGUI.spnYourAuctionsNextPrice.setModel(spnSiguientePrecioModel);
         
         clientGUI.btnAcceptNewOffer.addActionListener(new ActionBtnAcceptNewOffer(admin, clientGUI, this, printer));
         clientGUI.btnCancelAuction.addActionListener(new ActionBtnCancelAuction(admin, clientGUI, this, printer));
@@ -81,6 +75,7 @@ public class Controller implements AuctionsIMsgHandler<AuctionsMsg> {
         clientGUI.btnSendMsgToWinner.addActionListener(new ActionBtnSendMsgToWinner(admin, clientGUI, this, printer));
         clientGUI.btnUnfollowAuction.addActionListener(new ActionBtnUnfollowAuction(admin, clientGUI, this, printer));
         clientGUI.lstAvailableAuctions.addListSelectionListener(new ActionLstAvailableAuctions(admin, clientGUI, this, printer));
+        //clientGUI.lstAvailableAuctions.addListSelectionListener(new ActionLstAvailableAuctions(admin, clientGUI, this, printer));
         clientGUI.lstFollowedAuctions.addListSelectionListener(new ActionLstFollowedAuctions(admin, clientGUI, this, printer));
         clientGUI.lstYourAuctions.addListSelectionListener(new ActionLstYourAuctions(admin, clientGUI, this, printer));
         clientGUI.mnuSalir.addActionListener(new ActionMnuSalir(admin, clientGUI, this, printer));
@@ -98,13 +93,36 @@ public class Controller implements AuctionsIMsgHandler<AuctionsMsg> {
         this.clientGUI = clientGUI;
     }
     
-    public void actualizarTextos (Auction auction) {
+    public void updateGUIAvailableAuctionsList() {
+        lstAvailableAuctionsModel.clear();
+        for (Auction auction : admin.getAuctions().getAuctions().values()) {
+            lstAvailableAuctionsModel.addElement(auction.getId());
+        }
+    }
+    
+    public void updateGUIFollowedAuctionsList() {
+        lstFollowedAuctionsModel.clear();
+        for (Auction auction : admin.getFollowedAuctions().getAuctions().values()) {
+            lstFollowedAuctionsModel.addElement(auction.getId());
+        }
+    }
+    
+    public void updateGUIYourAuctionsList() {
+        lstYourAuctionsModel.clear();
+        for (Auction auction : admin.getAuctions().getAuctions().values()) {
+            if (auction.getOwnerId().equals(admin.getClient().getId())) {
+                lstYourAuctionsModel.addElement(auction.getId());
+            }
+        }
+    }
+    
+    public void updateGUIYourAuctionSelectedInfo (Auction auction) {
         clientGUI.txtYourAuctionId.setText(auction.getId());
         clientGUI.txtYourAuctionStatus.setText(auction.getState().toString());
         clientGUI.txtYourAuctionBestOffer.setText(Double.toString(auction.getActualPrice()));
         clientGUI.txtYourAuctionsNewOffer.setText(Double.toString(auction.getNextPrice()));
         clientGUI.txtYourAuctionsIdProduct.setText(auction.getProduct().getId());
-        clientGUI.spnNextPrice.setValue(auction.getNextPrice());
+        clientGUI.spnYourAuctionsNextPrice.setValue(auction.getNextPrice());
         if (!"".equals(auction.getBidderId())) {
             clientGUI.txtYourAuctionsUserBestOffer.setText(auction.getBidderId());
         } else {
@@ -115,13 +133,23 @@ public class Controller implements AuctionsIMsgHandler<AuctionsMsg> {
         } else {
             clientGUI.txtYourAuctionsUserNewOffer.setText("");
         }
+        clientGUI.lblYourAuctionsAuctionImage.setIcon(auction.getImage());
+        clientGUI.lblYourAuctionsProductImage.setIcon(auction.getProduct().getImage());
     }
     
-    public void AuctionSelected() {
+    public void updateGUIAvailableAndFollowedAuctionSelectedInfo (Auction auction) {
+        clientGUI.txtState.setText(auction.getState().toString());
+        clientGUI.txtActualPrice.setText(Double.toString(auction.getActualPrice()));
+        clientGUI.txtNextPrice.setText(Double.toString(auction.getNextPrice()));
+        clientGUI.lblAuctionImage.setIcon(auction.getImage());
+        clientGUI.lblProductImage.setIcon(auction.getProduct().getImage());
+    }
+    
+    public void GUIYourAuctionSelected() {
         String subasta = clientGUI.lstFollowedAuctions.getSelectedValue();
         if (admin.getAuctions().containsKey(subasta)) {
             Auction auction = admin.getAuctions().get(subasta);
-            actualizarTextos(auction);
+            updateGUIYourAuctionSelectedInfo(auction);
         }
     }
     
@@ -139,15 +167,15 @@ public class Controller implements AuctionsIMsgHandler<AuctionsMsg> {
     }
     
     public void deleteAllAuctions() {
-        ((DefaultListModel<String>)clientGUI.lstAvailableAuctions.getModel()).clear();
-        ((DefaultListModel<String>)clientGUI.lstYourAuctions.getModel()).clear();
+        lstAvailableAuctionsModel.clear();
+        lstYourAuctionsModel.clear();
     }
     
     public void addAuction(Auction auction) {
         admin.getAuctions().add(auction);
-        ((DefaultListModel<String>)clientGUI.lstAvailableAuctions.getModel()).addElement(auction.getId());
+        lstAvailableAuctionsModel.addElement(auction.getId());
         if (admin.getClient().getId().equals(auction.getAuctioneerId())) {
-            ((DefaultListModel<String>)clientGUI.lstYourAuctions.getModel()).addElement(auction.getId());
+            lstYourAuctionsModel.addElement(auction.getId());
         }
     }
     
@@ -155,67 +183,18 @@ public class Controller implements AuctionsIMsgHandler<AuctionsMsg> {
         admin.getAuctions().get(auctionId).setState(Auction.STATE.FINISHED);
     }
 
-    @Override
-    public void handleMsg(AuctionsMsg message) {
-        printer.print("ClientController: Nuevo mensaje recibido: " + message.toString());
-        switch(message.getType()) {
-            case AuctionsMsgFactForClients.NEW_OFFER:
-                AuctionsMsgNewOffer newOffer = (AuctionsMsgNewOffer)message.getMessage();
-                printer.print("ClientController: Recibida una nueva oferta para la subasta " + newOffer.getIdAuction());
-                newOffer(newOffer.getIdAuction(), message.getId(), newOffer.getNewOffer());
-                break;
-            case AuctionsMsgFactForClients.ACCEPT_OFFER:
-                AuctionsMsgAcceptOffer acceptOffer = (AuctionsMsgAcceptOffer)message.getMessage();
-                printer.print("ClientController: Se aceptó tu oferta en la subasta " + acceptOffer.getIdAuction());
-                offerAccepted(acceptOffer.getIdAuction(), acceptOffer.getIdBidder(), acceptOffer.getNewPrice());
-                break;
-            case AuctionsMsgFactForClients.AUCTION_FINISHED:
-                AuctionsMsgAuctionFinished auctionFinished = (AuctionsMsgAuctionFinished)message.getMessage();
-                printer.print("ClientController: Se terminó la subasta" + auctionFinished.getIdAuction() + ", el ganador es " + auctionFinished.getIdWinnerBidder() + ".");
-                auctionFinished(auctionFinished.getIdAuction());
-                break;
-            case AuctionsMsgFactForClients.MESSAGE_TO_BIDDER:
-                AuctionsMsgMessageToBidder messageToBidder = (AuctionsMsgMessageToBidder)message.getMessage();
-                printer.print("ClientController: Llegó un mensaje de la subasta " + messageToBidder.getIdAuction() + ", el mensaje es: " + messageToBidder.getMessage() + ".");
-                break;
-            case AuctionsMsgFactForServer.MESSAGE_TO_BIDDER:
-            case AuctionsMsgFactForServer.INFO:
-                printer.print("ClientController: Se recibió el mensaje: " + (String)message.getMessage());
-                break;
-            case AuctionsMsgFactForServer.SENDING_ALL_AUCTIONS:
-                printer.print("ClientController: Se van a recibir todas las subastas.");
-                deleteAllAuctions();
-                break;
-            case AuctionsMsgFactForServer.SENDING_ALL_BIDDERS:
-                printer.print("ClientController: Se van a recibir todos los postores.");
-                break;
-            case AuctionsMsgFactForServer.SENDING_AUCTION:
-                printer.print("ClientController: Se recibe una subasta.");
-                addAuction((Auction)message.getMessage());
-                break;
-            case AuctionsMsgFactForServer.SENDING_BIDDER:
-                printer.print("ClientController: Se recibe un postor.");
-                break;
-            case AuctionsMsgFactForServer.DONE:
-                printer.print("ClientController: Todo realizado de parte del servidor.");
-                break;
-            case AuctionsMsgFactForServer.SENDING_BIDDER_ID:
-                setId((String)message.getMessage());
-                printer.print("ClientController: El servidor nos envía nuestro id: " + admin.getClient().getId() + ".");
-                break;
-            case AuctionsMsgFactForServer.CLOSE_CONNECTION:
-                printer.print("ClientController: El servidor solicita cerrar la conexión.");
-                break;
-            case AuctionsMsgFactForServer.CHECKING_CONNECTION:
-                printer.print("El servidor solicitó checkar la conexión, se mandó un mensaje de confirmación.");
-                break;
-            default:
-                break;
-        }
-    }
-
     public void setId(String id) {
         admin.setClientId(id);
+    }
+
+    @Override
+    public void update(Object message) {
+        if (message instanceof AuctionsAtributeChanged) {
+            AuctionsAtributeChanged msg = (AuctionsAtributeChanged) message;
+            if("new auction".equals(msg.getName())) {
+                addAuction((Auction)msg.getObject());
+            }
+        }
     }
     
     

@@ -5,8 +5,9 @@
  */
 package controller;
 
-import admin.Admin;
+import auctions.admin.AuctionsClientAdmin;
 import vista.ClientGUI;
+import vista.Printer;
 
 /**
  *
@@ -15,7 +16,7 @@ import vista.ClientGUI;
 public class AuctionsClient {
 
     private static ClientGUI clientGUI;
-    private static Admin admin;
+    private static AuctionsClientAdmin admin;
     private static Controller controller;
     
     /**
@@ -70,8 +71,9 @@ public class AuctionsClient {
             @Override
             public void run() {
                 clientGUI = new ClientGUI();
-                admin = new Admin(serverName, port, clientGUI);
-                controller =  new Controller(clientGUI, admin, clientGUI);
+                Printer printer = new Printer(clientGUI);
+                admin = new AuctionsClientAdmin(serverName, port, printer);
+                controller =  new Controller(clientGUI, admin, printer);
                 clientGUI.setVisible(true);
             }
         });
