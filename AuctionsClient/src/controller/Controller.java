@@ -22,6 +22,8 @@ import controller.actions.ActionLstFollowedAuctions;
 import controller.actions.ActionLstYourAuctions;
 import controller.actions.ActionMnuSalir;
 import controller.actions.ActionWindowListener;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import javax.swing.DefaultListModel;
 import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
@@ -81,8 +83,14 @@ public class Controller implements AuctionsIObserver {
         clientGUI.mnuSalir.addActionListener(new ActionMnuSalir(admin, clientGUI, this, printer));
         clientGUI.addWindowListener(new ActionWindowListener(admin, clientGUI, this, printer));
         
-        String nombre = clientGUI.getClientName();
-        admin.setClientName(nombre);
+        Calendar calendar = new GregorianCalendar();
+        clientGUI.spnNewAuctionDay.setValue(calendar.get(Calendar.DAY_OF_MONTH));
+        clientGUI.spnNewAuctionMonth.setValue(calendar.get(Calendar.MONTH));
+        clientGUI.spnNewAuctionYear.setValue(calendar.get(Calendar.YEAR));
+        clientGUI.spnNewAuctionHour.setValue(calendar.get(Calendar.HOUR_OF_DAY));
+        clientGUI.spnNewAuctionMinutes.setValue(calendar.get(Calendar.MINUTE));
+        
+        admin.setClientName(clientGUI.getClientName());
     }
 
     public ClientGUI getClientGUI() {
@@ -110,7 +118,7 @@ public class Controller implements AuctionsIObserver {
     public void updateGUIYourAuctionsList() {
         lstYourAuctionsModel.clear();
         for (Auction auction : admin.getAuctions().getAuctions().values()) {
-            if (auction.getOwnerId().equals(admin.getClient().getId())) {
+            if (auction.getAuctioneerId().equals(admin.getMyId())) {
                 lstYourAuctionsModel.addElement(auction.getId());
             }
         }
@@ -123,6 +131,7 @@ public class Controller implements AuctionsIObserver {
         clientGUI.txtYourAuctionsNewOffer.setText(Double.toString(auction.getNextPrice()));
         clientGUI.txtYourAuctionsIdProduct.setText(auction.getProduct().getId());
         clientGUI.spnYourAuctionsNextPrice.setValue(auction.getNextPrice());
+        clientGUI.txtYourAuctionsDescription.setText(auction.getProduct().getDescription());
         if (!"".equals(auction.getBidderId())) {
             clientGUI.txtYourAuctionsUserBestOffer.setText(auction.getBidderId());
         } else {
@@ -138,6 +147,7 @@ public class Controller implements AuctionsIObserver {
     }
     
     public void updateGUIAvailableAndFollowedAuctionSelectedInfo (Auction auction) {
+        clientGUI.txtProductId.setText(auction.getProduct().getId());
         clientGUI.txtState.setText(auction.getState().toString());
         clientGUI.txtActualPrice.setText(Double.toString(auction.getActualPrice()));
         clientGUI.txtNextPrice.setText(Double.toString(auction.getNextPrice()));
@@ -173,9 +183,11 @@ public class Controller implements AuctionsIObserver {
     
     public void addAuction(Auction auction) {
         admin.getAuctions().add(auction);
-        lstAvailableAuctionsModel.addElement(auction.getId());
+        
         if (admin.getClient().getId().equals(auction.getAuctioneerId())) {
             lstYourAuctionsModel.addElement(auction.getId());
+        } else {
+            lstAvailableAuctionsModel.addElement(auction.getId());
         }
     }
     

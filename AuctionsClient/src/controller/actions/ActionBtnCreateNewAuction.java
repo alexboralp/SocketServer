@@ -41,8 +41,8 @@ public class ActionBtnCreateNewAuction implements ActionListener {
                     !"".equals(clientGUI.txtnewAuctionInitialPrice.getText())) {
                 String AuctionName = clientGUI.txtNewAuctionid.getText();
                 int dia = (int)clientGUI.spnNewAuctionDay.getValue();
-                int mes = (int)clientGUI.spnnewAuctionMonth.getValue();
-                int anno = (int)clientGUI.spnnewAuctionYear.getValue();
+                int mes = (int)clientGUI.spnNewAuctionMonth.getValue();
+                int anno = (int)clientGUI.spnNewAuctionYear.getValue();
                 int hora = (int)clientGUI.spnNewAuctionHour.getValue();
                 int duracion = (int)clientGUI.spnNewAuctionDuration.getValue();
                 String nombreProduct = clientGUI.txtNewAuctionProductName.getText();
