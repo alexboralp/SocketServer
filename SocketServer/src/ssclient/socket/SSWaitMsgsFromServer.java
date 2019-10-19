@@ -9,8 +9,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import ssserver.patterns.observer.SSAbsObservable;
 import ssserver.commoninterfaces.SSIPrintable;
 import ssserver.commoninterfaces.SSIOkable;
@@ -145,7 +143,6 @@ public class SSWaitMsgsFromServer extends SSAbsObservable implements Runnable, S
                 updateAll(message);
             }
         } catch (IOException | ClassNotFoundException ex) {
-            Logger.getLogger(SSWaitMsgsFromServer.class.getName()).log(Level.SEVERE, null, ex);
             printer.printError("SSWaitMsgsFromServer: " + ex.getMessage());
         }
     }
