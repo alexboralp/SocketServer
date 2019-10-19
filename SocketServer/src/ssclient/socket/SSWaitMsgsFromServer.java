@@ -95,6 +95,10 @@ public class SSWaitMsgsFromServer extends SSAbsObservable implements Runnable, S
         this.message = message;
     }
     
+    public String getMyId() {
+        return socket.getLocalSocketAddress().toString();
+    }
+    
     public void sendMessage(SSIMsg message) {
         try {
             message.setId(socket.getLocalSocketAddress().toString());

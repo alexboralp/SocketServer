@@ -10,43 +10,53 @@ import ssserver.client.SSWaitForClients;
 import java.io.IOException;
 import java.io.Serializable;
 import static java.lang.Thread.sleep;
-import ssclient.SSClientMsgFact;
-import ssserver.SSServerMsgFact;
 import ssserver.client.SSClient;
 import ssserver.client.SSWaitForClientsMsgs;
 import ssserver.patterns.observer.SSAbsObservable;
 import ssserver.commoninterfaces.SSIPrintable;
-import ssserver.msg.SSIMsg;
 import ssserver.patterns.observer.SSIObserver;
 import ssserver.client.SSIClient;
 import ssserver.client.SSWaitForClientMsgs;
 import ssserver.commoninterfaces.SSIMsgHandler;
-import ssserver.msg.SSMsgToClient;
+import ssserver.msg.SSServerMsgHandler;
 
 /**
  *
  * @author alexander
  */
-public class SSServerAdmin extends SSAbsObservable implements SSIObserver, SSIMsgHandler<SSIMsg>, Runnable {
+public class SSServerAdmin extends SSAbsObservable implements SSIObserver, Runnable {
     
-    private SSWaitForClients waitClients;
-    private SSClients clients;
-    private SSIPrintable printer;
-    private SSWaitForClientsMsgs waitForClientsMessages;
-    private Thread thread;
+    protected SSWaitForClients waitClients;
+    protected SSClients clients;
+    protected SSIPrintable printer;
+    protected SSWaitForClientsMsgs waitForClientsMessages;
+    protected SSIMsgHandler msgHandler;
+    protected Thread thread;
 
     public SSServerAdmin(int port, SSIPrintable printer) {
+        _init_(port, printer);
+        
+        msgHandler = new SSServerMsgHandler(printer, this);
+    }
+    
+    public SSServerAdmin(int port, SSIPrintable printer, SSIMsgHandler msgHandler) {
+        _init_(port, printer);
+        
+        this.msgHandler = msgHandler;
+    }
+    
+    private void _init_(int port, SSIPrintable printer) {
         try {
             clients = new SSClients(printer);
             waitClients = new SSWaitForClients(port, printer);
             waitClients.addObserver(this);
             waitClients.startListening();
             
-            waitForClientsMessages = new SSWaitForClientsMsgs(printer);
-            
             this.printer = printer;
             
-            this.printer.print("SSServerAdmin: " + "Waiting for clients.");
+            waitForClientsMessages = new SSWaitForClientsMsgs(printer);
+            
+            this.printer.print("SSServerAdmin: " + "Waiting for clients on port " + port + ".");
             
         } catch (IOException ex) {
             this.printer.printError("SSServerAdmin: " + "Unnable to start server on port " + port + ".");
@@ -83,6 +93,15 @@ public class SSServerAdmin extends SSAbsObservable implements SSIObserver, SSIMs
     public void stopServerCleaning() {
         thread.interrupt();
     }
+    
+    public void closeConnection(String clientId) {
+        try {
+            waitForClientsMessages.get(clientId).closeComunication();
+        } catch (IOException ex) {
+            this.printer.printError("SSServerAdmin: " + ex.getMessage());
+        }
+        waitForClientsMessages.remove(clientId);
+    }
 
     @Override
     public void update(Object message) {
@@ -90,67 +109,25 @@ public class SSServerAdmin extends SSAbsObservable implements SSIObserver, SSIMs
         if (message instanceof SSIClient) {
             this.printer.print("SSServerAdmin: " + "New client received.");
             addNewClient((SSClient)message);
-        } else if (message instanceof SSIMsg) {
-            this.printer.print("SSServerAdmin: " + "SSIMsg received.");
-            this.printer.print("SSServerAdmin: " + "New message from client: " + message.toString() + ".");
-            handleMsg((SSIMsg) message);
-            this.printer.print("SSServerAdmin: " + "Resending message to observers.");
-            updateAll(message);
         } else {
-            this.printer.print("SSServerAdmin: " + "Non SSIMsg message received.");
-            updateAll(message);
+            this.printer.print("SSServerAdmin: " + "Unknown message type.");
         }
-        
-        
     }
     
     private void addNewClient(SSIClient client) {
         clients.add(client);
         SSWaitForClientMsgs sswfcm = new SSWaitForClientMsgs(client, printer);
-        sswfcm.addObserver(this);
+        sswfcm.addObserver(msgHandler);
         sswfcm.startListening();
         waitForClientsMessages.add(sswfcm);
         this.printer.print("SSServerAdmin: " + "New client added.");
-    }
-    
-    /**
-     *
-     * @param message
-     */
-    @Override
-    public void handleMsg(SSIMsg message) {
-        switch (message.getType()) {
-            case SSClientMsgFact.CLOSE_CONNECTION:
-                this.printer.print("SSServerAdmin: " + "El cliente solicitó cerrar su conección.");
-                try {
-                    waitForClientsMessages.get(message.getId()).closeComunication();
-                } catch (IOException ex) {
-                    this.printer.printError("ServerAdministrator: " + ex.getMessage());
-                }
-                waitForClientsMessages.remove(message.getId());
-                break;
-            case SSClientMsgFact.MESSAGE_RECEIVED:
-                this.printer.print("SSServerAdmin: " + "El cliente " + message.getId() + " confirma la recepción de revisión de su conexión.");
-                break;
-            case SSClientMsgFact.INFO:
-                this.printer.print("SSServerAdmin: " + "Se recibió información del cliente.");
-                this.printer.print(message.getMessage().toString());
-                break;
-            case SSClientMsgFact.SEND_MESSAGE_TO_CLIENT:
-                this.printer.print("SSServerAdmin: " + "Se recibió un mensaje para otro cliente.");
-                SSIMsg msgToClient = SSServerMsgFact.createMsg(SSServerMsgFact.RESENDING_MESSAGE_FROM_CLIENT, message.getMessage());
-                sendMessageToClient(((SSMsgToClient)message.getMessage()).getId(), msgToClient);
-                break;
-            default:
-                break;
-        }
     }
 
     @Override
     public void run() {
         while(true) {
             try {
-                sleep(5*60*1000); // Realiza limpieza cada 5 minutos
+                sleep(5*60*1000); // Realiza limpieza de clientes cada 5 minutos
                 waitForClientsMessages.clean();
                 clients.clean();
             } catch (InterruptedException ex) {
@@ -162,7 +139,57 @@ public class SSServerAdmin extends SSAbsObservable implements SSIObserver, SSIMs
 
     @Override
     public String toString() {
-        return "SSServerAdmin{" + "waitClients=" + waitClients + ", clients=" + clients + ", printer=" + printer + ", waitForClientsMessages=" + waitForClientsMessages + ", thread=" + thread + '}';
+        return "SSServerAdmin{" + "waitClients=" + waitClients + ", clients=" + clients + ", printer=" + printer + ", waitForClientsMessages=" + waitForClientsMessages + ", msgHandler=" + msgHandler + ", thread=" + thread + '}';
     }
+
+    public SSWaitForClients getWaitClients() {
+        return waitClients;
+    }
+
+    public void setWaitClients(SSWaitForClients waitClients) {
+        this.waitClients = waitClients;
+    }
+
+    public SSClients getClients() {
+        return clients;
+    }
+
+    public void setClients(SSClients clients) {
+        this.clients = clients;
+    }
+
+    public SSIPrintable getPrinter() {
+        return printer;
+    }
+
+    public void setPrinter(SSIPrintable printer) {
+        this.printer = printer;
+    }
+
+    public SSWaitForClientsMsgs getWaitForClientsMessages() {
+        return waitForClientsMessages;
+    }
+
+    public void setWaitForClientsMessages(SSWaitForClientsMsgs waitForClientsMessages) {
+        this.waitForClientsMessages = waitForClientsMessages;
+    }
+
+    public SSIMsgHandler getMsgHandler() {
+        return msgHandler;
+    }
+
+    public void setMsgHandler(SSIMsgHandler msgHandler) {
+        this.msgHandler = msgHandler;
+    }
+
+    public Thread getThread() {
+        return thread;
+    }
+
+    public void setThread(Thread thread) {
+        this.thread = thread;
+    }
+    
+    
     
 }

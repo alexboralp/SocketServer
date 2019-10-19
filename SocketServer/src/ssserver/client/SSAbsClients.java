@@ -7,10 +7,10 @@ package ssserver.client;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.HashMap;
 import ssserver.commoninterfaces.SSIPrintable;
 import ssserver.commoninterfaces.SSIList;
-import ssserver.msg.SSIMsg;
 
 /**
  *
@@ -42,6 +42,10 @@ public abstract class SSAbsClients implements SSIList<SSIClient>, SSIClients{
     
     public boolean containsKey(String key) {
         return clients.containsKey(key);
+    }
+    
+    public Collection<SSIClient> getClients() {
+        return clients.values();
     }
     
     @Override

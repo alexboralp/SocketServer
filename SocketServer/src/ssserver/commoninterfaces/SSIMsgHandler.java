@@ -5,11 +5,12 @@
  */
 package ssserver.commoninterfaces;
 
+import ssserver.patterns.observer.SSIObserver;
+
 /**
  *
  * @author alexander
- * @param <T>
  */
-public interface SSIMsgHandler<T> {
-    public void handleMsg(T message);
+public interface SSIMsgHandler extends SSIObserver {
+    public void handleMsg(Object message);
 }
