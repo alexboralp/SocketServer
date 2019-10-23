@@ -24,6 +24,7 @@ public class OOServerMsgFact extends SSServerMsgFact {
     public static final int TEXT_MESSAGE_TO_OBSERVER = 105;
     public static final int SENDING_ID_TO_OBSERVER = 106;
     public static final int DONE = 107;
+    public static final int ID_REPEATED = 108;
     
     public static OOIMsg createMsg() {
         return new OOMsg();

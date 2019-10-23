@@ -5,6 +5,7 @@
  */
 package ooserver.client;
 
+import java.util.Collection;
 import java.util.HashMap;
 
 /**
@@ -42,6 +43,11 @@ public abstract class OOAbsSimpleClients implements OOISimpleClients {
     @Override
     public OOISimpleClient get(String id) {
         return simpleClients.get(id);
+    }
+
+    @Override
+    public Collection<OOISimpleClient> getValues() {
+        return simpleClients.values();
     }
 
     @Override

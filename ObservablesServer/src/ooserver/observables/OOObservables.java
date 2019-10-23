@@ -43,6 +43,11 @@ public class OOObservables implements OOIListId<OOIObservableObj> {
     }
 
     @Override
+    public Collection<OOIObservableObj> getValues() {
+        return observables.values();
+    }
+
+    @Override
     public boolean containsKey(String id) {
         return observables.containsKey(id);
     }

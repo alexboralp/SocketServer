@@ -5,6 +5,7 @@
  */
 package ooserver.observables;
 
+import java.util.Collection;
 import java.util.HashMap;
 import ooserver.commoninterfaces.OOISerializableIdable;
 import ooserver.observers.OOIObserverObj;
@@ -76,6 +77,11 @@ public abstract class OOAbsObservableObj<T extends OOISerializableIdable> implem
     @Override
     public void removeObserver(OOIObserverObj observer) {
         observers.remove(observer.getId());
+    }
+    
+    @Override
+    public Collection<OOIObserverObj> getObservers() {
+        return observers.values();
     }
 
     @Override

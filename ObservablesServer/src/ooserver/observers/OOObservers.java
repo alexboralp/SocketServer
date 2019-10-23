@@ -46,6 +46,11 @@ public class OOObservers implements OOIListId<OOIObserverObj> {
     }
 
     @Override
+    public Collection<OOIObserverObj> getValues() {
+        return observers.values();
+    }
+
+    @Override
     public boolean containsKey(String id) {
         return observers.containsKey(id);
     }

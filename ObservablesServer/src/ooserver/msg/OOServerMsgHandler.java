@@ -7,6 +7,7 @@ package ooserver.msg;
 
 import ooclient.OOClientMsgFact;
 import ooserver.OOServerAdminFact;
+import ooserver.OOServerMsgFact;
 import ooserver.admin.OOServerAdmin;
 import ooserver.client.OOISimpleClient;
 import ooserver.commoninterfaces.OOIMsg;
@@ -38,7 +39,12 @@ public class OOServerMsgHandler extends SSServerMsgHandler implements OOIMsgHand
             switch (msg.getType()) {
                 case OOClientMsgFact.ADD_OBSERVABLE:
                     printer.print("OOServerMsgHandler: ADD_OBSERVABLE.");
-                    ooAdmin.addObservableToServer(OOServerAdminFact.createObservableObj(msg.getId(), (OOISerializableIdable)msg.getMessage()));
+                    OOISerializableIdable observable = (OOISerializableIdable)msg.getMessage();
+                    if (ooAdmin.getObservableFromServer(observable.getId()) == null) {
+                        ooAdmin.addObservableToServer(OOServerAdminFact.createObservableObj(msg.getId(), (OOISerializableIdable)msg.getMessage()));
+                    } else {
+                        ooAdmin.sendMessageToClient(msg.getId(), OOServerMsgFact.createMsg(OOServerMsgFact.ID_REPEATED, null));
+                    }
                     break;
                 case OOClientMsgFact.REMOVE_OBSERVABLE:
                     printer.print("OOServerMsgHandler: REMOVE_OBSERVABLE.");
