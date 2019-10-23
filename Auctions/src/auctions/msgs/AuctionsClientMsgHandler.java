@@ -5,6 +5,7 @@
  */
 package auctions.msgs;
 
+import auctions.AuctionsMsgFactForClients;
 import auctions.AuctionsMsgFactForServer;
 import auctions.admin.AuctionsClientAdmin;
 import auctions.interfaces.AuctionsIMsg;
@@ -26,65 +27,105 @@ public class AuctionsClientMsgHandler extends OOClientMsgHandler implements Auct
         super(printer, admin);
         aAdmin = admin;
     }
+    
+    private void newOffer(AuctionsMsgNewOffer newOffer) {
+        printer.print("AuctionsClientMsgHandler: Recibida una nueva oferta para la subasta " + newOffer.getIdAuction());
+        Auction auction = aAdmin.getAuctions().get(newOffer.getIdAuction());
+        auction.newOffer(newOffer.getIdBidder(), newOffer.getNewOffer());
+        aAdmin.GUINewMessage("Recibida una nueva oferta para la subasta " + newOffer.getIdAuction() + ".");
+    }
+    
+    private void acceptOffer(AuctionsMsgAcceptOffer acceptOffer) {
+        printer.print("AuctionsClientMsgHandler: Se aceptó tu oferta en la subasta " + acceptOffer.getIdAuction());
+        Auction auction = aAdmin.getAuctions().get(acceptOffer.getIdAuction());
+        //auction.acceptNewOffer();
+        auction.setActualPrice(auction.getNextPrice());
+        auction.setNextPrice(acceptOffer.getNewPrice());
+        auction.setBidderId(acceptOffer.getIdBidder());
+        auction.setNewBidderId("");
+        aAdmin.GUINewMessage("Se aceptó la oferta para la subasta " + acceptOffer.getIdAuction() + ".");
+    }
+    
+    private void auctionFinished(AuctionsMsgAuctionFinished auctionFinished) {
+        printer.print("AuctionsClientMsgHandler: Se terminó la subasta" + auctionFinished.getIdAuction() + ", el ganador es " + auctionFinished.getIdWinnerBidder() + ".");
+        Auction auction = aAdmin.getAuction(auctionFinished.getIdAuction());
+        auction.setState(Auction.STATE.FINISHED);
+        aAdmin.GUINewMessage("Se terminó la subasta" + auctionFinished.getIdAuction() + ", el ganador es " + auctionFinished.getIdWinnerBidder() + ".");
+    }
 
     @Override
     public void handleMsg(Object message) {
         this.printer.print("AuctionsClientMsgHandler: " + "New message received.");
         super.handleMsg(message);
-        AuctionsIMsg msg;
+        Object msgObj;
         if (message instanceof OOIMsg) {
-            msg = AuctionsMsgFactForServer.createMsg((OOIMsg)message);
+            msgObj = AuctionsMsgFactForServer.createMsg((OOIMsg)message);
+        } else {
+            msgObj = message;
         }
-        if (message instanceof AuctionsIMsg) {
-            msg = (AuctionsIMsg)message;
-            printer.print("ClientController: Nuevo mensaje recibido: " + msg.toString());
+        if (msgObj instanceof AuctionsIMsg) {
+            AuctionsIMsg msg = (AuctionsIMsg)msgObj;
+            printer.print("AuctionsClientMsgHandler: Nuevo mensaje recibido: " + msg.toString());
             switch(msg.getType()) {
-                /*case AuctionsMsgFactForClients.NEW_OFFER:
-                    AuctionsMsgNewOffer newOffer = (AuctionsMsgNewOffer)msg.getMessage();
-                    printer.print("ClientController: Recibida una nueva oferta para la subasta " + newOffer.getIdAuction());
-                    aAdmin.newOffer(newOffer.getIdAuction(), msg.getId(), newOffer.getNewOffer());
+                case AuctionsMsgFactForClients.NEW_OFFER:
+                    newOffer((AuctionsMsgNewOffer)msg.getMessage());
                     break;
                 case AuctionsMsgFactForClients.ACCEPT_OFFER:
-                    AuctionsMsgAcceptOffer acceptOffer = (AuctionsMsgAcceptOffer)msg.getMessage();
-                    printer.print("ClientController: Se aceptó tu oferta en la subasta " + acceptOffer.getIdAuction());
-                    aAdmin.offerAccepted(acceptOffer.getIdAuction(), acceptOffer.getIdBidder(), acceptOffer.getNewPrice());
+                    acceptOffer((AuctionsMsgAcceptOffer)msg.getMessage());
                     break;
                 case AuctionsMsgFactForClients.AUCTION_FINISHED:
-                    AuctionsMsgAuctionFinished auctionFinished = (AuctionsMsgAuctionFinished)msg.getMessage();
-                    printer.print("ClientController: Se terminó la subasta" + auctionFinished.getIdAuction() + ", el ganador es " + auctionFinished.getIdWinnerBidder() + ".");
-                    aAdmin.auctionFinished(auctionFinished.getIdAuction());
+                    auctionFinished((AuctionsMsgAuctionFinished)msg.getMessage());
                     break;
                 case AuctionsMsgFactForClients.MESSAGE_TO_BIDDER:
                     AuctionsMsgMessageToBidder messageToBidder = (AuctionsMsgMessageToBidder)msg.getMessage();
-                    printer.print("ClientController: Llegó un mensaje de la subasta " + messageToBidder.getIdAuction() + ", el mensaje es: " + messageToBidder.getMessage() + ".");
+                    printer.print("AuctionsClientMsgHandler: Llegó un mensaje de la subasta " + messageToBidder.getIdAuction() + ", el mensaje es: " + messageToBidder.getMessage() + ".");
+                    aAdmin.GUINewMessage("Llegó un mensaje de la subasta " + messageToBidder.getIdAuction() + ": " + messageToBidder.getMessage() + ".");
                     break;
-                case AuctionsMsgFactForServer.MESSAGE_TO_BIDDER:
+                case AuctionsMsgFactForClients.FOLLOW_AUCTION:
+                    aAdmin.GUIFollowAuction((String)msg.getMessage());
+                    break;
+                case AuctionsMsgFactForClients.UNFOLLOW_AUCTION:
+                    aAdmin.GUIUnfollowAuction((String)msg.getMessage());
+                    break;
                 case AuctionsMsgFactForServer.INFO:
-                    printer.print("ClientController: Se recibió el mensaje: " + (String)msg.getMessage());
+                    printer.print("AuctionsClientMsgHandler: Se recibió el mensaje: " + (String)msg.getMessage());
+                    break;
+                case AuctionsMsgFactForServer.AUCTION_ID_REPEATED:
+                    printer.print("AuctionsClientMsgHandler: El id de la subasta ya fue utilizado.");
+                    aAdmin.GUINewMessage("El id de la subasta ya fue utilizado.");
                     break;
                 case AuctionsMsgFactForServer.SENDING_ALL_AUCTIONS:
-                    printer.print("ClientController: Se van a recibir todas las subastas.");
-                    aAdmin.deleteAllAuctions();
+                    printer.print("AuctionsClientMsgHandler: Se van a recibir todas las subastas.");
+                    aAdmin.GUIDeleteAllAuctions();
                     break;
                 case AuctionsMsgFactForServer.SENDING_ALL_BIDDERS:
-                    printer.print("ClientController: Se van a recibir todos los postores.");
-                    break;*/
+                    printer.print("AuctionsClientMsgHandler: Se van a recibir todos los postores.");
+                    break;
                 case AuctionsMsgFactForServer.SENDING_AUCTION:
-                    printer.print("ClientController: Se recibe una subasta.");
-                    aAdmin.addAuction((Auction)msg.getMessage());
+                    printer.print("AuctionsClientMsgHandler: Se recibe una subasta.");
+                    aAdmin.GUIAddAuction((Auction)msg.getMessage());
                     break;
                 /*case AuctionsMsgFactForServer.SENDING_BIDDER:
                     printer.print("ClientController: Se recibe un postor.");
                     break;*/
+                case AuctionsMsgFactForServer.NEW_BID_ALLREADY_MADE:
+                    aAdmin.GUINewBidAllreadyMade((String)msg.getMessage());
+                    break;
+                case AuctionsMsgFactForServer.TEXT_MESSAGE:
+                    aAdmin.GUINewBidAllreadyMade((String)msg.getMessage());
+                    break;
+                case AuctionsMsgFactForServer.TEXT_MESSAGE_TO_OBSERVER:
+                    aAdmin.GUINewBidAllreadyMade((String)msg.getMessage());
+                    break;
                 case AuctionsMsgFactForServer.DONE:
-                    printer.print("ClientController: Todo realizado de parte del servidor.");
+                    printer.print("AuctionsClientMsgHandler: Todo realizado de parte del servidor.");
                     break;
                 case AuctionsMsgFactForServer.SENDING_BIDDER_ID:
                     aAdmin.setClientId((String)msg.getMessage());
-                    printer.print("ClientController: El servidor nos envía nuestro id: " + aAdmin.getClient().getId() + ".");
+                    printer.print("AuctionsClientMsgHandler: El servidor nos envía nuestro id: " + aAdmin.getClient().getId() + ".");
                     break;
                 case AuctionsMsgFactForServer.CLOSE_CONNECTION:
-                    printer.print("ClientController: El servidor solicita cerrar la conexión.");
+                    printer.print("AuctionsClientMsgHandler: El servidor solicita cerrar la conexión.");
                     break;
                 case AuctionsMsgFactForServer.CHECKING_CONNECTION:
                     printer.print("El servidor solicitó checkar la conexión, se mandó un mensaje de confirmación.");

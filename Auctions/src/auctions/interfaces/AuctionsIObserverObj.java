@@ -3,16 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package auctions.objects;
+package auctions.interfaces;
 
-
+import ooserver.observers.OOIObserverObj;
 
 /**
  *
  * @author alexander
  */
-public class AuctionObserverObjectFactory {
-    public static AuctionObserverObject create(String ownerId, Auction object) {
-        return new AuctionObserverObject(ownerId, object);
-    }
+public interface AuctionsIObserverObj extends OOIObserverObj {
+    
 }

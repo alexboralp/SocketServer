@@ -11,9 +11,9 @@ import ooserver.client.OOSimpleClient;
  *
  * @author alexander
  */
-public class AuctionClient extends OOSimpleClient {
+public class AuctionSimpleClient extends OOSimpleClient {
 
-    public AuctionClient(String id, String name) {
+    public AuctionSimpleClient(String id, String name) {
         super(id, name);
     }
     

@@ -5,31 +5,31 @@
  */
 package auctions.msgs;
 
-import auctions.interfaces.AuctionsINameable;
 import auctions.interfaces.AuctionsIObjectable;
+import auctions.interfaces.AuctionsITypeable;
 
 /**
  *
  * @author aborbon
  */
-public class AuctionsAtributeChanged implements AuctionsINameable, AuctionsIObjectable {
+public class AuctionsAtributeChanged implements AuctionsITypeable, AuctionsIObjectable {
     
-    private String name;
+    private int type;
     private Object object;
 
-    public AuctionsAtributeChanged(String name, Object object) {
-        this.name = name;
+    public AuctionsAtributeChanged(int type, Object object) {
+        this.type = type;
         this.object = object;
     }
 
     @Override
-    public String getName() {
-        return name;
+    public int getType() {
+        return type;
     }
 
     @Override
-    public void setName(String name) {
-        this.name = name;
+    public void setType(int type) {
+        this.type = type;
     }
 
     @Override

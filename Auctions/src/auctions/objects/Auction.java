@@ -16,7 +16,7 @@ import ooserver.observermsg.OOAbsSendableObj;
 public class Auction extends OOAbsSendableObj {
     
     public enum STATE {
-        IN_PROGRESS, CANCELED, FINISHED
+        IN_PROGRESS, CANCELED, TIME_FINISHED, FINISHED
     }
     
     private Date startDate;
@@ -67,6 +67,11 @@ public class Auction extends OOAbsSendableObj {
             setBidderId(newBidderId);
             this.newBidderId = "";
         }
+    }
+    
+    public void newOffer(String bidderId, double nextPrice) {
+        setNextPrice(nextPrice);
+        setNewBidderId(bidderId);
     }
 
     public Date getStartDate() {
@@ -129,7 +134,7 @@ public class Auction extends OOAbsSendableObj {
         return newBidderId;
     }
 
-    public void setNewBidder(String newBidderId) {
+    public void setNewBidderId(String newBidderId) {
         this.newBidderId = newBidderId;
     }
 

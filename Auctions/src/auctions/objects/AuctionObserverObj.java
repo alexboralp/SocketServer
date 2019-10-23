@@ -6,15 +6,20 @@
 package auctions.objects;
 
 import ooserver.observers.OOAbsObserverObj;
+import ooserver.observers.OOIObserverObj;
 
 /**
  *
  * @author aborbon
  */
-public class AuctionObserverObject extends OOAbsObserverObj<Auction> {
+public class AuctionObserverObj extends OOAbsObserverObj<Auction> {
 
-    public AuctionObserverObject(String ownerId, Auction object) {
+    public AuctionObserverObj(String ownerId, Auction object) {
         super(ownerId, object);
+    }
+    
+    public AuctionObserverObj(OOIObserverObj obj) {
+        super(obj.getOwnerId(), (Auction)obj.getObject());
     }
 
     @Override

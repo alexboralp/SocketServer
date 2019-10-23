@@ -5,6 +5,7 @@
  */
 package auctions.objects;
 
+import java.util.Collection;
 import java.util.HashMap;
 import ooserver.commoninterfaces.OOIListId;
 
@@ -55,6 +56,11 @@ public class Auctions implements OOIListId<Auction>{
     @Override
     public void remove(String id) {
         auctions.remove(id);
+    }
+
+    @Override
+    public Collection<Auction> getValues() {
+        return auctions.values();
     }
 
     @Override

@@ -13,10 +13,12 @@ import java.io.Serializable;
  */
 public class AuctionsMsgNewOffer implements Serializable{
     private String idAuction;
+    private String idBidder;
     private double newOffer;
 
-    public AuctionsMsgNewOffer(String idAuction, double newOffer) {
+    public AuctionsMsgNewOffer(String idAuction, String idBidder, double newOffer) {
         this.idAuction = idAuction;
+        this.idBidder = idBidder;
         this.newOffer = newOffer;
     }
 
@@ -26,6 +28,14 @@ public class AuctionsMsgNewOffer implements Serializable{
 
     public void setIdAuction(String idAuction) {
         this.idAuction = idAuction;
+    }
+
+    public String getIdBidder() {
+        return idBidder;
+    }
+
+    public void setIdBidder(String idBidder) {
+        this.idBidder = idBidder;
     }
 
     public double getNewOffer() {

@@ -41,8 +41,8 @@ public class AuctionsMsgFactForClients extends OOClientMsgFact {
         return new AuctionsMsgAuctionFinished(idAuction, idBidder, messageToWinner);
     }
     
-    public static AuctionsMsgNewOffer createNewOffer(String idAuction, double newOffer) {
-        return new AuctionsMsgNewOffer(idAuction, newOffer);
+    public static AuctionsMsgNewOffer createNewOffer(String idAuction, String idBidder, double newOffer) {
+        return new AuctionsMsgNewOffer(idAuction, idBidder, newOffer);
     }
     
     public static AuctionsMsgAcceptOffer createAcceptOffer(String idAuction, String idBidder, double newPrice) {

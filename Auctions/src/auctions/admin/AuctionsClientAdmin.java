@@ -17,7 +17,7 @@ import auctions.msgs.AuctionsMsgAuctionFinished;
 import auctions.msgs.AuctionsMsgMessageToBidder;
 import auctions.msgs.AuctionsMsgNewOffer;
 import auctions.objects.Auction;
-import auctions.objects.AuctionClient;
+import auctions.objects.AuctionSimpleClient;
 import auctions.objects.AuctionProduct;
 import auctions.objects.Auctions;
 import java.util.Date;
@@ -28,9 +28,9 @@ import ooserver.admin.OOClientAdmin;
  *
  * @author alexander
  */
-public class AuctionsClientAdmin extends OOClientAdmin {
+    public class AuctionsClientAdmin extends OOClientAdmin {
     
-    private AuctionClient client;
+    private AuctionSimpleClient client;
     
     private Auctions auctions;
     private Auctions followedAuctions;
@@ -64,20 +64,19 @@ public class AuctionsClientAdmin extends OOClientAdmin {
         followedAuctions = new Auctions();
     }
     
+    // Mensajes al servidor de realizar alguna acción
+    
     public void addMeAsAClient() {
         if (client.getId() != null && client.getName() != null) {
             printer.print("AuctionsClientAdmin: " + "Asking server to add me as observer.");
             this.sendMessage(AuctionsMsgFactForClients.createMsg(AuctionsMsgFactForClients.ADD_BIDDER, client));
+            this.sendMessage(AuctionsMsgFactForClients.createMsg(AuctionsMsgFactForClients.SEND_ALL_AUCTIONS, null));
         }
     }
     
-    public void addClient(AuctionClient client) {
+    public void addClient(AuctionSimpleClient client) {
         this.sendMessage(AuctionsMsgFactForClients.createMsg(AuctionsMsgFactForClients.ADD_BIDDER, client));
-    }
-    
-    public void addAuction(Auction auction) {
-        auctions.add(auction);
-        this.updateAll(AuctionsAtributeChangedFact.createAuctionsAtributeChanged("new auction", auction));
+        this.sendMessage(AuctionsMsgFactForClients.createMsg(AuctionsMsgFactForClients.SEND_ALL_AUCTIONS, null));
     }
     
     public void addAuction(String id, Date date, int duration, String productId, String productDescription, Icon productImage, double productInititalPrice, double initialPrice, Icon image) {
@@ -103,7 +102,7 @@ public class AuctionsClientAdmin extends OOClientAdmin {
     }
     
     public void newOffer(String idAuction, double newOffer) {
-        AuctionsMsgNewOffer mess = AuctionsMsgFactForClients.createNewOffer(idAuction, newOffer);
+        AuctionsMsgNewOffer mess = AuctionsMsgFactForClients.createNewOffer(idAuction, this.getMyId(), newOffer);
         this.sendMessage(AuctionsMsgFactForClients.createMsg(AuctionsMsgFactForClients.NEW_OFFER, mess));
     }
     
@@ -130,6 +129,41 @@ public class AuctionsClientAdmin extends OOClientAdmin {
         this.sendMessage(AuctionsMsgFactForClients.createMsg(AuctionsMsgFactForClients.SEND_ALL_BIDDERS, null));
     }
     
+    // Mensajes para el GUI sobre el cambio en algún atributo
+    
+    public void GUIAddAuction(Auction auction) {
+        auctions.add(auction);
+        this.updateAll(AuctionsAtributeChangedFact.createAuctionsAtributeChanged(AuctionsAtributeChangedFact.NEW_AUCTION, auction));
+    }
+    
+    public void GUIDeleteAuction(String auctionId) {
+        auctions.remove(auctionId);
+        this.updateAll(AuctionsAtributeChangedFact.createAuctionsAtributeChanged(AuctionsAtributeChangedFact.DELETE_AUCTION, auctionId));
+    }
+    
+    public void GUIFollowAuction(String auctionId) {
+        followedAuctions.add(auctions.get(auctionId));
+        this.updateAll(AuctionsAtributeChangedFact.createAuctionsAtributeChanged(AuctionsAtributeChangedFact.FOLLOW_AUCTION, auctionId));
+    }
+    
+    public void GUIUnfollowAuction(String auctionId) {
+        followedAuctions.remove(auctions.get(auctionId));
+        this.updateAll(AuctionsAtributeChangedFact.createAuctionsAtributeChanged(AuctionsAtributeChangedFact.UNFOLLOW_AUCTION, auctionId));
+    }
+    
+    public void GUIDeleteAllAuctions() {
+        auctions = new Auctions();
+        this.updateAll(AuctionsAtributeChangedFact.createAuctionsAtributeChanged(AuctionsAtributeChangedFact.DELETE_ALL_AUCTIONS, null));
+    }
+    
+    public void GUINewBidAllreadyMade(String auctionId) {
+        this.updateAll(AuctionsAtributeChangedFact.createAuctionsAtributeChanged(AuctionsAtributeChangedFact.NEW_BID_ALLREADY_MADE, auctionId));
+    }
+    
+    public void GUINewMessage(String message) {
+        this.updateAll(AuctionsAtributeChangedFact.createAuctionsAtributeChanged(AuctionsAtributeChangedFact.NEW_MESSAGE, message));
+    }
+    
     // Setter y Getter del administrador
 
     public void setClientName(String name) {
@@ -144,7 +178,7 @@ public class AuctionsClientAdmin extends OOClientAdmin {
         }
     }
 
-    public AuctionClient getClient() {
+    public AuctionSimpleClient getClient() {
         return client;
     }
 
@@ -154,5 +188,9 @@ public class AuctionsClientAdmin extends OOClientAdmin {
 
     public Auctions getFollowedAuctions() {
         return followedAuctions;
+    }
+    
+    public Auction getAuction(String auctionId) {
+        return auctions.get(auctionId);
     }
 }

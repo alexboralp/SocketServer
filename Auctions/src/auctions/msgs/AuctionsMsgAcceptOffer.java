@@ -12,9 +12,9 @@ import java.io.Serializable;
  * @author alexander
  */
 public class AuctionsMsgAcceptOffer implements Serializable {
-    String idAuction;
-    String idBidder;
-    double newPrice;
+    private String idAuction;
+    private String idBidder;
+    private double newPrice;
 
     public AuctionsMsgAcceptOffer(String idAuction, String idBidder, double newPrice) {
         this.idAuction = idAuction;

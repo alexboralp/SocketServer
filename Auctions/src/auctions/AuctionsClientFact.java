@@ -5,18 +5,18 @@
  */
 package auctions;
 
-import auctions.objects.AuctionClient;
+import auctions.objects.AuctionSimpleClient;
 
 /**
  *
  * @author alexander
  */
 public class AuctionsClientFact {
-    public static AuctionClient createClient(String id, String name) {
-        return new AuctionClient(id, name);
+    public static AuctionSimpleClient createClient(String id, String name) {
+        return new AuctionSimpleClient(id, name);
     }
     
-    public static AuctionClient createClient(String name) {
-        return new AuctionClient("", name);
+    public static AuctionSimpleClient createClient(String name) {
+        return new AuctionSimpleClient("", name);
     }
 }

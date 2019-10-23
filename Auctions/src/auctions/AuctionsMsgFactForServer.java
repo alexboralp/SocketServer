@@ -22,6 +22,8 @@ public class AuctionsMsgFactForServer extends OOServerMsgFact {
     public static final int SENDING_BIDDER = SENDING_OBSERVER;
     public static final int MESSAGE_TO_AUCTIONEER = TEXT_MESSAGE_TO_OBSERVER;
     public static final int SENDING_BIDDER_ID = SENDING_ID_TO_OBSERVER;
+    public static final int NEW_BID_ALLREADY_MADE = 200;
+    public static final int AUCTION_ID_REPEATED = ID_REPEATED;
     
     public static AuctionsMsg createMsg() {
         return new AuctionsMsg();
