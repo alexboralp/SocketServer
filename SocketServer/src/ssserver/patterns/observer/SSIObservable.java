@@ -5,6 +5,8 @@
  */
 package ssserver.patterns.observer;
 
+import java.util.Collection;
+
 /**
  * Interfaz que define las funciones de un objeto observable
  * @author aborbon
@@ -35,4 +37,6 @@ public interface SSIObservable<T extends SSIObserver> {
      * @param message Mensaje que se desea enviar.
      */
     public void updateAll(Object message);
+    
+    public Collection<T> getObservers();
 }

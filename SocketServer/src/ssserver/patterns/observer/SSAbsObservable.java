@@ -5,6 +5,7 @@
  */
 package ssserver.patterns.observer;
 
+import java.util.Collection;
 import java.util.LinkedList;
 
 /**
@@ -35,6 +36,11 @@ public abstract class SSAbsObservable implements SSIObservable<SSIObserver>{
     @Override
     public void update(SSIObserver observer, Object message){
         observer.update(message);
+    }
+
+    @Override
+    public Collection<SSIObserver> getObservers() {
+        return observers;
     }
 
     @Override

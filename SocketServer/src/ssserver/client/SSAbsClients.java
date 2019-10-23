@@ -58,6 +58,11 @@ public abstract class SSAbsClients implements SSIList<SSIClient>, SSIClients{
     }
 
     @Override
+    public Collection<SSIClient> getValues() {
+        return clients.values();
+    }
+
+    @Override
     public void sendMessageToAllClients(Serializable message) {
         for (SSIClient client: clients.values()) {
             if (client.isOk()) {

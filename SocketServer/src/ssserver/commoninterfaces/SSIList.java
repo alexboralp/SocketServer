@@ -5,6 +5,8 @@
  */
 package ssserver.commoninterfaces;
 
+import java.util.Collection;
+
 /**
  *
  * @author alexander
@@ -14,4 +16,5 @@ public interface SSIList<T> {
     public void add(T element);
     public void remove(T element);
     public T get(String id);
+    public Collection<T> getValues();
 }

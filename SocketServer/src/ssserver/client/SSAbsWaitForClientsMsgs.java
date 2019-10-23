@@ -6,6 +6,7 @@
 package ssserver.client;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.HashMap;
 import ssserver.commoninterfaces.SSIPrintable;
 import ssserver.commoninterfaces.SSIList;
@@ -40,6 +41,11 @@ public abstract class SSAbsWaitForClientsMsgs implements SSIList<SSWaitForClient
     @Override
     public SSWaitForClientMsgs get(String id) {
         return waitForClientsMessages.get(id);
+    }
+
+    @Override
+    public Collection<SSWaitForClientMsgs> getValues() {
+        return waitForClientsMessages.values();
     }
     
     @Override
