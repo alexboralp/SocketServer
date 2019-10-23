@@ -10,6 +10,7 @@ import auctions.interfaces.AuctionsIPrintable;
 import controller.Controller;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Calendar;
 import java.util.Date;
 import javax.swing.Icon;
 import vista.ClientGUI;
@@ -48,10 +49,12 @@ public class ActionBtnCreateNewAuction implements ActionListener {
                 String nombreProduct = clientGUI.txtNewAuctionProductName.getText();
                 String descripcion = clientGUI.txtNewAuctionDescription.getText();
                 double initialPrice = Double.parseDouble(clientGUI.txtnewAuctionInitialPrice.getText());
-                Icon auctionImage = clientGUI.lblAuctionImage.getIcon();
-                Icon productImage = clientGUI.lblProductImage.getIcon();
+                Icon auctionImage = clientGUI.lblNewAuctionAuctionImage.getIcon();
+                Icon productImage = clientGUI.lblNewAuctionProductImage.getIcon();
                 
-                Date fecha = new Date(anno, mes, dia, hora, 0);
+                Calendar fecha1 = Calendar.getInstance();
+                fecha1.set(anno, mes, dia, hora, 0);
+                Date fecha = fecha1.getTime();
                 
                 printer.print("Enviando la solicitud de agregar la nueva subasta");
                 admin.addAuction(AuctionName, fecha, duracion, nombreProduct, descripcion, productImage, initialPrice, initialPrice, auctionImage);

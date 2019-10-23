@@ -10,6 +10,9 @@ import auctions.interfaces.AuctionsIObserver;
 import auctions.objects.Auction;
 import auctions.interfaces.AuctionsIPrintable;
 import auctions.msgs.AuctionsAtributeChanged;
+import auctions.msgs.AuctionsAtributeChangedFact;
+import auctions.msgs.AuctionsMsgAcceptOffer;
+import auctions.msgs.AuctionsMsgNewOffer;
 import controller.actions.ActionBtnAcceptNewOffer;
 import controller.actions.ActionBtnCancelAuction;
 import controller.actions.ActionBtnCreateNewAuction;
@@ -17,14 +20,16 @@ import controller.actions.ActionBtnFollowAuction;
 import controller.actions.ActionBtnMakeNewOffer;
 import controller.actions.ActionBtnSendMsgToWinner;
 import controller.actions.ActionBtnUnfollowAuction;
+import controller.actions.ActionLblNewAuctionAuctionImage;
+import controller.actions.ActionLblNewAuctionProductImage;
 import controller.actions.ActionLstAvailableAuctions;
 import controller.actions.ActionLstFollowedAuctions;
 import controller.actions.ActionLstYourAuctions;
 import controller.actions.ActionMnuSalir;
 import controller.actions.ActionWindowListener;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
 import javax.swing.DefaultListModel;
+import javax.swing.JOptionPane;
 import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
 import vista.ClientGUI;
@@ -52,7 +57,6 @@ public class Controller implements AuctionsIObserver {
     }
     
     private void _init_() {
-        
         admin.addObserver(this);
     
         clientGUI.lstYourAuctions.removeAll();
@@ -76,14 +80,26 @@ public class Controller implements AuctionsIObserver {
         clientGUI.btnMakeNewOffer.addActionListener(new ActionBtnMakeNewOffer(admin, clientGUI, this, printer));
         clientGUI.btnSendMsgToWinner.addActionListener(new ActionBtnSendMsgToWinner(admin, clientGUI, this, printer));
         clientGUI.btnUnfollowAuction.addActionListener(new ActionBtnUnfollowAuction(admin, clientGUI, this, printer));
-        clientGUI.lstAvailableAuctions.addListSelectionListener(new ActionLstAvailableAuctions(admin, clientGUI, this, printer));
-        //clientGUI.lstAvailableAuctions.addListSelectionListener(new ActionLstAvailableAuctions(admin, clientGUI, this, printer));
-        clientGUI.lstFollowedAuctions.addListSelectionListener(new ActionLstFollowedAuctions(admin, clientGUI, this, printer));
-        clientGUI.lstYourAuctions.addListSelectionListener(new ActionLstYourAuctions(admin, clientGUI, this, printer));
+        
+        ActionLstAvailableAuctions lstAvailableAuctionsListener = new ActionLstAvailableAuctions(admin, clientGUI, this, printer);
+        clientGUI.lstAvailableAuctions.addListSelectionListener(lstAvailableAuctionsListener);
+        clientGUI.lstAvailableAuctions.addMouseListener(lstAvailableAuctionsListener);
+        
+        ActionLstFollowedAuctions lstFollowedAuctionsListener = new ActionLstFollowedAuctions(admin, clientGUI, this, printer);
+        clientGUI.lstFollowedAuctions.addListSelectionListener(lstFollowedAuctionsListener);
+        clientGUI.lstFollowedAuctions.addMouseListener(lstFollowedAuctionsListener);
+        
+        ActionLstYourAuctions lstYourActionsListener = new ActionLstYourAuctions(admin, clientGUI, this, printer);
+        clientGUI.lstYourAuctions.addListSelectionListener(lstYourActionsListener);
+        clientGUI.lstYourAuctions.addMouseListener(lstYourActionsListener);
+        
+        clientGUI.lblNewAuctionAuctionImage.addMouseListener(new ActionLblNewAuctionAuctionImage(admin, clientGUI, this, printer));
+        clientGUI.lblNewAuctionProductImage.addMouseListener(new ActionLblNewAuctionProductImage(admin, clientGUI, this, printer));
+        
         clientGUI.mnuSalir.addActionListener(new ActionMnuSalir(admin, clientGUI, this, printer));
         clientGUI.addWindowListener(new ActionWindowListener(admin, clientGUI, this, printer));
         
-        Calendar calendar = new GregorianCalendar();
+        Calendar calendar = Calendar.getInstance();
         clientGUI.spnNewAuctionDay.setValue(calendar.get(Calendar.DAY_OF_MONTH));
         clientGUI.spnNewAuctionMonth.setValue(calendar.get(Calendar.MONTH));
         clientGUI.spnNewAuctionYear.setValue(calendar.get(Calendar.YEAR));
@@ -137,7 +153,7 @@ public class Controller implements AuctionsIObserver {
         } else {
             clientGUI.txtYourAuctionsUserBestOffer.setText("");
         }
-        if ("".equals(auction.getNewBidderId())) {
+        if (!"".equals(auction.getNewBidderId())) {
             clientGUI.txtYourAuctionsUserNewOffer.setText(auction.getNewBidderId());
         } else {
             clientGUI.txtYourAuctionsUserNewOffer.setText("");
@@ -150,6 +166,7 @@ public class Controller implements AuctionsIObserver {
         clientGUI.txtProductId.setText(auction.getProduct().getId());
         clientGUI.txtState.setText(auction.getState().toString());
         clientGUI.txtActualPrice.setText(Double.toString(auction.getActualPrice()));
+        clientGUI.txtActualBidder.setText(auction.getBidderId());
         clientGUI.txtNextPrice.setText(Double.toString(auction.getNextPrice()));
         clientGUI.lblAuctionImage.setIcon(auction.getImage());
         clientGUI.lblProductImage.setIcon(auction.getProduct().getImage());
@@ -158,20 +175,20 @@ public class Controller implements AuctionsIObserver {
     public void GUIYourAuctionSelected() {
         String subasta = clientGUI.lstFollowedAuctions.getSelectedValue();
         if (admin.getAuctions().containsKey(subasta)) {
-            Auction auction = admin.getAuctions().get(subasta);
+            Auction auction = admin.getAuction(subasta);
             updateGUIYourAuctionSelectedInfo(auction);
         }
     }
     
     public void newOffer(String auctionId, String bidderId, double nextPrice) {
-        Auction auction = admin.getAuctions().get(auctionId);
+        Auction auction = admin.getAuction(auctionId);
         if (nextPrice == auction.getNextPrice() && !"".equals(auction.getNewBidderId())) {
-            auction.setNewBidder(bidderId);
+            auction.setNewBidderId(bidderId);
         }
     }
     
     public void offerAccepted(String auctionId, String bidderId, double newPrice) {
-        Auction auction = admin.getAuctions().get(auctionId);
+        Auction auction = admin.getAuction(auctionId);
         auction.setBidderId(bidderId);
         auction.setActualPrice(newPrice);
     }
@@ -181,9 +198,19 @@ public class Controller implements AuctionsIObserver {
         lstYourAuctionsModel.clear();
     }
     
+    public void deleteAuction(String auctionId) {
+        if (lstFollowedAuctionsModel.contains(auctionId)) {
+            lstFollowedAuctionsModel.removeElement(auctionId);
+        }
+        if (lstYourAuctionsModel.contains(auctionId)) {
+            lstYourAuctionsModel.removeElement(auctionId);
+        }
+        if (lstAvailableAuctionsModel.contains(auctionId)) {
+            lstAvailableAuctionsModel.removeElement(auctionId);
+        }
+    }
+    
     public void addAuction(Auction auction) {
-        admin.getAuctions().add(auction);
-        
         if (admin.getClient().getId().equals(auction.getAuctioneerId())) {
             lstYourAuctionsModel.addElement(auction.getId());
         } else {
@@ -191,20 +218,67 @@ public class Controller implements AuctionsIObserver {
         }
     }
     
-    public void auctionFinished(String auctionId) {
-        admin.getAuctions().get(auctionId).setState(Auction.STATE.FINISHED);
+    public void followAuction (String auctionId) {
+        if (lstAvailableAuctionsModel.contains(auctionId) && !lstFollowedAuctionsModel.contains(auctionId)) {
+            lstFollowedAuctionsModel.addElement(auctionId);
+        }
     }
+    
+    public void unfollowAuction (String auctionId) {
+        if (lstFollowedAuctionsModel.contains(auctionId)) {
+            lstFollowedAuctionsModel.removeElement(auctionId);
+        }
+    }
+    
+    /*public void auctionFinished(String auctionId) {
+        admin.getAuctions().get(auctionId).setState(Auction.STATE.FINISHED);
+    }*/
 
     public void setId(String id) {
         admin.setClientId(id);
+    }
+    
+    public void showMessage(String message) {
+        JOptionPane.showMessageDialog(clientGUI, message);
     }
 
     @Override
     public void update(Object message) {
         if (message instanceof AuctionsAtributeChanged) {
             AuctionsAtributeChanged msg = (AuctionsAtributeChanged) message;
-            if("new auction".equals(msg.getName())) {
-                addAuction((Auction)msg.getObject());
+            switch (msg.getType()) {
+                case AuctionsAtributeChangedFact.DELETE_ALL_AUCTIONS:
+                    deleteAllAuctions();
+                    break;
+                case AuctionsAtributeChangedFact.DELETE_AUCTION:
+                    deleteAuction((String)msg.getObject());
+                    break;
+                case AuctionsAtributeChangedFact.NEW_AUCTION:
+                    addAuction((Auction)msg.getObject());
+                    break;
+                case AuctionsAtributeChangedFact.NEW_BID_ALLREADY_MADE:
+                    showMessage("Ya otro postor ofertó por el nuevo precio de la subasta: " + (String)msg.getObject() + ", se está a la espera que el subastador acepte dicha oferta.");
+                    break;
+                case AuctionsAtributeChangedFact.NEW_MESSAGE:
+                    showMessage((String)msg.getObject());
+                    break;
+                case AuctionsAtributeChangedFact.FOLLOW_AUCTION:
+                    followAuction((String)msg.getObject());
+                    break;
+                case AuctionsAtributeChangedFact.UNFOLLOW_AUCTION:
+                    unfollowAuction((String)msg.getObject());
+                    break;
+                case AuctionsAtributeChangedFact.NEW_OFFER:
+                    AuctionsMsgNewOffer newOffer = (AuctionsMsgNewOffer)msg.getObject();
+                    showMessage("Nueva oferta en la subasta " + newOffer.getIdAuction() + ".");
+                    break;
+                case AuctionsAtributeChangedFact.ACCEPT_OFFER:
+                    AuctionsMsgAcceptOffer acceptOffer = (AuctionsMsgAcceptOffer)msg.getObject();
+                    showMessage("Se aceptó la oferta en la subasta " + acceptOffer.getIdAuction() + ".");
+                    break;
+                default:
+                    printer.printError("Comando desconocido.");
+                    break;
             }
         }
     }

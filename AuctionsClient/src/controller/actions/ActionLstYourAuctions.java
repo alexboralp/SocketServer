@@ -9,6 +9,8 @@ import auctions.admin.AuctionsClientAdmin;
 import auctions.interfaces.AuctionsIPrintable;
 import auctions.objects.Auction;
 import controller.Controller;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import vista.ClientGUI;
@@ -17,7 +19,7 @@ import vista.ClientGUI;
  *
  * @author alexander
  */
-public class ActionLstYourAuctions implements ListSelectionListener {
+public class ActionLstYourAuctions implements ListSelectionListener, MouseListener {
 
     private final AuctionsClientAdmin admin;
     private final ClientGUI clientGUI;
@@ -30,9 +32,8 @@ public class ActionLstYourAuctions implements ListSelectionListener {
         this.controller = controller;
         this.printer = printer;
     }
-
-    @Override
-    public void valueChanged(ListSelectionEvent e) {
+    
+    private void process() {
         String selectedValue = clientGUI.lstYourAuctions.getSelectedValue();
         
         if (selectedValue != null && !"".equals(selectedValue)) {
@@ -40,6 +41,32 @@ public class ActionLstYourAuctions implements ListSelectionListener {
             
             controller.updateGUIYourAuctionSelectedInfo(auction);
         }
+    }
+
+    @Override
+    public void valueChanged(ListSelectionEvent e) {
+        process();
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        process();
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
     }
     
 }

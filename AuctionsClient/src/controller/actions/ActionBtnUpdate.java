@@ -33,9 +33,9 @@ public class ActionBtnUpdate implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        ((DefaultListModel<String>)clientGUI.lstAvailableAuctions.getModel()).clear();
+        /*((DefaultListModel<String>)clientGUI.lstAvailableAuctions.getModel()).clear();
         ((DefaultListModel<String>)clientGUI.lstFollowedAuctions.getModel()).clear();
-        ((DefaultListModel<String>)clientGUI.lstYourAuctions.getModel()).clear();
+        ((DefaultListModel<String>)clientGUI.lstYourAuctions.getModel()).clear();*/
         admin.sendAllAuctions();
     }
     

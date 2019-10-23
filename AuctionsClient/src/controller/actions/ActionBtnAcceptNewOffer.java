@@ -43,14 +43,14 @@ public class ActionBtnAcceptNewOffer implements ActionListener {
             double newPrice = (double)clientGUI.spnYourAuctionsNextPrice.getValue();
             String newBidder = auction.getNewBidderId();
             
-            auction.setNextPrice(auction.getNextPrice());
+            /*auction.setNextPrice(auction.getNextPrice());
             auction.setBidderId(auction.getNewBidderId());
             auction.setNextPrice(newPrice);
             auction.setNewBidder(null);
-            admin.getAuctions().add(auction);
+            admin.getAuctions().add(auction);*/
             
             admin.acceptOffer(selectedValue, newBidder, newPrice);
-            controller.updateGUIYourAuctionSelectedInfo(auction);
+            //controller.updateGUIYourAuctionSelectedInfo(auction);
         } else {
             printer.print("Debe seleccionar alguna subasta.");
         }

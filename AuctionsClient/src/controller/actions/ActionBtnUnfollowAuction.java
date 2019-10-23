@@ -36,14 +36,14 @@ public class ActionBtnUnfollowAuction implements ActionListener {
         int pos = clientGUI.lstFollowedAuctions.getSelectedIndex();
         if (pos != -1) {
             String AuctionName = clientGUI.lstFollowedAuctions.getSelectedValue();
-            DefaultListModel<String> lstFollowedAuctionsModel = (DefaultListModel<String>)clientGUI.lstFollowedAuctions.getModel();
-            DefaultListModel<String> lstAvailableAuctionsModel = (DefaultListModel<String>)clientGUI.lstAvailableAuctions.getModel();
+            /*DefaultListModel<String> lstFollowedAuctionsModel = (DefaultListModel<String>)clientGUI.lstFollowedAuctions.getModel();
+            DefaultListModel<String> lstAvailableAuctionsModel = (DefaultListModel<String>)clientGUI.lstAvailableAuctions.getModel();*/
 
             System.out.println("Solicitud de dejar de seguir la subasta" + AuctionName + ".");
             admin.unfollowAuction(AuctionName);
-            if (pos >= 0 && pos < lstFollowedAuctionsModel.getSize()){
+            /*if (pos >= 0 && pos < lstFollowedAuctionsModel.getSize()){
                 lstFollowedAuctionsModel.addElement(lstAvailableAuctionsModel.remove(pos));
-            }
+            }*/
         } else {
             printer.printError("Se debe escoger una subasta.");
         }

@@ -38,14 +38,14 @@ public class ActionBtnCancelAuction implements ActionListener {
         if (pos != -1) {
             String selectedValue = clientGUI.lstYourAuctions.getSelectedValue();
             
-            Auction auction = admin.getAuctions().get(selectedValue);
+            /*Auction auction = admin.getAuctions().get(selectedValue);
             
             auction.setState(Auction.STATE.CANCELED);
             
-            admin.getAuctions().add(auction);
+            admin.getAuctions().add(auction);*/
             
             admin.cancelAuction(selectedValue);
-            controller.updateGUIYourAuctionSelectedInfo(auction);
+            //controller.updateGUIYourAuctionSelectedInfo(auction);
         } else {
             printer.print("Debe seleccionar alguna subasta.");
         }

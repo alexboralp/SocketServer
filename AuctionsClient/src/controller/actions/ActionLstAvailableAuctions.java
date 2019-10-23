@@ -9,6 +9,8 @@ import auctions.admin.AuctionsClientAdmin;
 import auctions.interfaces.AuctionsIPrintable;
 import auctions.objects.Auction;
 import controller.Controller;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import vista.ClientGUI;
@@ -17,7 +19,7 @@ import vista.ClientGUI;
  *
  * @author alexander
  */
-public class ActionLstAvailableAuctions implements ListSelectionListener {
+public class ActionLstAvailableAuctions implements ListSelectionListener, MouseListener {
 
     private final AuctionsClientAdmin admin;
     private final ClientGUI clientGUI;
@@ -30,20 +32,45 @@ public class ActionLstAvailableAuctions implements ListSelectionListener {
         this.controller = controller;
         this.printer = printer;
     }
-
-    @Override
-    public void valueChanged(ListSelectionEvent e) {
+    
+    private void process() {
         printer.print("ActionLstAvailableAuctions: " + "Action.");
         String selectedValue = clientGUI.lstAvailableAuctions.getSelectedValue();
         printer.print("ActionLstAvailableAuctions: " + "Selected value: " + selectedValue);
         if (clientGUI.lstAvailableAuctions.getSelectedIndex() != -1) {
-            clientGUI.btnFollowAuction.setEnabled(false);
+            clientGUI.btnFollowAuction.setEnabled(true);
             Auction auction = admin.getAuctions().get(selectedValue);
             
             controller.updateGUIAvailableAndFollowedAuctionSelectedInfo(auction);
         } else {
-            clientGUI.btnFollowAuction.setEnabled(true);
+            clientGUI.btnFollowAuction.setEnabled(false);
         }
+    }
+
+    @Override
+    public void valueChanged(ListSelectionEvent e) {
+        process();
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        process();
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
     }
     
 }
