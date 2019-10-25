@@ -54,7 +54,7 @@ public class ActionLstMsgs implements ListSelectionListener, MouseListener {
 
     @Override
     public void valueChanged(ListSelectionEvent e) {
-        process();
+        //process();
     }
 
     @Override

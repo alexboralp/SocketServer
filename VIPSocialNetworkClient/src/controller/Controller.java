@@ -115,6 +115,7 @@ public class Controller implements VIPIObserver {
     
     public void GUIUpdateMsgsList() {
         lstMsgsModel.clear();
+        clientGUI.txtMsg.setText("");
         VIPFamous famous = admin.getFamous(clientGUI.cmbFamous.getSelectedItem().toString());
         for (VIPFamousMsg msg : famous.getMsgs()) {
             lstMsgsModel.addElement(msg.getId());
