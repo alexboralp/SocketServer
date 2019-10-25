@@ -37,12 +37,9 @@ public class VIPServerAdmin extends OOServerAdmin {
     
     public void sendMessageToAllObserversOfAbservable(String idObservable, Serializable message) {
         OOIObservableObj observable = (OOIObservableObj)this.getObservableFromServer(idObservable);
-        printer.print("AuctionsServerAdmin: " + "Todo bien, mandando mensaje a los seguidores la subasta " + idObservable);
-        System.out.println("AuctionsObservableObj: " + "Aquí estoy");
         for (OOIObserverObj obj : (Collection<OOIObserverObj>)observable.getObservers()) {
             SSIClient client = this.getClient(((VIPSimpleClient)obj.getObject()).getId());
             try {
-                System.out.println("AuctionsObservableObj: " + "Todo bien, mandando mensaje al cliente: " + client.getId());
                 client.sendMessage((Serializable)message);
             } catch (IOException ex) {
                 Logger.getLogger(VIPObservableObj.class.getName()).log(Level.SEVERE, null, ex);

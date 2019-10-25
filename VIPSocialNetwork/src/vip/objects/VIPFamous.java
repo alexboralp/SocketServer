@@ -27,7 +27,7 @@ public class VIPFamous extends OOAbsSendableObj implements VIPILevelable {
     public VIPFamous(String id, String name) {
         super(id);
         this.name = name;
-        this.level = 1;
+        this.level = 0;
         msgs = new LinkedList();
     }
 
@@ -63,18 +63,22 @@ public class VIPFamous extends OOAbsSendableObj implements VIPILevelable {
         this.level = level;
     }
     
-    public void addMessage(VIPFamousMsg msg) {
+    public void addMsg(VIPFamousMsg msg) {
         msg.setOwnerId(id);
         msgs.add(msg);
     }
     
-    public VIPFamousMsg getMessage(String msgId) {
+    public VIPFamousMsg getMsg(String msgId) {
         for (VIPFamousMsg msg : msgs) {
             if (msgId.equals(msg.getId())) {
                 return msg;
             }
         }
         return null;
+    }
+    
+    public LinkedList<VIPFamousMsg> getMsgs() {
+        return msgs;
     }
 
     @Override

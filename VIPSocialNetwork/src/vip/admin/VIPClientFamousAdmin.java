@@ -72,13 +72,27 @@ public class VIPClientFamousAdmin  extends OOClientAdmin {
     
     // Mensajes para el GUI sobre el cambio en algún atributo
     
-    public void GUINewMessage(VIPFamousMsg msg) {
-        famous.addMessage(msg);
+    public void GUINewMsg(VIPFamousMsg msg) {
+        famous.addMsg(msg);
         this.updateAll(VIPAtributeChangedFact.createAuctionsAtributeChanged(VIPAtributeChangedFact.NEW_MESSAGE, msg));
     }
     
-    public void GUIShowMessage(String message) {
+    public void GUIShowMsg(String message) {
         this.updateAll(VIPAtributeChangedFact.createAuctionsAtributeChanged(VIPAtributeChangedFact.SHOW_MESSAGE, message));
+    }
+    
+    public void GUILike(String msgId) {
+        VIPFamousMsg msg = getFamous().getMsg(msgId);
+        msg.setLikes(msg.getLikes() + 1);
+        printer.print("Un like más para el mensaje " + msgId + ".");
+        this.updateAll(VIPAtributeChangedFact.createAuctionsAtributeChanged(VIPAtributeChangedFact.MESSAGE_LIKE, msgId));
+    }
+    
+    public void GUIDislike(String msgId) {
+        VIPFamousMsg msg = getFamous().getMsg(msgId);
+        msg.setDislikes(msg.getDislikes() + 1);
+        printer.print("Un dislike más para el mensaje " + msgId + ".");
+        this.updateAll(VIPAtributeChangedFact.createAuctionsAtributeChanged(VIPAtributeChangedFact.MESSAGE_DISLIKE, msgId));
     }
     
     // Setter y Getter del administrador

@@ -18,7 +18,8 @@ public class VIPAtributeChangedFact {
     public static final int FOLLOW_FAMOUS = 6;
     public static final int UNFOLLOW_FAMOUS = 7;
     public static final int DELETE_ALL_FAMOUS = 8;
-    public static final int SHOW_MESSAGE = 9;
+    public static final int DELETE_FAMOUS = 9;
+    public static final int SHOW_MESSAGE = 10;
     
     
     public static VIPAtributeChanged createAuctionsAtributeChanged(int type, Object object) {

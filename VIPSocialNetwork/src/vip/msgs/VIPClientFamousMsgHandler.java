@@ -29,26 +29,22 @@ public class VIPClientFamousMsgHandler extends OOClientMsgHandler implements VIP
     }
     
     private void like(String msgId) {
-        printer.print("AuctionsClientMsgHandler: Se le dio like al mensaje " + msgId);
-        VIPFamousMsg msg = aAdmin.getFamous().getMessage(msgId);
-        msg.setLikes(msg.getLikes() + 1);
-        printer.print("Un like más para el mensaje " + msgId + ".");
+        printer.print("VIPClientFamousMsgHandler: Se le dio like al mensaje " + msgId);
+        aAdmin.GUILike(msgId);
     }
     
     private void dislike(String msgId) {
-        printer.print("AuctionsClientMsgHandler: Se le dio like al mensaje " + msgId);
-        VIPFamousMsg msg = aAdmin.getFamous().getMessage(msgId);
-        msg.setDislikes(msg.getDislikes() + 1);
-        printer.print("Un like más para el mensaje " + msgId + ".");
+        printer.print("VIPClientFamousMsgHandler: Se le dio dislike al mensaje " + msgId);
+        aAdmin.GUIDislike(msgId);
     }
     
     public void messageReceived(VIPFamousMsg msg){
-        aAdmin.GUINewMessage(msg);
+        aAdmin.GUINewMsg(msg);
     }
 
     @Override
     public void handleMsg(Object message) {
-        this.printer.print("AuctionsClientMsgHandler: " + "New message received.");
+        this.printer.print("VIPClientFamousMsgHandler: " + "New message received.");
         super.handleMsg(message);
         Object msgObj;
         if (message instanceof OOIMsg) {
@@ -58,7 +54,7 @@ public class VIPClientFamousMsgHandler extends OOClientMsgHandler implements VIP
         }
         if (msgObj instanceof VIPIMsg) {
             VIPIMsg msg = (VIPIMsg)msgObj;
-            printer.print("AuctionsClientMsgHandler: Nuevo mensaje recibido: " + msg.toString());
+            printer.print("VIPClientFamousMsgHandler: Nuevo mensaje recibido: " + msg.toString());
             switch(msg.getType()) {
                 case VIPMsgFactForClients.LIKE:
                     VIPMsgLike likeMsg = (VIPMsgLike)msg.getMessage();
@@ -70,29 +66,30 @@ public class VIPClientFamousMsgHandler extends OOClientMsgHandler implements VIP
                     break;
                 case VIPMsgFactForServer.SENDING_MESSAGE:
                     VIPFamousMsg famousMsg = (VIPFamousMsg)msg.getMessage();
-                    printer.print("AuctionsClientMsgHandler: Se recibió el mensaje del famoso: " + famousMsg.toString());
+                    printer.print("VIPClientFamousMsgHandler: Se recibió el mensaje del famoso: " + famousMsg.toString());
                     if (famousMsg.getOwnerId().equals(aAdmin.getMyId())) {
                         messageReceived((VIPFamousMsg)msg.getMessage());
                     }
                     break;
+                case VIPMsgFactForServer.SHOW_MESSAGE:
+                    printer.print("VIPClientFamousMsgHandler: Se recibió el mensaje: " + (String)msg.getMessage());
+                    aAdmin.GUIShowMsg((String)msg.getMessage());
+                    break;
                 case VIPMsgFactForServer.INFO:
-                    printer.print("AuctionsClientMsgHandler: Se recibió el mensaje: " + (String)msg.getMessage());
+                    printer.print("VIPClientFamousMsgHandler: Se recibió el mensaje: " + (String)msg.getMessage());
                     break;
                 case VIPMsgFactForServer.MESSAGE_ID_REPEATED:
-                    printer.print("AuctionsClientMsgHandler: El id del mensaje ya fue utilizado.");
-                    aAdmin.GUIShowMessage("El id de la subasta ya fue utilizado.");
-                    break;
-                case VIPMsgFactForServer.TEXT_MESSAGE:
-                    printer.print("AuctionsClientMsgHandler: Se recibió el mensaje: " + (String)msg.getMessage());
+                    printer.print("VIPClientFamousMsgHandler: El id del mensaje ya fue utilizado.");
+                    aAdmin.GUIShowMsg("El id de la subasta ya fue utilizado.");
                     break;
                 case VIPMsgFactForServer.TEXT_MESSAGE_TO_OBSERVER:
-                    printer.print("AuctionsClientMsgHandler: Se recibió el mensaje: " + (String)msg.getMessage());
+                    printer.print("VIPClientFamousMsgHandler: Se recibió el mensaje: " + (String)msg.getMessage());
                     break;
                 case VIPMsgFactForServer.DONE:
-                    printer.print("AuctionsClientMsgHandler: Todo realizado de parte del servidor.");
+                    printer.print("VIPClientFamousMsgHandler: Todo realizado de parte del servidor.");
                     break;
                 case VIPMsgFactForServer.CLOSE_CONNECTION:
-                    printer.print("AuctionsClientMsgHandler: El servidor solicita cerrar la conexión.");
+                    printer.print("VIPClientFamousMsgHandler: El servidor solicita cerrar la conexión.");
                     break;
                 case VIPMsgFactForServer.CHECKING_CONNECTION:
                     printer.print("El servidor solicitó checkar la conexión, se mandó un mensaje de confirmación.");
@@ -105,7 +102,7 @@ public class VIPClientFamousMsgHandler extends OOClientMsgHandler implements VIP
 
     @Override
     public void update(Object message) {
-            this.printer.print("AuctionsClientMsgHandler: " + "Sending message to message handler.");
+            this.printer.print("VIPClientFamousMsgHandler: " + "Sending message to message handler.");
             this.handleMsg(message);
     }
     

@@ -25,7 +25,7 @@ public class VIPFamousList implements OOIListId<VIPFamous>{
         this.famous = famous;
     }
 
-    public HashMap<String, VIPFamous> getAuctions() {
+    public HashMap<String, VIPFamous> getFamous() {
         return famous;
     }
 

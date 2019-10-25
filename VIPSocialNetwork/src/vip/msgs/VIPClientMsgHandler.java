@@ -30,20 +30,18 @@ public class VIPClientMsgHandler extends OOClientMsgHandler implements VIPIMsgHa
     }
     
     public void like(VIPMsgLike msgLike) {
-        VIPFamousMsg msg = aAdmin.getFamous().get(msgLike.getFamousId()).getMessage(msgLike.getMsgId());
-        msg.setLikes(msg.getLikes() + 1);
-        printer.print("Un like más para el mensaje " + msgLike.getMsgId() + " del famoso " + msgLike.getFamousId() + ".");
+        printer.print("VIPClientMsgHandler: Se le dio like al mensaje " + msgLike.getMsgId() + " del famoso " + msgLike.getFamousId() + ".");
+        aAdmin.GUIMsgLike(msgLike);
     }
     
-    public void dislike(VIPMsgLike msgLike) {
-        VIPFamousMsg msg = aAdmin.getFamous().get(msgLike.getFamousId()).getMessage(msgLike.getMsgId());
-        msg.setDislikes(msg.getDislikes() + 1);
-        printer.print("Un like más para el mensaje " + msgLike.getMsgId() + " del famoso " + msgLike.getFamousId() + ".");
+    public void dislike(VIPMsgLike msgDislike) {
+        printer.print("VIPClientMsgHandler: Se le dio dislike al mensaje " + msgDislike.getMsgId() + " del famoso " + msgDislike.getFamousId() + ".");
+        aAdmin.GUIMsgDislike(msgDislike);
     }
 
     @Override
     public void handleMsg(Object message) {
-        this.printer.print("AuctionsClientMsgHandler: " + "New message received.");
+        this.printer.print("VIPClientMsgHandler: " + "New message received.");
         super.handleMsg(message);
         Object msgObj;
         if (message instanceof OOIMsg) {
@@ -53,7 +51,7 @@ public class VIPClientMsgHandler extends OOClientMsgHandler implements VIPIMsgHa
         }
         if (msgObj instanceof VIPIMsg) {
             VIPIMsg msg = (VIPIMsg)msgObj;
-            printer.print("AuctionsClientMsgHandler: Nuevo mensaje recibido: " + msg.toString());
+            printer.print("VIPClientMsgHandler: Nuevo mensaje recibido: " + msg.toString());
             switch(msg.getType()) {
                 case VIPMsgFactForClients.LIKE:
                     like((VIPMsgLike)msg.getMessage());
@@ -68,27 +66,31 @@ public class VIPClientMsgHandler extends OOClientMsgHandler implements VIPIMsgHa
                     aAdmin.GUIUnfollowAuction((String)msg.getMessage());
                     break;
                 case VIPMsgFactForServer.INFO: // Listo
-                    printer.print("AuctionsClientMsgHandler: Se recibió el mensaje: " + (String)msg.getMessage());
+                    printer.print("VIPClientMsgHandler: Se recibió el mensaje: " + (String)msg.getMessage());
                     break;
                 case VIPMsgFactForServer.SENDING_ALL_FAMOUS:
-                    printer.print("AuctionsClientMsgHandler: Se van a recibir todas los famosos.");
+                    printer.print("VIPClientMsgHandler: Se van a recibir todas los famosos.");
                     aAdmin.GUIDeleteAllFamous();
                     break;
                 case VIPMsgFactForServer.SENDING_FAMOUS:
-                    printer.print("AuctionsClientMsgHandler: Se recibe un famoso.");
+                    printer.print("VIPClientMsgHandler: Se recibe un famoso.");
                     aAdmin.GUIAddFamous((VIPFamous)msg.getMessage());
                     break;
-                case VIPMsgFactForServer.TEXT_MESSAGE:
+                case VIPMsgFactForServer.SENDING_MESSAGE:
+                    printer.print("VIPClientMsgHandler: Se recibe un nuevo mensaje de un famoso.");
+                    aAdmin.GUINewMsg((VIPFamousMsg)msg.getMessage());
+                    break;
+                case VIPMsgFactForServer.SHOW_MESSAGE:
                     aAdmin.GUIShowMessage((String)msg.getMessage());
                     break;
                 case VIPMsgFactForServer.TEXT_MESSAGE_TO_OBSERVER:
                     aAdmin.GUIShowMessage((String)msg.getMessage());
                     break;
                 case VIPMsgFactForServer.DONE:
-                    printer.print("AuctionsClientMsgHandler: Todo realizado de parte del servidor.");
+                    printer.print("VIPClientMsgHandler: Todo realizado de parte del servidor.");
                     break;
                 case VIPMsgFactForServer.CLOSE_CONNECTION:
-                    printer.print("AuctionsClientMsgHandler: El servidor solicita cerrar la conexión.");
+                    printer.print("VIPClientMsgHandler: El servidor solicita cerrar la conexión.");
                     break;
                 case VIPMsgFactForServer.CHECKING_CONNECTION:
                     printer.print("El servidor solicitó checkar la conexión, se mandó un mensaje de confirmación.");
@@ -101,7 +103,7 @@ public class VIPClientMsgHandler extends OOClientMsgHandler implements VIPIMsgHa
 
     @Override
     public void update(Object message) {
-            this.printer.print("AuctionsClientMsgHandler: " + "Sending message to message handler.");
+            this.printer.print("VIPClientMsgHandler: " + "Sending message to message handler.");
             this.handleMsg(message);
     }
     

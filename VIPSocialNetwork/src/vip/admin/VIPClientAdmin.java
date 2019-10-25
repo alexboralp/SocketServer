@@ -67,6 +67,10 @@ import vip.interfaces.VIPIPrintable;
         }
     }
     
+    public void sendAllFamous() {
+        this.sendMessage(VIPMsgFactForClients.createMsg(VIPMsgFactForClients.SEND_ALL_FAMOUS, null));
+    }
+    
     public void followFamous(String idFamous) {
         this.sendMessage(VIPMsgFactForClients.createMsg(VIPMsgFactForClients.FOLLOW_FAMOUS, idFamous));
     }
@@ -92,8 +96,8 @@ import vip.interfaces.VIPIPrintable;
         this.updateAll(VIPAtributeChangedFact.createAuctionsAtributeChanged(VIPAtributeChangedFact.NEW_FAMOUS, famous));
     }
     
-    public void GUINewMessage(VIPFamousMsg msg) {
-        this.getFamous(msg.getOwnerId()).addMessage(msg);
+    public void GUINewMsg(VIPFamousMsg msg) {
+        this.getFamous(msg.getOwnerId()).addMsg(msg);
         this.updateAll(VIPAtributeChangedFact.createAuctionsAtributeChanged(VIPAtributeChangedFact.NEW_MESSAGE, msg));
     }
     
@@ -113,14 +117,16 @@ import vip.interfaces.VIPIPrintable;
     }
     
     public void GUIMsgLike(VIPMsgLike msg) {
-        VIPFamousMsg famousMsg = getFamous(msg.getFamousId()).getMessage(msg.getMsgId());
+        VIPFamousMsg famousMsg = getFamous(msg.getFamousId()).getMsg(msg.getMsgId());
         famousMsg.setLikes(famousMsg.getLikes() + 1);
+        printer.print("Un like más para el mensaje " + msg.getMsgId() + " del famoso " + msg.getFamousId() + ".");
         this.updateAll(VIPAtributeChangedFact.createAuctionsAtributeChanged(VIPAtributeChangedFact.MESSAGE_LIKE, msg));
     }
     
     public void GUIMsgDislike(VIPMsgLike msg) {
-        VIPFamousMsg famousMsg = getFamous(msg.getFamousId()).getMessage(msg.getMsgId());
+        VIPFamousMsg famousMsg = getFamous(msg.getFamousId()).getMsg(msg.getMsgId());
         famousMsg.setDislikes(famousMsg.getDislikes() + 1);
+        printer.print("Un dislike más para el mensaje " + msg.getMsgId() + " del famoso " + msg.getFamousId() + ".");
         this.updateAll(VIPAtributeChangedFact.createAuctionsAtributeChanged(VIPAtributeChangedFact.MESSAGE_DISLIKE, msg));
     }
     
