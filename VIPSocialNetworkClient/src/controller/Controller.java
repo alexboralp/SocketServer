@@ -146,6 +146,10 @@ public class Controller implements VIPIObserver {
         if (lstAvailableFamousModel.contains(famousId)) {
             lstAvailableFamousModel.removeElement(famousId);
         }
+        if (clientGUI.cmbFamous.getSelectedItem() != null && clientGUI.cmbFamous.getSelectedItem().toString().equals(famousId)) {
+            lstMsgsModel.clear();
+        }
+        clientGUI.cmbFamous.removeItem(famousId);
     }
     
     public void GUIAddFamous(VIPFamous famous) {
