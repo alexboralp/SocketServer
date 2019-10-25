@@ -51,7 +51,7 @@ public class VIPServerMsgHandler extends OOServerMsgHandler implements VIPIMsgHa
                     aAdmin.sendMessageToAllObservers(msg);
                     if (msgLike.getLikes() % 10 == 0) {
                         VIPMsg msgLike2 = VIPMsgFactForServer.createMsg(VIPMsgFactForServer.SHOW_MESSAGE, "El mensaje " +  msgLike.getId() + " del famoso " + msgLike.getOwnerId() + " llegó a " + msgLike.getLikes() + " likes.");
-                        aAdmin.sendMessageToAllObserversOfAbservable(msgLike.getOwnerId(), msgLike2);
+                        aAdmin.sendMessageToAllObserversOfObservable(msgLike.getOwnerId(), msgLike2);
                         aAdmin.sendMessageToClient(like.getFamousId(), msgLike2);
                     }
                     break;
@@ -64,7 +64,7 @@ public class VIPServerMsgHandler extends OOServerMsgHandler implements VIPIMsgHa
                     aAdmin.sendMessageToAllObservers(msg);
                     if (msgDislike.getDislikes() % 10 == 0) {
                         VIPMsg msgDislike2 = VIPMsgFactForServer.createMsg(VIPMsgFactForServer.SHOW_MESSAGE, "El mensaje " +  msgDislike.getId() + " del famoso " + msgDislike.getOwnerId() + " llegó a " + msgDislike.getDislikes() + " dislikes.");
-                        aAdmin.sendMessageToAllObserversOfAbservable(msgDislike.getOwnerId(), msgDislike2);
+                        aAdmin.sendMessageToAllObserversOfObservable(msgDislike.getOwnerId(), msgDislike2);
                         aAdmin.sendMessageToClient(dislike.getFamousId(), msgDislike2);
                     }
                     break;
@@ -95,7 +95,7 @@ public class VIPServerMsgHandler extends OOServerMsgHandler implements VIPIMsgHa
                         //printer.print("Aquí estoy");
                         if (famous.getLevel() != level) {
                             famous.setLevel(level);
-                            aAdmin.sendMessageToAllObserversOfAbservable((String)msg.getMessage(), VIPMsgFactForServer.createMsg(VIPMsgFactForServer.SHOW_MESSAGE, "El famoso " + (String)msg.getMessage() + " ha llegado al nivel " + level + "."));
+                            aAdmin.sendMessageToAllObserversOfObservable((String)msg.getMessage(), VIPMsgFactForServer.createMsg(VIPMsgFactForServer.SHOW_MESSAGE, "El famoso " + (String)msg.getMessage() + " ha llegado al nivel " + level + "."));
                             aAdmin.sendMessageToClient((String)msg.getMessage(), VIPMsgFactForServer.createMsg(VIPMsgFactForServer.SHOW_MESSAGE, "Has bajado al nivel " + level + "."));
                             //printer.print("Aquí estoy2");
                         }
@@ -112,15 +112,16 @@ public class VIPServerMsgHandler extends OOServerMsgHandler implements VIPIMsgHa
                         VIPFamous famous = (VIPFamous)observable2.getObject();
                         if (famous.getLevel() != level) {
                             famous.setLevel(level);
-                            aAdmin.sendMessageToAllObserversOfAbservable(msg.getId(), VIPMsgFactForServer.createMsg(VIPMsgFactForServer.SHOW_MESSAGE, "El famoso " + (String)msg.getMessage() + " ha llegado al nivel " + level + "."));
+                            aAdmin.sendMessageToAllObserversOfObservable(msg.getId(), VIPMsgFactForServer.createMsg(VIPMsgFactForServer.SHOW_MESSAGE, "El famoso " + (String)msg.getMessage() + " ha llegado al nivel " + level + "."));
                             aAdmin.sendMessageToClient((String)msg.getMessage(), VIPMsgFactForServer.createMsg(VIPMsgFactForServer.SHOW_MESSAGE, "Has bajado al nivel " + level + "."));
                         }
                     }
                     break;
-                /*case VIPMsgFactForFamousClients.NEW_MESSAGE:
-                    printer.print("VIPServerMsgHandler: " + "Solicitud de eliminar una subasta.");
+                case VIPMsgFactForFamousClients.LEFT_SOCIAL_NETWORK:
+                    printer.print("VIPServerMsgHandler: " + "Solicitud de eliminar un famoso.");
+                    aAdmin.sendMessageToAllObserversOfObservable(msg.getId(), msg);
                     aAdmin.removeObservableFromServer((String)msg.getMessage());
-                    break;*/
+                    break;
                 case VIPMsgFactForClients.SEND_ALL_FAMOUS: //Listo
                     printer.print("VIPServerMsgHandler: " + "Solicitud de enviar todas las subastas.");
                     aAdmin.sendObservablesToClient(msg.getId());

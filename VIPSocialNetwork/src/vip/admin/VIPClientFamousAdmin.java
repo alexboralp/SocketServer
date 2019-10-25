@@ -70,6 +70,10 @@ public class VIPClientFamousAdmin  extends OOClientAdmin {
         this.sendMessage(VIPMsgFactForClients.createMsg(VIPMsgFactForFamousClients.NEW_MESSAGE, message));
     }
     
+    public void leftSocialNetwork() {
+        this.sendMessage(VIPMsgFactForFamousClients.createMsg(VIPMsgFactForFamousClients.LEFT_SOCIAL_NETWORK, this.getMyId()));
+    }
+    
     // Mensajes para el GUI sobre el cambio en algún atributo
     
     public void GUINewMsg(VIPFamousMsg msg) {

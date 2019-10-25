@@ -116,6 +116,11 @@ import vip.interfaces.VIPIPrintable;
         this.updateAll(VIPAtributeChangedFact.createAuctionsAtributeChanged(VIPAtributeChangedFact.DELETE_ALL_FAMOUS, null));
     }
     
+    public void GUIDeleteFamous(String famousId) {
+        famous.remove(famousId);
+        this.updateAll(VIPAtributeChangedFact.createAuctionsAtributeChanged(VIPAtributeChangedFact.DELETE_FAMOUS, null));
+    }
+    
     public void GUIMsgLike(VIPMsgLike msg) {
         VIPFamousMsg famousMsg = getFamous(msg.getFamousId()).getMsg(msg.getMsgId());
         famousMsg.setLikes(famousMsg.getLikes() + 1);

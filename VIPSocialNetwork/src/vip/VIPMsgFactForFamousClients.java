@@ -18,6 +18,7 @@ public class VIPMsgFactForFamousClients extends OOClientMsgFact {
     
     public static final int NEW_FAMOUS = ADD_OBSERVABLE;
     public static final int NEW_MESSAGE = -301;
+    public static final int LEFT_SOCIAL_NETWORK = REMOVE_OBSERVABLE;
     
     public static VIPMsg createMsg() {
         return new VIPMsg();

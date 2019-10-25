@@ -11,6 +11,7 @@ import vip.admin.VIPClientAdmin;
 import vip.objects.VIPFamous;
 import ooserver.commoninterfaces.OOIMsg;
 import ooserver.msg.OOClientMsgHandler;
+import vip.VIPMsgFactForFamousClients;
 import vip.objects.VIPFamousMsg;
 import vip.interfaces.VIPIPrintable;
 import vip.interfaces.VIPIMsg;
@@ -85,6 +86,9 @@ public class VIPClientMsgHandler extends OOClientMsgHandler implements VIPIMsgHa
                     break;
                 case VIPMsgFactForServer.TEXT_MESSAGE_TO_OBSERVER:
                     aAdmin.GUIShowMessage((String)msg.getMessage());
+                    break;
+                case VIPMsgFactForFamousClients.LEFT_SOCIAL_NETWORK: // Listo
+                    aAdmin.GUIDeleteFamous((String)msg.getMessage());
                     break;
                 case VIPMsgFactForServer.DONE:
                     printer.print("VIPClientMsgHandler: Todo realizado de parte del servidor.");

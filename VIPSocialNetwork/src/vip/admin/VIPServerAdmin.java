@@ -35,7 +35,7 @@ public class VIPServerAdmin extends OOServerAdmin {
         super(port, printer, msgHandler);
     }
     
-    public void sendMessageToAllObserversOfAbservable(String idObservable, Serializable message) {
+    public void sendMessageToAllObserversOfObservable(String idObservable, Serializable message) {
         OOIObservableObj observable = (OOIObservableObj)this.getObservableFromServer(idObservable);
         for (OOIObserverObj obj : (Collection<OOIObserverObj>)observable.getObservers()) {
             SSIClient client = this.getClient(((VIPSimpleClient)obj.getObject()).getId());
