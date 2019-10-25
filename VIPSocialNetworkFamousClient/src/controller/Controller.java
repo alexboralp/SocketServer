@@ -9,6 +9,7 @@ import vip.msgs.VIPAtributeChanged;
 import vip.msgs.VIPAtributeChangedFact;
 import controller.actions.ActionBtnNewMsg;
 import controller.actions.ActionLstYourMsgs;
+import controller.actions.ActionMnuLeftSocialNetwork;
 import controller.actions.ActionMnuSalir;
 import controller.actions.ActionWindowListener;
 import javax.swing.DefaultListModel;
@@ -53,6 +54,7 @@ public class Controller implements VIPIObserver {
         clientGUI.lstYourMsgs.addMouseListener(lstYourMsgsListener);
         
         clientGUI.mnuSalir.addActionListener(new ActionMnuSalir(admin, clientGUI, this, printer));
+        clientGUI.mnuLeftSocialNetwork.addActionListener(new ActionMnuLeftSocialNetwork(admin, clientGUI, this, printer));
         clientGUI.addWindowListener(new ActionWindowListener(admin, clientGUI, this, printer));
         
         admin.setClientName(clientGUI.getClientName());

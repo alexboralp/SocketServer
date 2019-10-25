@@ -50,6 +50,7 @@ public class ClientGUI extends javax.swing.JFrame implements VIPIPrintable {
         txtMessagesFromServer = new javax.swing.JTextArea();
         jMenuBar2 = new javax.swing.JMenuBar();
         mnuArchivo = new javax.swing.JMenu();
+        mnuLeftSocialNetwork = new javax.swing.JMenuItem();
         mnuSalir = new javax.swing.JMenuItem();
 
         jMenu1.setText("File");
@@ -142,6 +143,9 @@ public class ClientGUI extends javax.swing.JFrame implements VIPIPrintable {
 
         mnuArchivo.setText("Archivo");
 
+        mnuLeftSocialNetwork.setText("Dejar red social");
+        mnuArchivo.add(mnuLeftSocialNetwork);
+
         mnuSalir.setText("Salir");
         mnuArchivo.add(mnuSalir);
 
@@ -170,6 +174,7 @@ public class ClientGUI extends javax.swing.JFrame implements VIPIPrintable {
     private javax.swing.JScrollPane jScrollPane5;
     public javax.swing.JList<String> lstYourMsgs;
     private javax.swing.JMenu mnuArchivo;
+    public javax.swing.JMenuItem mnuLeftSocialNetwork;
     public javax.swing.JMenuItem mnuSalir;
     public javax.swing.JTextField txtDislikes;
     public javax.swing.JTextField txtLikes;
