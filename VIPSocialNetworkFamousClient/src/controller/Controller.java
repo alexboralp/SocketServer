@@ -76,8 +76,8 @@ public class Controller implements VIPIObserver {
         String selectedValue = clientGUI.lstYourMsgs.getSelectedValue();
         
         if (selectedValue != null && !"".equals(selectedValue)) {
-            if (admin.getFamous().getMessage(selectedValue) != null) {
-                VIPFamousMsg famousMsg = admin.getFamous().getMessage(selectedValue);
+            if (admin.getFamous().getMsg(selectedValue) != null) {
+                VIPFamousMsg famousMsg = admin.getFamous().getMsg(selectedValue);
 
                 updateGUIYourMsgsSelectedInfo(famousMsg);
             }
@@ -95,6 +95,20 @@ public class Controller implements VIPIObserver {
     public void showMessage(String message) {
         JOptionPane.showMessageDialog(clientGUI, message);
     }
+    
+    public void msgLike(String msgId) {
+        String msgSelected = clientGUI.lstYourMsgs.getSelectedValue();
+        if (msgSelected != null && msgSelected.equals(msgId)) {
+            clientGUI.txtLikes.setText(Integer.toString(admin.getFamous().getMsg(msgId).getLikes()));
+        }
+    }
+    
+    public void msgDislike(String msgId) {
+        String msgSelected = clientGUI.lstYourMsgs.getSelectedValue();
+        if (msgSelected != null && msgSelected.equals(msgId)) {
+            clientGUI.txtDislikes.setText(Integer.toString(admin.getFamous().getMsg(msgId).getDislikes()));
+        }
+    }
 
     @Override
     public void update(Object message) {
@@ -106,6 +120,12 @@ public class Controller implements VIPIObserver {
                     break;
                 case VIPAtributeChangedFact.SHOW_MESSAGE:
                     showMessage((String)msg.getObject());
+                    break;
+                case VIPAtributeChangedFact.MESSAGE_LIKE:
+                    msgLike((String)msg.getObject());
+                    break;
+                case VIPAtributeChangedFact.MESSAGE_DISLIKE:
+                    msgDislike((String)msg.getObject());
                     break;
                 default:
                     printer.printError("Comando desconocido.");
